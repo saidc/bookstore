@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+
+# Environment variables
+.env
+
+# Flask related
+instance/
+
+# Static files
+static/images/
