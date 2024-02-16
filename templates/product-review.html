@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El libro del cristiano</title>
+    <title>{{libro["nombre"]}}</title>
 
 	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800&display=swap" rel="stylesheet">
 	
@@ -27,7 +27,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
 	<header>
 	<div class="header-items">
-		<a href="/" target="_self" >Libro del cristiano</a>
+		<a href="/" target="_self" >{{libro["nombre"]}}</a>
 		<div class="cart" data-in-cart="1">
 		<span class="material-symbols-outlined">shopping_cart</span>
 		</div>
@@ -57,34 +57,34 @@
 					</div>
 				</div>
 				<div class="col-md-6">
-					<div class="product-dtl">
-						<div class="product-info">
-						<div class="product-name">{{libro["nombre"]}}</div>
-						<div class="product-price-discount"><span>${{libro["precio"]}}</span><span class="line-through">${{libro["precio-anterior"]}}</span></div>
-						</div>
-						<p>{{libro["descripcion-corta"]}}</p>
-						<div class="row">
-							<div class="col-md-6">
-								<label for="size">Pais</label>
-								<select id="size" name="size" class="form-control">
-								<option>COLOMBIA</option>
-								<option>CANADA</option>
-								<option>ESTADOS UNIDOS</option>
-								</select>
+					<form action="/product-review" method="post" >
+						<div class="product-dtl">
+							<div class="product-info">
+								<div class="product-name">{{libro["nombre"]}}</div>
+								<div class="product-price-discount"><span>${{libro["precio"]}}</span><span class="line-through">${{libro["precio-anterior"]}}</span></div>
+							</div>
+							<p>{{libro["descripcion-corta"]}}</p>
+							<div class="row">
+								<div class="col-md-6">
+									<label for="pais">Pais</label>
+									<select id="size" name="pais" class="form-control">
+										<option>COLOMBIA</option>
+										<option>CANADA</option>
+										<option>ESTADOS UNIDOS</option>
+									</select>
+								</div>
+							</div>
+							<div class="product-count">
+								<label for="size">Cantidad</label>
+								<div class="display-flex">
+									<div class="qtyminus">-</div>
+									<input type="text" name="quantity" value="1" class="qty">
+									<div class="qtyplus">+</div>
+								</div>
+								<button type="submit" class="round-black-btn" name="libro" value='{{libro["id"]}}''>Agregar al Carrito</button>
 							</div>
 						</div>
-						<div class="product-count">
-						<label for="size">Cantidad</label>
-						<form action="/product-review" method="post" >
-							<div class="display-flex">
-								<div class="qtyminus">-</div>
-								<input type="text" name="quantity" value="1" class="qty">
-								<div class="qtyplus">+</div>
-							</div>
-							<button type="submit" class="round-black-btn">Agregar al Carrito</button>
-						</form>
-						</div>
-					</div>
+					</form>
 				</div>
 			</div>
 			<div class="product-info-tabs">
