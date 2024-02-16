@@ -7,7 +7,7 @@ import os
 
 # Ruta al archivo .env
 env_file_path = ".env"
-
+print("iniciando >>>>>>")
 # Verifica si el archivo .env existe antes de intentar cargar las variables
 if os.path.exists(env_file_path):
     with open(env_file_path, "r") as file:
