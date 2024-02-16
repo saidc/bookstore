@@ -5,25 +5,9 @@ import requests
 import uuid
 import os
 
-import subprocess
-import sys
-
-def ejecutar_ls():
-    try:
-        # Ejecuta el comando 'ls' y captura la salida
-        resultado = subprocess.run(['ls'], stdout=subprocess.PIPE, text=True, check=True)
-        
-        # Imprime la salida del comando 'ls'
-        print(resultado.stdout)
-    except subprocess.CalledProcessError as e:
-        # En caso de error, imprime el mensaje de error
-        print(f"Error al ejecutar 'ls': {e}")
-
-# Llama a la función para ejecutar 'ls'
-ejecutar_ls()
-print("sys path: ", sys.path )
+print("path actual: ", os.getcwd())
 # Ruta al archivo .env
-env_file_path = ".env"
+env_file_path = "myapp/bookstore/.env"
 print("iniciando >>>>>>")
 # Verifica si el archivo .env existe antes de intentar cargar las variables
 if os.path.exists(env_file_path):
