@@ -1,9 +1,8 @@
-<<<<<<< HEAD
 from flask import Flask, render_template, request, jsonify, redirect, session
 from datetime import timedelta
 from copy import deepcopy
 import requests
-import uuid 
+import uuid
 import os
 
 # Ruta al archivo .env
@@ -70,7 +69,7 @@ def obtener_informacion_producto(id):
     # Aquí deberías implementar la lógica para obtener la información del producto
     # Puedes obtener el ID, nombre y precio del producto desde una base de datos o cualquier otra fuente de datos.
     # Por ahora, simplemente retornaré una lista con diccionarios de ejemplo
-    
+
     #BASE DE DATOS
     libros = [
         {
@@ -139,7 +138,7 @@ def index():
 
     if request.method == 'GET':
         return render_template('index.html')
-    
+
     return redirect('/')
 
 @app.route('/product-review', methods=['GET','POST'])
@@ -169,11 +168,11 @@ def product():
 
             # Obtener información del producto
             info_producto = obtener_informacion_producto(libro)
-            
+
             # Inicializar el carrito si aún no existe en la sesión
             if 'carrito' not in session:
                 session['carrito'] = []
-            
+
             # Crear una copia de la lista del carrito en la sesión antes de realizar cambios
             carrito = deepcopy(session['carrito'])
 
@@ -196,7 +195,7 @@ def product():
                     'pais'  : pais,
                     'cantidad': rv_p['cantidad'] + cantidad
                 })
-                
+
             else:
                 # Agregar información del producto al carrito en la sesión
                 carrito.append({
@@ -207,8 +206,8 @@ def product():
                     'pais'  : pais,
                     'cantidad': cantidad
                 })
-            
-            session['carrito'] = carrito 
+
+            session['carrito'] = carrito
 
             return redirect('/cart')
 
@@ -220,7 +219,7 @@ def cart():
     if 'user_id' not in session:
         # Si no hay un identificador de sesión, genera uno y almacénalo en las cookies
         session['user_id'] = str(uuid.uuid4())
-    
+
     print( session['user_id'], session['carrito'] if 'carrito' in session else "")
 
     if request.method == 'GET':
@@ -233,15 +232,15 @@ def cart():
         request_data = request.get_json()
         print("request_data: ",request_data)
         return jsonify({"error": 0, "url": "aqui url"})
-    
-    
+
+
 #if __name__ == "__main__":
 =======
 from flask import Flask, render_template, request, jsonify, redirect, session
 from datetime import timedelta
 from copy import deepcopy
 import requests
-import uuid 
+import uuid
 import os
 
 # Ruta al archivo .env
@@ -308,7 +307,7 @@ def obtener_informacion_producto(id):
     # Aquí deberías implementar la lógica para obtener la información del producto
     # Puedes obtener el ID, nombre y precio del producto desde una base de datos o cualquier otra fuente de datos.
     # Por ahora, simplemente retornaré una lista con diccionarios de ejemplo
-    
+
     #BASE DE DATOS
     libros = [
         {
@@ -377,7 +376,7 @@ def index():
 
     if request.method == 'GET':
         return render_template('index.html')
-    
+
     return redirect('/')
 
 @app.route('/product-review', methods=['GET','POST'])
@@ -407,11 +406,11 @@ def product():
 
             # Obtener información del producto
             info_producto = obtener_informacion_producto(libro)
-            
+
             # Inicializar el carrito si aún no existe en la sesión
             if 'carrito' not in session:
                 session['carrito'] = []
-            
+
             # Crear una copia de la lista del carrito en la sesión antes de realizar cambios
             carrito = deepcopy(session['carrito'])
 
@@ -434,7 +433,7 @@ def product():
                     'pais'  : pais,
                     'cantidad': rv_p['cantidad'] + cantidad
                 })
-                
+
             else:
                 # Agregar información del producto al carrito en la sesión
                 carrito.append({
@@ -445,8 +444,8 @@ def product():
                     'pais'  : pais,
                     'cantidad': cantidad
                 })
-            
-            session['carrito'] = carrito 
+
+            session['carrito'] = carrito
 
             return redirect('/cart')
 
@@ -458,7 +457,7 @@ def cart():
     if 'user_id' not in session:
         # Si no hay un identificador de sesión, genera uno y almacénalo en las cookies
         session['user_id'] = str(uuid.uuid4())
-    
+
     print( session['user_id'], session['carrito'] if 'carrito' in session else "")
 
     if request.method == 'GET':
@@ -471,8 +470,7 @@ def cart():
         request_data = request.get_json()
         print("request_data: ",request_data)
         return jsonify({"error": 0, "url": "aqui url"})
-    
-    
+
+
 #if __name__ == "__main__":
->>>>>>> 326bb99b0a9c8389e0591ccc4ec179176a321547
 #  app.run(debug=True)
