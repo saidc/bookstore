@@ -6,6 +6,7 @@ import uuid
 import os
 
 import subprocess
+import sys
 
 def ejecutar_ls():
     try:
@@ -20,7 +21,7 @@ def ejecutar_ls():
 
 # Llama a la función para ejecutar 'ls'
 ejecutar_ls()
-
+print("sys path: ", sys.path )
 # Ruta al archivo .env
 env_file_path = ".env"
 print("iniciando >>>>>>")
