@@ -18,7 +18,9 @@ if os.path.exists(env_file_path):
                 key, value = line.strip().split("=", 1)
                 os.environ[key] = value
                 print("key:",key, " - value:",value)
-
+else:
+    print("el path: ", env_file_path,  " no existe")
+    
 # Carga las variables de entorno desde el archivo .env
 
 # Accede a las variables de entorno
