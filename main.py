@@ -1,27 +1,26 @@
 from flask import Flask, render_template, request, jsonify, redirect, session
 from datetime import timedelta
 from copy import deepcopy
+import platform
 import requests
 import uuid
 import os
 
-import platform
-
-def verificar_sistema_operativo():
-    sistema_operativo = platform.system()
-    if sistema_operativo == "Windows":
-        print("Estás en un sistema Windows.")
-    elif sistema_operativo == "Linux":
-        print("Estás en un sistema Linux.")
-    else:
-        print(f"Sistema operativo no reconocido: {sistema_operativo}")
-
-# Ejemplo de uso
-verificar_sistema_operativo()
+sistema_operativo = platform.system()
 
 print("path actual: ", os.getcwd())
-# Ruta al archivo .env
-env_file_path = "myapp/bookstore/.env"
+env_file_path = ".env"
+if sistema_operativo == "Windows":
+    # Ruta al archivo .env
+    env_file_path = ".env"
+    print("Estás en un sistema Windows.")
+elif sistema_operativo == "Linux": 
+    env_file_path = "myapp/bookstore/.env"
+    print("Estás en un sistema Linux.")
+else:
+    env_file_path = ".env"
+    print(f"Sistema operativo no reconocido: {sistema_operativo}")
+
 
 # Verifica si el archivo .env existe antes de intentar cargar las variables
 if os.path.exists(env_file_path):
