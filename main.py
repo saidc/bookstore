@@ -235,7 +235,6 @@ def cart():
 
 
 #if __name__ == "__main__":
-=======
 from flask import Flask, render_template, request, jsonify, redirect, session
 from datetime import timedelta
 from copy import deepcopy
