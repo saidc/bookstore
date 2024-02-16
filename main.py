@@ -237,7 +237,21 @@ def cart():
     else:
         request_data = request.get_json()
         print("request_data: ",request_data)
-        return jsonify({"error": 0, "url": "aqui url"})
+        if "total" in request_data and "productos" in request_data and "taxvalue" in request_data and "shipping" in request_data:
+            productos   =  request_data["productos"]
+            taxvalue    =  request_data["taxvalue"]
+            shipping    =  request_data["shipping"]
+            total       = request_data["total"]
+            print(type(productos),type(taxvalue),type(shipping),type(total))
+            
+            #for prod in productos:
+
+            return jsonify({"error": 0, "url": "aqui url"})
+        
+        else:
+            return jsonify({"error": 1, "error-msg":"Parametros incorrectos o faltantes"})
+        
+
 
 
 #if __name__ == "__main__":

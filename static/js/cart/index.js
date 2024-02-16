@@ -3,6 +3,7 @@ var el;
 var cantidad_productos = 0;
 var taxvalue = 0;
 var shipping = 0;
+var total = 0;
 $("tr").each(function() {
   var subtotal = parseFloat($(this).children(".price").text().replace("$",""));
   var amount = parseFloat($(this).children(".amount").children("input").val());
@@ -48,7 +49,7 @@ function changed() {
   $(".totalpricesubtotal").text("$"+(Math.round(subtotal*100)/100).toFixed(2));
   shipping = parseFloat($(".shipping").text()) 
   var a = (subtotal/100*119)+ shipping
-  var total = 0;
+  total = 0;
   if(cantidad_productos > 0){
     total = (Math.round(a*100)/100).toFixed(2);
   }
@@ -90,7 +91,8 @@ $("#checkout").click(function() {
     body: JSON.stringify({ 
       productos: productos,
       taxvalue: taxvalue,
-      shipping:shipping
+      shipping:shipping,
+      total: total
     }) // Enviar el valor del input como JSON
   }).then(function(response) {
     if (response.ok) {
@@ -106,6 +108,9 @@ $("#checkout").click(function() {
     if( data.error == 0 ){
       // aqui se redirecciona a la url obtenida
       //window.location.href = data.url;
+    }else if(data.error == 1 ){
+      msg = "Error, falta de parametros para generar el pago, intentalo mas tarde"
+      alert(msg);
     }
   }).catch(function(error) {
     msg = "Ocurrio un error an realizar la solicitud de pago, Intentalo mas tarte!!"
