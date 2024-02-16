@@ -67,7 +67,7 @@ $("#checkout").click(function() {
     var imageSrc = $(this).find('.image img').attr('src');
     var name = $(this).find('.name').text();
     var price = parseFloat($(this).find('.price').text().replace("$",""));
-    var amount = $(this).find('.amount input').val();
+    var amount = parseFloat($(this).find('.amount input').val());
     var subtotal = parseFloat($(this).find('.pricesubtotal').text().replace("$",""));
 
     productos.push({
@@ -80,43 +80,49 @@ $("#checkout").click(function() {
     })
   });
 
-  console.log("productos: ",productos)
-  //fetch("https://tecwoz.alwaysdata.net/buycredits", {
-  //fetch("http://127.0.0.1:5000/cart", {
-  fetch("/cart", {
-    method: "POST", // Puedes usar POST u otro método según tus necesidades
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ 
-      productos: productos,
-      taxvalue: taxvalue,
-      shipping:shipping,
-      total: total
-    }) // Enviar el valor del input como JSON
-  }).then(function(response) {
-    if (response.ok) {
-      return response.json(); // Parsear la respuesta JSON
-    } else {
+  console.log(productos.length," productos: ",productos)
+
+  if (productos.length > 0){
+    //fetch("https://tecwoz.alwaysdata.net/buycredits", {
+    //fetch("http://127.0.0.1:5000/cart", {
+    fetch("/cart", {
+      method: "POST", // Puedes usar POST u otro método según tus necesidades
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ 
+        productos: productos,
+        taxvalue: taxvalue,
+        shipping:shipping,
+        total: total
+      }) // Enviar el valor del input como JSON
+    }).then(function(response) {
+      if (response.ok) {
+        return response.json(); // Parsear la respuesta JSON
+      } else {
+        msg = "Ocurrio un error an realizar la solicitud de pago, Intentalo mas tarte!!"
+        console.log(msg)
+        alert(msg);
+        throw new Error("Error en la respuesta del servidor");
+      }
+    }).then(function(data){
+      console.log("data de respuesta: ", data)
+      if( data.error == 0 ){
+        // aqui se redirecciona a la url obtenida
+        print("url obtenido: ", data.url)
+        //window.location.href = data.url;
+      }else if(data.error >= 1 ){
+        //msg = "Error, falta de parametros para generar el pago, intentalo mas tarde"
+        alert(data["error-msg"]);
+      }
+    }).catch(function(error) {
       msg = "Ocurrio un error an realizar la solicitud de pago, Intentalo mas tarte!!"
-      console.log(msg)
-      alert(msg);
-      throw new Error("Error en la respuesta del servidor");
-    }
-  }).then(function(data){
-    console.log("data de respuesta: ", data)
-    if( data.error == 0 ){
-      // aqui se redirecciona a la url obtenida
-      //window.location.href = data.url;
-    }else if(data.error == 1 ){
-      msg = "Error, falta de parametros para generar el pago, intentalo mas tarde"
-      alert(msg);
-    }
-  }).catch(function(error) {
-    msg = "Ocurrio un error an realizar la solicitud de pago, Intentalo mas tarte!!"
-    console.log("Error en la solicitud:", error);
-    alert(msg , error);
-  });
+      console.log("Error en la solicitud:", error);
+      alert(msg , error);
+    });
+  }else{
+    alert("No hay productos en el carrito para comprar");
+  }
 });
 
 changed();

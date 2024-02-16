@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify, redirect, session
+from datetime import datetime, timedelta
 from datetime import timedelta
 from copy import deepcopy
 import platform
@@ -125,6 +126,15 @@ def obtener_informacion_producto(id):
     else:
         return None
 
+def obtener_hora_colombia(delta):
+    # Obtener la hora actual en UTC
+    hora_actual_utc = datetime.now() # datetime.utcnow() 
+    diferencia_horas = timedelta(hours=delta)
+    hora_colombia = hora_actual_utc + diferencia_horas
+    return hora_colombia.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+print("hora Colombia" , obtener_hora_colombia(0))
+
 #SERVIDOR FLASK
 
 app = Flask(__name__)
@@ -226,28 +236,110 @@ def cart():
         # Si no hay un identificador de sesión, genera uno y almacénalo en las cookies
         session['user_id'] = str(uuid.uuid4())
 
-    print( session['user_id'], session['carrito'] if 'carrito' in session else "")
+    #print( session['user_id'], session['carrito'] if 'carrito' in session else "")
 
     if request.method == 'GET':
         # Inicializar el carrito si aún no existe en la sesión
         if 'carrito' not in session:
             session['carrito'] = []
-
         return render_template('cart.html', cart=session['carrito'])
+    
     else:
+        # se obtiene los parametros enviados para el metodo de pago
         request_data = request.get_json()
         print("request_data: ",request_data)
+        # se verifica que se obtengan los parametros necesarios para procesar el link de pago
         if "total" in request_data and "productos" in request_data and "taxvalue" in request_data and "shipping" in request_data:
             productos   =  request_data["productos"]
-            taxvalue    =  request_data["taxvalue"]
-            shipping    =  request_data["shipping"]
-            total       = request_data["total"]
-            print(type(productos),type(taxvalue),type(shipping),type(total))
-            
-            #for prod in productos:
+            taxvalue    =  int(request_data["taxvalue"])
+            shipping    =  int(request_data["shipping"])
+            total       =  int(request_data["total"])
 
-            return jsonify({"error": 0, "url": "aqui url"})
-        
+            print(type(productos),type(taxvalue),type(shipping),type(total))
+            # calculara el total a pagar
+            h_total = 0
+            # calcula el costo de envio
+            h_shipping = 0
+            # calcula el numero total de libros
+            total_amount = 0
+            # obtendra las lista de productos distintos con su subtotal
+            productos_comprar = []
+            for prod in productos:
+                # id del producto
+                id = prod["id"]
+                # se obtiene el producto de la base de datos con el id
+                p = obtener_informacion_producto(id)
+                # se verifica que el producto exista en la base de datos
+                if p != None:
+                    imageSrc = prod["imageSrc"]
+                    amount = int(prod["amount"])
+                    price = int(prod["price"])
+                    name = prod["name"]
+
+                    # se va sumando la cantidad de libros a comprar
+                    total_amount = total_amount + amount
+                    # se va calculanto el subtotal de un tipo de libro
+                    subtotal = amount * price
+                    # se va sumando todos los subtotales para obtener el monto total a pagar
+                    h_total = h_total + subtotal
+                    # se añade los datos calculados del producto a las lista de productos a comprar
+                    productos_comprar.append({
+                        "id": id,
+                        "name":name,
+                        "image": imageSrc,
+                        "amount":amount,
+                        "price":price,
+                        "subtotal": subtotal
+                    })
+                    
+                else:
+                    return jsonify({"error": 2, "error-msg":"Un producto a comprar no existe"})
+            
+            if total_amount < 100:
+                #print(h_total, total)
+                #print(productos_comprar, taxvalue/h_total )
+                
+                h_shipping = 10000 if total_amount < 10 else 20000 if total_amount < 25 else 35000 if total_amount < 50 else 50000 if total_amount < 75 else 65000
+                nombre = "compra de libro cristiano" if total_amount == 1 else "Compra de libros cristiano"
+                id_Orden_de_Compra = str(uuid.uuid4())
+                descripcion = "" 
+                for pr in productos_comprar:
+                    name = pr["name"]
+                    amount = pr["amount"]
+                    subtotal = pr["subtotal"]
+                    descripcion = descripcion + f"""
+                        Nombre: {name}
+                        Cantidad: {amount}
+                        subtotal: {subtotal}
+
+                    """
+                h_total += h_shipping
+                descripcion = descripcion + f"""
+                    Costo de envio: {h_shipping}
+                    total:  {h_total}
+                """
+                valor_a_pagar_centavos = h_total * 100  # este pago debe ser en centavos de pesos, 100 pesos debe enviarse como 10000
+                
+                expiration_time = 0
+                Link_de_redireccion = "https://api.whatsapp.com/send?phone=15147125576&text=Hola%20hize%20una%20compra%2C%20mi%20numero%20de%20pedido%20es%20("+id_Orden_de_Compra+")"
+                Link_de_img_logo = "https://saidc.pythonanywhere.com/static/images/hero_bg_1.jpg"
+
+                print( private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
+                url = "aqui tu url"
+                #response = generar_link_de_pago( private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
+                #if response.status_code == 201:
+                #    data = response.json()["data"]
+                #    payment_link_id = data["id"] # payment_link_id
+                #    fecha_de_creacion = data["created_at"]
+                #    fecha_de_expiracion = data["expires_at"]
+                #    print("link de pago response: ", response.json())
+                #    url = f"https://checkout.wompi.co/l/{payment_link_id}" 
+                return jsonify({"error": 0, "url": url})
+                #else:
+                #    return jsonify({"error": 4, "error-msg":"Error al obtener el link de pago, intentar mas tarde"})
+                
+            else:
+                return jsonify({"error": 3, "error-msg":"la cantidad maxima son 100 libros por compra"})
         else:
             return jsonify({"error": 1, "error-msg":"Parametros incorrectos o faltantes"})
         
