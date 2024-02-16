@@ -223,6 +223,3 @@ def cart():
         return jsonify({"error": 0, "url": "aqui url"})
     
     
-
-if __name__ == "__main__":
-    app.run(debug=True)
