@@ -78,8 +78,8 @@ $("#checkout").click(function() {
 
   console.log("productos: ",productos)
   //fetch("https://tecwoz.alwaysdata.net/buycredits", {
-  //montoAPagar = 
-  fetch("http://127.0.0.1:5000/cart", {
+  //fetch("http://127.0.0.1:5000/cart", {
+  fetch("/cart", {
     method: "POST", // Puedes usar POST u otro método según tus necesidades
     headers: {
       "Content-Type": "application/json"
