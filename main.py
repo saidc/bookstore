@@ -17,7 +17,7 @@ if os.path.exists(env_file_path):
             if not line.startswith("#") and "=" in line:
                 key, value = line.strip().split("=", 1)
                 os.environ[key] = value
-                print("key:",key, " - value:",value) 
+                print("key:",key, " - value:",value)
 
 # Carga las variables de entorno desde el archivo .env
 
