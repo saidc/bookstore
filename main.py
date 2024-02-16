@@ -251,9 +251,9 @@ def cart():
         # se verifica que se obtengan los parametros necesarios para procesar el link de pago
         if "total" in request_data and "productos" in request_data and "taxvalue" in request_data and "shipping" in request_data:
             productos   =  request_data["productos"]
-            taxvalue    =  int(request_data["taxvalue"])
+            taxvalue    =  float(request_data["taxvalue"])
             shipping    =  int(request_data["shipping"])
-            total       =  int(request_data["total"])
+            total       =  float(request_data["total"])
 
             print(type(productos),type(taxvalue),type(shipping),type(total))
             # calculara el total a pagar
