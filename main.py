@@ -1,26 +1,36 @@
 from flask import Flask, render_template, request, jsonify, redirect, session
 from datetime import timedelta
-from dotenv import load_dotenv
 from copy import deepcopy
 import requests
 import uuid 
 import os
 
+# Ruta al archivo .env
+env_file_path = ".env"
+
+# Verifica si el archivo .env existe antes de intentar cargar las variables
+if os.path.exists(env_file_path):
+    with open(env_file_path, "r") as file:
+        # Lee cada línea del archivo y configura las variables de entorno
+        for line in file:
+            # Ignora líneas que comienzan con "#" (comentarios) o están en blanco
+            if not line.startswith("#") and "=" in line:
+                key, value = line.strip().split("=", 1)
+                os.environ[key] = value
+
 # Carga las variables de entorno desde el archivo .env
-load_dotenv()
 
 # Accede a las variables de entorno
-clave_secreta_de_sesion = os.getenv("clave_secreta_de_sesion")
+clave_secreta_de_sesion = os.environ.get("clave_secreta_de_sesion")
 
 # ----------> WOMPI <--------------
 
 # Configura las llaves y la URL base según el ambiente (Sandbox o Producción)
-public_key  = os.getenv("WOMPI_TEST_PUBLIC_KEY")
-private_key = os.getenv("WOMPI_TEST_PRIVATE_KEY")
+public_key  = os.environ.get("WOMPI_TEST_PUBLIC_KEY")
+private_key = os.environ.get("WOMPI_TEST_PRIVATE_KEY")
 # Secreto proporcionado por Wompi
-wompi_secret = os.getenv("WOMPI_TEST_SECRET")
-wompi_url = os.getenv("WOMPI_TEST_URL")
-
+wompi_secret = os.environ.get("WOMPI_TEST_SECRET")
+wompi_url = os.environ.get("WOMPI_TEST_URL")
 
 #FUNCIONES
 def generar_link_de_pago( private_key, nombre, descripcion, valor_cliente_a_pagar, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra):
@@ -223,3 +233,5 @@ def cart():
         return jsonify({"error": 0, "url": "aqui url"})
     
     
+#if __name__ == "__main__":
+#  app.run(debug=True)
