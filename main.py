@@ -6,21 +6,11 @@ import requests
 import uuid
 import os
 
-sistema_operativo = platform.system()
+sist_op = platform.system()
 
 print("path actual: ", os.getcwd())
-env_file_path = ".env"
-if sistema_operativo == "Windows":
-    # Ruta al archivo .env
-    env_file_path = ".env"
-    print("Estás en un sistema Windows.")
-elif sistema_operativo == "Linux": 
-    env_file_path = "myapp/bookstore/.env"
-    print("Estás en un sistema Linux.")
-else:
-    env_file_path = ".env"
-    print(f"Sistema operativo no reconocido: {sistema_operativo}")
-
+env_file_path = "myapp/bookstore/.env" if sist_op == "Linux" else ".env" # else "Windows"
+print( "estas en un sistema " + str(sist_op))
 
 # Verifica si el archivo .env existe antes de intentar cargar las variables
 if os.path.exists(env_file_path):
