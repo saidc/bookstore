@@ -1,7 +1,8 @@
 
 var el;
 var cantidad_productos = 0;
-
+var taxvalue = 0;
+var shipping = 0;
 $("tr").each(function() {
   var subtotal = parseFloat($(this).children(".price").text().replace("$",""));
   var amount = parseFloat($(this).children(".amount").children("input").val());
@@ -45,13 +46,15 @@ function changed() {
   console.log("cantidad_productos: ", cantidad_productos)
 
   $(".totalpricesubtotal").text("$"+(Math.round(subtotal*100)/100).toFixed(2));
-  var a = (subtotal/100*119)+parseFloat($(".shipping").text())
+  shipping = parseFloat($(".shipping").text()) 
+  var a = (subtotal/100*119)+ shipping
   var total = 0;
   if(cantidad_productos > 0){
     total = (Math.round(a*100)/100).toFixed(2);
   }
   $(".realtotal").text(total);
-  $(".taxval").text("($"+(Math.round(subtotal*19)/100).toFixed(2)+") ");
+  taxvalue = (Math.round(subtotal*19)/100).toFixed(2)
+  $(".taxval").text("($"+taxvalue+") ");
 }
 
 $("#checkout").click(function() {
@@ -85,7 +88,9 @@ $("#checkout").click(function() {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({ 
-      productos: productos
+      productos: productos,
+      taxvalue: taxvalue,
+      shipping:shipping
     }) // Enviar el valor del input como JSON
   }).then(function(response) {
     if (response.ok) {
