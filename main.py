@@ -326,19 +326,18 @@ def cart():
                 Link_de_img_logo = "https://saidc.pythonanywhere.com/static/images/hero_bg_1.jpg"
 
                 print( private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
-                url = "aqui tu url"
-                #response = generar_link_de_pago( private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
-                #if response.status_code == 201:
-                #    data = response.json()["data"]
-                #    payment_link_id = data["id"] # payment_link_id
-                #    fecha_de_creacion = data["created_at"]
-                #    fecha_de_expiracion = data["expires_at"]
-                #    print("link de pago response: ", response.json())
-                #    url = f"https://checkout.wompi.co/l/{payment_link_id}" 
-                return jsonify({"error": 0, "url": url})
-                #else:
-                #    return jsonify({"error": 4, "error-msg":"Error al obtener el link de pago, intentar mas tarde"})
-                
+                #url = "aqui tu url"
+                response = generar_link_de_pago( private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
+                if response.status_code == 201:
+                    data = response.json()["data"]
+                    payment_link_id = data["id"] # payment_link_id
+                    fecha_de_creacion = data["created_at"]
+                    fecha_de_expiracion = data["expires_at"]
+                    print("link de pago response: ", response.json())
+                    url = f"https://checkout.wompi.co/l/{payment_link_id}" 
+                    return jsonify({"error": 0, "url": url})
+                else:
+                    return jsonify({"error": 4, "error-msg":"Error al obtener el link de pago, intentar mas tarde"})
             else:
                 return jsonify({"error": 3, "error-msg":"la cantidad maxima son 100 libros por compra"})
         else:
