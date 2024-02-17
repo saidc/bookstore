@@ -4,36 +4,26 @@ from datetime import timedelta
 from copy import deepcopy
 import platform
 import requests
+import hashlib
+import tools
 import uuid
 import os
 
 sist_op = platform.system()
+print( "estas en un sistema " + str(sist_op))
 
 print("path actual: ", os.getcwd())
 delta_time = -5 if sist_op == "Linux" else 0
 env_file_path = "myapp/bookstore/.env" if sist_op == "Linux" else ".env" # else "Windows"
-print( "estas en un sistema " + str(sist_op))
 
-# Verifica si el archivo .env existe antes de intentar cargar las variables
-if os.path.exists(env_file_path):
-    with open(env_file_path, "r") as file:
-        # Lee cada línea del archivo y configura las variables de entorno
-        for line in file:
-            # Ignora líneas que comienzan con "#" (comentarios) o están en blanco
-            if not line.startswith("#") and "=" in line:
-                key, value = line.strip().split("=", 1)
-                os.environ[key] = value
-                print("key:",key, " - value:",value)
-else:
-    print("el path: ", env_file_path,  " no existe")
-
-# Carga las variables de entorno desde el archivo .env
+# obtener variables de entorno
+tools.getenv_var(env_file_path=env_file_path)
 
 # Accede a las variables de entorno
 clave_secreta_de_sesion = os.environ.get("clave_secreta_de_sesion")
 print("clave_secreta_de_sesion: ",clave_secreta_de_sesion)
-# ----------> WOMPI <--------------
 
+# ----------> WOMPI <--------------
 # Configura las llaves y la URL base según el ambiente (Sandbox o Producción)
 public_key  = os.environ.get("WOMPI_TEST_PUBLIC_KEY")
 private_key = os.environ.get("WOMPI_TEST_PRIVATE_KEY")
@@ -72,6 +62,33 @@ def generar_link_de_pago( private_key, nombre, descripcion, valor_cliente_a_paga
   response = requests.post(f"{base_url}/payment_links", json=payment_link_data, headers=headers)
 
   return response
+
+def verify_event(request_data):
+  if "signature" not in request_data:
+    return False
+
+  event_signature = request_data["signature"]["checksum"]
+  properties = request_data["signature"]["properties"]
+  data_values = []
+
+  for prop in properties:
+    prop_split = prop.split('.')
+    prop_split_rslt = request_data["data"][prop_split[0]][prop_split[1]]
+    data_values.append(str(prop_split_rslt))
+
+  timestamp = str(request_data["timestamp"])
+  data_string = "".join(data_values)
+  data_string += timestamp
+  data_string += wompi_secret
+
+  # Calcular el checksum SHA256 utilizando hashlib
+  m = hashlib.sha256()
+  m.update(data_string.encode('utf-8'))
+  calculated_checksum = m.hexdigest()#.upper()
+  #print("calculated_checksum: ", calculated_checksum)
+  #print("event_signature: ", event_signature)
+  # Comparar el checksum calculado con el proporcionado en el evento
+  return calculated_checksum == event_signature
 
 def obtener_informacion_producto(id):
     # Aquí deberías implementar la lógica para obtener la información del producto
@@ -230,6 +247,14 @@ def product():
 
     return redirect('/')
 
+@app.route('/webhook', methods=['GET','POST'])
+def webhook():
+    request_data = request.get_json()
+    print("webhook request_data: ", request_data)
+
+    # Verificar la autenticidad del evento
+    #if verify_event(request_data):
+
 @app.route('/cart', methods=['GET','POST'])
 def cart():
     # Verifica si ya hay un identificador de sesión en las cookies
@@ -244,7 +269,6 @@ def cart():
         if 'carrito' not in session:
             session['carrito'] = []
         return render_template('cart.html', cart=session['carrito'])
-    
     else:
         # se obtiene los parametros enviados para el metodo de pago
         request_data = request.get_json()
@@ -328,6 +352,7 @@ def cart():
                 print( private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
                 #url = "aqui tu url"
                 response = generar_link_de_pago( private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
+                print("responses.status_code: ", response.status_code , response)
                 if response.status_code == 201:
                     data = response.json()["data"]
                     payment_link_id = data["id"] # payment_link_id
