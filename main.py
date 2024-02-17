@@ -10,6 +10,7 @@ import os
 sist_op = platform.system()
 
 print("path actual: ", os.getcwd())
+delta_time = -5 if sist_op == "Linux" else 0
 env_file_path = "myapp/bookstore/.env" if sist_op == "Linux" else ".env" # else "Windows"
 print( "estas en un sistema " + str(sist_op))
 
@@ -133,7 +134,7 @@ def obtener_hora_colombia(delta):
     hora_colombia = hora_actual_utc + diferencia_horas
     return hora_colombia.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
-print("hora Colombia" , obtener_hora_colombia(-6))
+print("hora Colombia" , obtener_hora_colombia(delta_time))
 
 #SERVIDOR FLASK
 
@@ -320,7 +321,7 @@ def cart():
                 """
                 valor_a_pagar_centavos = h_total * 100  # este pago debe ser en centavos de pesos, 100 pesos debe enviarse como 10000
                 
-                expiration_time = 0
+                expiration_time = obtener_hora_colombia(delta_time+2) # el link de pago expira en 2 horas
                 Link_de_redireccion = "https://api.whatsapp.com/send?phone=15147125576&text=Hola%20DTB%20hice%20una%20compra%2C%20mi%20numero%20de%20pedido%20es%20("+id_Orden_de_Compra+")"
                 Link_de_img_logo = "https://saidc.pythonanywhere.com/static/images/hero_bg_1.jpg"
 
