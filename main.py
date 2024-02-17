@@ -133,7 +133,7 @@ def obtener_hora_colombia(delta):
     hora_colombia = hora_actual_utc + diferencia_horas
     return hora_colombia.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
-print("hora Colombia" , obtener_hora_colombia(0))
+print("hora Colombia" , obtener_hora_colombia(-6))
 
 #SERVIDOR FLASK
 
