@@ -321,7 +321,7 @@ def cart():
                 valor_a_pagar_centavos = h_total * 100  # este pago debe ser en centavos de pesos, 100 pesos debe enviarse como 10000
                 
                 expiration_time = 0
-                Link_de_redireccion = "https://api.whatsapp.com/send?phone=15147125576&text=Hola%20hize%20una%20compra%2C%20mi%20numero%20de%20pedido%20es%20("+id_Orden_de_Compra+")"
+                Link_de_redireccion = "https://api.whatsapp.com/send?phone=15147125576&text=Hola%20DTB%20hice%20una%20compra%2C%20mi%20numero%20de%20pedido%20es%20("+id_Orden_de_Compra+")"
                 Link_de_img_logo = "https://saidc.pythonanywhere.com/static/images/hero_bg_1.jpg"
 
                 print( private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
