@@ -168,7 +168,7 @@ def index():
         # Si no hay un identificador de sesión, genera uno y almacénalo en las cookies
         session['user_id'] = str(uuid.uuid4())
 
-    print( session['user_id'], session['carrito'] if 'carrito' in session else "")
+    print("user_id: ", session['user_id'], session['carrito'] if 'carrito' in session else "")
 
     if request.method == 'GET':
         return render_template('index.html')
@@ -280,7 +280,7 @@ def cart():
             shipping    =  int(request_data["shipping"])
             total       =  float(request_data["total"])
 
-            print(type(productos),type(taxvalue),type(shipping),type(total))
+            #print(type(productos),type(taxvalue),type(shipping),type(total))
             # calculara el total a pagar
             h_total = 0
             # calcula el costo de envio
@@ -349,7 +349,7 @@ def cart():
                 Link_de_redireccion = "https://api.whatsapp.com/send?phone=15147125576&text=Hola%20DTB%20hice%20una%20compra%2C%20mi%20numero%20de%20pedido%20es%20("+id_Orden_de_Compra+")"
                 Link_de_img_logo = "https://saidc.pythonanywhere.com/static/images/hero_bg_1.jpg"
 
-                print( private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
+                print( "variables que generan link de pago: \n", private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
                 #url = "aqui tu url"
                 response = generar_link_de_pago( private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
                 print("responses.status_code: ", response.status_code , response)
