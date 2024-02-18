@@ -389,8 +389,8 @@ def cart():
                 #url = "aqui tu url"
                 response = generar_link_de_pago( private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
                 print("responses.status_code: ", response.status_code , response)
-                resp = response.json()["data"]
-                print("respuesta wompi: ", resp, "data" in resp)
+                #resp = response.json()["data"]
+                #print("respuesta wompi: ", resp, "data" in resp)
 
                 if response.status_code == 201:
                     data = response.json()["data"]
