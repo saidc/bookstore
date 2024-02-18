@@ -33,9 +33,10 @@ wompi_url = os.environ.get("WOMPI_TEST_URL")
 
 #FUNCIONES
 def generar_link_de_pago( private_key, nombre, descripcion, valor_cliente_a_pagar, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra):
+  global wompi_url
   # "https://production.wompi.co/v1" # version de produccion
   # "https://sandbox.wompi.co/v1" # Usar la URL de Sandbox para version de prueba
-  base_url    = "https://production.wompi.co/v1"  # Usar la URL de Sandbox
+  base_url = wompi_url  # Usar la URL de Sandbox
 
   # Crear el encabezado de autenticación
   headers = {
