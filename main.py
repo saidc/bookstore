@@ -21,7 +21,6 @@ tools.getenv_var(env_file_path=env_file_path)
 
 # Accede a las variables de entorno
 clave_secreta_de_sesion = os.environ.get("clave_secreta_de_sesion")
-print("clave_secreta_de_sesion: ",clave_secreta_de_sesion)
 
 # ----------> WOMPI <--------------
 # Configura las llaves y la URL base según el ambiente (Sandbox o Producción)
