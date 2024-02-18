@@ -51,7 +51,7 @@ def generar_link_de_pago( private_key, nombre, descripcion, valor_cliente_a_paga
     "name": nombre,
     "description": descripcion,
     "single_use": True, # True si quiero que despues del primer pago ya no servira el link de pago, False si se puede hacer multiples pagos con el link
-    "collect_shipping": False, # Si deseas que el cliente inserte su información de envío current el checkout, o no
+    "collect_shipping": True, # Si deseas que el cliente inserte su información de envío current el checkout, o no
     "collect_customer_legal_id": False,
     "currency": "COP",
     "amount_in_cents": valor_cliente_a_pagar, # Si el pago current por un monto específico, si no lo incluyes el pagador podrá elegir el valor a pagar.
@@ -68,6 +68,7 @@ def generar_link_de_pago( private_key, nombre, descripcion, valor_cliente_a_paga
   return response
 
 def verify_event(request_data):
+  global wompi_secret
   if "signature" not in request_data:
     return False
 
@@ -257,10 +258,41 @@ def webhook():
     print("webhook request_data: ", request_data)
 
     # Verificar la autenticidad del evento
-    #if verify_event(request_data):
+    if verify_event(request_data):
+        print("El webhook recibido es autentico ")
+        if "data" in request_data:
+            if "transaction" in request_data["data"]:
+                keys = ["id","created_at","status","amount_in_cents","payment_link_id","payment_method","customer_email","shipping_address"]
+                # se verifica si request["data"]["transaction"] contiene la lista de keys 
+                keys_in_request = [k in request_data["data"]["transaction"] for k in keys]
+                if not False in keys_in_request:
+                    print( "el request contiene los siguientes keys: ", keys )
+                    payment_link_id = request_data["data"]["transaction"]["payment_link_id"]
+                    proceso_compra_id = request_data["data"]["transaction"]["id"]
+                    estado_compra = request_data["data"]["transaction"]["status"]
+                    shipping_address = request_data["data"]["transaction"]["shipping_address"]
+                    
+                    #user_id, creditos_comprados = dbm.actualizar_proceso_compra(payment_link_id, proceso_compra_id, estado_compra)
+                    print("variables de respuesta de pago: \n", )
+                    print("     payment_link_id: ", payment_link_id)
+                    print("     proceso_compra_id: ", proceso_compra_id)
+                    print("     estado_compra: ", estado_compra) 
+                    print("     shipping_address: ", shipping_address) 
+                else:
+                    print(f"la pregunta not false in {keys_in_request} \n segun la lista es {keys}") 
+            else:
+                print("no esta transaction en request data obtenida en el webhook")
+        else:
+            print("no esta data en request data obtenida en el webhook")
+        return jsonify({"status": "Evento auténtico"})
+    else:
+      print("El webhook recibido No es autentico ")
+      # El evento no es auténtico, ignóralo
+      return jsonify({"status": "Evento no auténtico"}), 400
 
 @app.route('/cart', methods=['GET','POST'])
 def cart():
+    global private_key
     # Verifica si ya hay un identificador de sesión en las cookies
     if 'user_id' not in session:
         # Si no hay un identificador de sesión, genera uno y almacénalo en las cookies
@@ -349,7 +381,7 @@ def cart():
                 """
                 valor_a_pagar_centavos = h_total * 100  # este pago debe ser en centavos de pesos, 100 pesos debe enviarse como 10000
                 
-                expiration_time = obtener_hora_colombia(delta_time+2) # el link de pago expira en 2 horas
+                expiration_time = obtener_hora_colombia(delta_time+6) # el link de pago expira en 2 horas
                 Link_de_redireccion = "https://api.whatsapp.com/send?phone=15147125576&text=Hola%20DTB%20hice%20una%20compra%2C%20mi%20numero%20de%20pedido%20es%20("+id_Orden_de_Compra+")"
                 Link_de_img_logo = "https://saidc.pythonanywhere.com/static/images/hero_bg_1.jpg"
 
@@ -362,6 +394,7 @@ def cart():
                     payment_link_id = data["id"] # payment_link_id
                     fecha_de_creacion = data["created_at"]
                     fecha_de_expiracion = data["expires_at"]
+                    print("Link de pago --> fecha_de_creacion: ",fecha_de_creacion, " fecha_de_expiracion: ",fecha_de_expiracion)
                     print("link de pago response: ", response.json())
                     url = f"https://checkout.wompi.co/l/{payment_link_id}" 
                     return jsonify({"error": 0, "url": url})
