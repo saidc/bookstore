@@ -30,6 +30,10 @@ private_key = os.environ.get("WOMPI_TEST_PRIVATE_KEY")
 wompi_secret = os.environ.get("WOMPI_TEST_SECRET")
 wompi_url = os.environ.get("WOMPI_TEST_URL")
 
+print( "public_key: ", public_key )
+print( "private_key: ", private_key )
+print( "wompi_secret: ", wompi_secret )
+print( "wompi_url: ", wompi_url )
 #FUNCIONES
 def generar_link_de_pago( private_key, nombre, descripcion, valor_cliente_a_pagar, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra):
   global wompi_url
