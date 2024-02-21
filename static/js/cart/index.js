@@ -58,6 +58,60 @@ function changed() {
   $(".taxval").text("($"+taxvalue+") ");
 }
 
+$("#Home").click(function(){
+  productos = []
+  
+  $(".p").each(function() {
+    var id = $(this).data("value");
+    var imageSrc = $(this).find('.image img').attr('src');
+    var name = $(this).find('.name').text();
+    var price = parseFloat($(this).find('.price').text().replace("$",""));
+    var amount = parseFloat($(this).find('.amount input').val());
+    var subtotal = parseFloat($(this).find('.pricesubtotal').text().replace("$",""));
+
+    productos.push({
+      id: id,
+      imageSrc: imageSrc,
+      name:name ,
+      price: price,
+      amount:amount,
+      subtotal:subtotal
+    })
+  });
+
+  console.log(productos.length," productos: ",productos)
+
+  fetch("/goHome", {
+    method: "POST", // Puedes usar POST u otro método según tus necesidades
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ 
+      productos: productos,
+      taxvalue: taxvalue,
+      shipping:shipping,
+      total: total
+    }) // Enviar el valor del input como JSON
+  }).then(function(response) {
+    if (response.ok) {
+      return response.json(); // Parsear la respuesta JSON
+    } else {
+      msg = "Ocurrio un error al ir al home, Intentalo mas tarte!!"
+      console.log(msg)
+      alert(msg);
+      throw new Error("Error en la respuesta del servidor");
+    }
+  }).then(function(data){
+    console.log("data de respuesta: ", data.msg , " redireccionando a /")
+    window.location.href = "/";
+  }).catch(function(error) {
+    msg = "Ocurrio un error an realizar la solicitud de pago, Intentalo mas tarte!!"
+    console.log("Error en la solicitud:", error);
+    alert(msg , error);
+  });
+
+});
+
 $("#checkout").click(function() {
   //alert("And that's $"+$(".realtotal").text()+", please.");
   productos = []

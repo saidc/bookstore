@@ -298,6 +298,38 @@ def webhook():
       # El evento no es auténtico, ignóralo
       return jsonify({"status": "Evento no auténtico"}), 400
 
+@app.route('/goHome', methods=['GET','POST'])
+def goHome():
+    request_data = rq.get_json()
+    print("request_data: ",request_data)
+    # se verifica que se obtengan los parametros necesarios para procesar el link de pago
+    if "total" in request_data and "productos" in request_data and "taxvalue" in request_data and "shipping" in request_data:
+        productos   =  request_data["productos"]
+        taxvalue    =  float(request_data["taxvalue"])
+        shipping    =  int(request_data["shipping"])
+        total       =  float(request_data["total"])
+        if len(productos) > 0:
+            # Inicializar el carrito si aún no existe en la sesión
+            if 'carrito' not in session:
+                session['carrito'] = []
+
+            # Crear una copia de la lista del carrito en la sesión antes de realizar cambios
+            carrito = deepcopy(session['carrito'])
+
+            for cart_p in productos:
+                for i in range(len(carrito)):
+                    p = carrito[i]
+                    if p["id"] == cart_p["id"] and p["cantidad"] != cart_p["amount"]:
+                        carrito[i]["cantidad"] = cart_p["amount"]
+                        break
+            
+            session['carrito'] = carrito
+        else:
+            session['carrito'] = []
+
+        return jsonify({"error": 2, "msg":"se actualizo "})
+    else:
+        return jsonify({"error": 1, "error-msg":"error al actualizar cookie"})
 
 @app.route('/cart', methods=['GET','POST'])
 def cart():
@@ -313,6 +345,7 @@ def cart():
         # Inicializar el carrito si aún no existe en la sesión
         if 'carrito' not in session:
             session['carrito'] = []
+
         return render_template('cart.html', cart=session['carrito'])
     else:
         # se obtiene los parametros enviados para el metodo de pago
@@ -411,8 +444,7 @@ def cart():
                             
                             url = f"https://checkout.wompi.co/l/{payment_link_id}"
                             print( {"error": 0, "url": url})
-                            return redirect(url)
-                            #return jsonify({"error": 0, "url": url})
+                            return jsonify({"error": 0, "url": url})
                         else:
                             print( {"error": 4, "error-msg":"Error al obtener el link de pago, intentar mas tarde"})
                             return( {"error": 4, "error-msg":"Error al obtener el link de pago, intentar mas tarde"})

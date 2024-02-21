@@ -17,13 +17,14 @@ header{
 	z-index: 12;   
 }
 
-header .header-items a{
+header .header-items h1{
 	cursor: pointer;
 	text-decoration: none; 
 	color: inherit;
 	font-size: 28px; 
 	color: #000000;
 }
+
 
 body {
     background: #fff;
