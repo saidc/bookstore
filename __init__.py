@@ -1,12 +1,15 @@
-from flask import Flask, render_template, request, jsonify, redirect, session
+from flask import Flask, render_template, jsonify, redirect, session
+from flask import request as rq
 from datetime import datetime, timedelta
 from datetime import timedelta
+from urllib import request as urllib_rq
+from urllib.error import HTTPError
 from copy import deepcopy
 import platform
-import requests
 import hashlib
 import tools
 import uuid
+import json
 import os
 
 sist_op = platform.system()
@@ -14,7 +17,7 @@ print( "estas en un sistema " + str(sist_op))
 
 print("path actual: ", os.getcwd())
 delta_time = -5 if sist_op == "Linux" else 0
-env_file_path = "myapp/bookstore/.env" if sist_op == "Linux" else ".env" # else "Windows"
+env_file_path = ".env"#"myapp/bookstore/.env" if sist_op == "Linux" else ".env" # else "Windows"
 
 # obtener variables de entorno
 tools.getenv_var(env_file_path=env_file_path)
@@ -40,10 +43,10 @@ def generar_link_de_pago( private_key, nombre, descripcion, valor_cliente_a_paga
   # "https://production.wompi.co/v1" # version de produccion
   # "https://sandbox.wompi.co/v1" # Usar la URL de Sandbox para version de prueba
   base_url = wompi_url  # Usar la URL de Sandbox
-
+  
   # Crear el encabezado de autenticación
   headers = {
-      "Authorization": f"Bearer {private_key}"
+    "Authorization": f"Bearer {private_key}"
   }
 
   # Crear el cuerpo de la petición con los detalles del link de pago
@@ -63,10 +66,15 @@ def generar_link_de_pago( private_key, nombre, descripcion, valor_cliente_a_paga
   }
 
   # Realizar la petición POST para crear el link de pago
-  response = requests.post(f"{base_url}/payment_links", json=payment_link_data, headers=headers)
-
-  return response
-
+  try:
+    req = urllib_rq.Request(f"{base_url}/payment_links", data=json.dumps(payment_link_data).encode(), headers=headers, method='POST')
+    with urllib_rq.urlopen(req) as response:
+      return response.read().decode()
+  except HTTPError as e:
+    print("Error HTTP:", e.code)
+    print("Respuesta:", e.read().decode())
+    return None
+  
 def verify_event(request_data):
   global wompi_secret
   if "signature" not in request_data:
@@ -175,7 +183,7 @@ def index():
 
     print("user_id: ", session['user_id'], session['carrito'] if 'carrito' in session else "")
 
-    if request.method == 'GET':
+    if rq.method == 'GET':
         return render_template('index.html')
 
     return redirect('/')
@@ -189,21 +197,21 @@ def product():
 
     print( session['user_id'], session['carrito'] if 'carrito' in session else "")
 
-    if request.method == 'GET':
-        if "libro" in request.args:
-            libro = request.args.get("libro")
+    if rq.method == 'GET':
+        if "libro" in rq.args:
+            libro = rq.args.get("libro")
             libro = obtener_informacion_producto(libro)
             if libro != None:
                 return render_template('product-review.html', libro=libro)
             else:
                 return redirect('/')
 
-    elif request.method == 'POST' :
-        if "libro" in request.form and "pais" in request.form and "quantity" in request.form:
-            print("request.form: ", request.form)
-            libro    = request.form["libro"]
-            pais     = request.form["pais"]
-            cantidad = int(request.form["quantity"])
+    elif rq.method == 'POST' :
+        if "libro" in rq.form and "pais" in rq.form and "quantity" in rq.form:
+            print("request.form: ", rq.form)
+            libro    = rq.form["libro"]
+            pais     = rq.form["pais"]
+            cantidad = int(rq.form["quantity"])
 
             # Obtener información del producto
             info_producto = obtener_informacion_producto(libro)
@@ -254,7 +262,7 @@ def product():
 
 @app.route('/webhook', methods=['GET','POST'])
 def webhook():
-    request_data = request.get_json()
+    request_data = rq.get_json()
     print("webhook request_data: ", request_data)
 
     # Verificar la autenticidad del evento
@@ -300,14 +308,14 @@ def cart():
 
     #print( session['user_id'], session['carrito'] if 'carrito' in session else "")
 
-    if request.method == 'GET':
+    if rq.method == 'GET':
         # Inicializar el carrito si aún no existe en la sesión
         if 'carrito' not in session:
             session['carrito'] = []
         return render_template('cart.html', cart=session['carrito'])
     else:
         # se obtiene los parametros enviados para el metodo de pago
-        request_data = request.get_json()
+        request_data = rq.get_json()
         print("request_data: ",request_data)
         # se verifica que se obtengan los parametros necesarios para procesar el link de pago
         if "total" in request_data and "productos" in request_data and "taxvalue" in request_data and "shipping" in request_data:
@@ -388,19 +396,27 @@ def cart():
                 print( "variables que generan link de pago: \n", private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
                 #url = "aqui tu url"
                 response = generar_link_de_pago( private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
-                print("responses.status_code: ", response.status_code , response)
-                #resp = response.json()["data"]
-                #print("respuesta wompi: ", resp, "data" in resp)
-
-                if response.status_code == 201:
-                    data = response.json()["data"]
-                    payment_link_id = data["id"] # payment_link_id
-                    fecha_de_creacion = data["created_at"]
-                    fecha_de_expiracion = data["expires_at"]
-                    print("Link de pago --> fecha_de_creacion: ",fecha_de_creacion, " fecha_de_expiracion: ",fecha_de_expiracion)
-                    print("link de pago response: ", response.json())
-                    url = f"https://checkout.wompi.co/l/{payment_link_id}" 
-                    return jsonify({"error": 0, "url": url})
+                print("responses.status_code: ", response)
+    
+                if response is not None:
+                    try:
+                        response_data = json.loads(response)
+                        if "data" in response_data:
+                            data = response_data["data"]
+                            payment_link_id = data["id"]
+                            fecha_de_creacion = data["created_at"]
+                            fecha_de_expiracion = data["expires_at"]
+                            print("Link de pago --> fecha_de_creacion: ",fecha_de_creacion, " fecha_de_expiracion: ",fecha_de_expiracion)
+                            
+                            url = f"https://checkout.wompi.co/l/{payment_link_id}"
+                            print( {"error": 0, "url": url})
+                            return jsonify({"error": 0, "url": url})
+                        else:
+                            print( {"error": 4, "error-msg":"Error al obtener el link de pago, intentar mas tarde"})
+                            return( {"error": 4, "error-msg":"Error al obtener el link de pago, intentar mas tarde"})
+                    except json.JSONDecodeError as e:
+                        print("Error al decodificar la respuesta JSON:", e)
+                        return("Error al decodificar la respuesta JSON:", e)
                 else:
                     return jsonify({"error": 4, "error-msg":"Error al obtener el link de pago, intentar mas tarde"})
             else:
@@ -409,7 +425,5 @@ def cart():
             return jsonify({"error": 1, "error-msg":"Parametros incorrectos o faltantes"})
         
 
-
-
-#if __name__ == "__main__":
-#  app.run(debug=True)
+if __name__ == "__main__":
+  app.run(debug=True)
