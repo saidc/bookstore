@@ -1,3 +1,7 @@
+$("#cart").click(function(){
+    window.location.href = "/cart";
+});
+  
 $(document).ready(function() {
     var slider = $("#slider");
     var thumb = $("#thumb");

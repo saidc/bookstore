@@ -1,3 +1,7 @@
+$("#cart").click(function(){
+	window.location.href = "/cart";
+});
+  
 ;(function () {
 	
 	'use strict';

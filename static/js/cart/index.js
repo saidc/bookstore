@@ -58,9 +58,6 @@ function changed() {
   $(".taxval").text("($"+taxvalue+") ");
 }
 
-$("#cart").click(function(){
-  window.location.href = "/cart";
-});
 
 $("#Home").click(function(){
   productos = []
