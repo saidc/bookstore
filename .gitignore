@@ -3,9 +3,10 @@
 # Ignorar archivos de caché de Python
 __pycache__/
 *.pyc
-
+.cache
 # Environment variables
 .env
+env/
 
 # Flask related
 instance/
