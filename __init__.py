@@ -117,7 +117,11 @@ def obtener_informacion_producto(id):
             'precio': 70000,
             'precio-anterior':90000,
             'descripcion-corta': 'Descubre la fascinante odisea de ARMANDO JOSÉ CALDERÓN, un hombre cuya vida trasciende los límites de lo ordinario en "el niño aquel". Desde sus modestos comienzos en Maicao, LA GUAJIRA-COLOMBIA hasta su destacada labor ministerial en Bucaramanga, esta cautivadora autobiografía te sumergirá en un viaje emocional donde la fe y la determinación desafían todo pronóstico.',
-            'descripcion': "...",
+            'descripcion': """
+                Descubre la fascinante odisea de ARMANDO JOSÉ CALDERÓN, un hombre cuya vida trasciende los límites de lo ordinario en "el niño aquel". Desde sus modestos comienzos en Maicao, LA GUAJIRA-COLOMBIA hasta su destacada labor ministerial en Bucaramanga, esta cautivadora autobiografía te sumergirá en un viaje emocional donde la fe y la determinación desafían todo pronóstico.
+                <br/>
+                'EL NIÑO AQUEL' no es solo una autobiografía, sino un tributo a la fuerza espiritual que impulsó a Armando a dedicar su vida a la fe y al servicio a Dios y a su prójimo. Su historia inspiradora se convierte en un faro de esperanza, recordándonos que, con fe y perseverancia, podemos superar cualquier adversidad y dejar una huella perdurable en la comunidad.
+            """,
             'imagenes': [
                 "https://live.staticflickr.com/65535/53541352177_10a216e3c0_o.png",
                 "https://live.staticflickr.com/65535/53542553219_4414c9666a_o.png",
@@ -138,7 +142,10 @@ def obtener_informacion_producto(id):
             'precio': 70000,
             'precio-anterior':90000,
             'descripcion-corta': "Palabras memorables es la compilación de más de 150 enseñanzas que contienen una cantidad de temas doctrinales y de formación ministerial de nuestro visionero, Eliceo Duarte. Transcritas por el pastor Armando José Calderón, trabajo que hizo por muchas horas y años para lograr lo que hoy es palabras memorables.",
-            'descripcion': "...",
+            'descripcion': """
+                Palabras memorables es la compilación de más de 150 enseñanzas que contienen una cantidad de temas doctrinales y de formación ministerial de nuestro visionero, Eliceo Duarte. Transcritas por el pastor Armando José Calderón, trabajo que hizo por muchas horas y años para lograr lo que hoy es palabras memorables. 
+                <br/> 
+                Leer palabras memorables es de mucha utilidad para el crecimiento cristiano, la instrucción, la edificación para aquellos que se dedican por entero a la enseñanza de las sagradas escrituras y también para los que quieran prepararse para servir al Señor en un futuro. El Evangelio es lo único que Jesús mandó predicar, creer y obedecer para ser salvos. Jesucristo no mandó predicar otra cosa.""",
             'imagenes': [
                 "https://live.staticflickr.com/65535/53542410328_7392d8a4d0_o.jpg",
                 "https://live.staticflickr.com/65535/53542228811_0d3a009021_o.png",
@@ -160,7 +167,13 @@ def obtener_informacion_producto(id):
             'precio': 70000,
             'precio-anterior':90000,
             'descripcion-corta': "Se trata del relato de la vida de una misionera, de tiempo completo, que por más de cincuenta años se ha dedicado a predicar el evangelio y a enseñar a vivir en Cristo.  Si, es la vida de la hermana Isabel Torres, que ahora, retirada del trajín de la obra, decidió contarnos como fue ese trabajo en diversos países.",
-            'descripcion': "...",
+            'descripcion': """
+                Se trata del relato de la vida de una misionera, de tiempo completo, que por más de cincuenta años se ha dedicado a predicar el evangelio y a enseñar a vivir en Cristo.  Si, es la vida de la hermana Isabel Torres, que ahora, retirada del trajín de la obra, decidió contarnos como fue ese trabajo en diversos países.
+                <br/>
+                Comienza relatando su niñez y conversión, y nos lleva de la mano para explicarnos como fueron los comienzos de su trabajo en la cálida ciudad de Barranquilla, en la costa caribe de Colombia.
+                <br/>
+                De allí nos lleva por Suramérica, y nos cuenta de su labor en España, Canadá, Francia e inclusive su visita a Suiza.
+            """,
             'imagenes': [
                 "https://live.staticflickr.com/65535/53542657250_700ab17f7b_o.jpg",
                 "https://live.staticflickr.com/65535/53542410233_64fd16a91c_o.png",
