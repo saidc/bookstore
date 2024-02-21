@@ -290,6 +290,7 @@ def webhook():
       # El evento no es auténtico, ignóralo
       return jsonify({"status": "Evento no auténtico"}), 400
 
+
 @app.route('/cart', methods=['GET','POST'])
 def cart():
     global private_key
@@ -408,8 +409,6 @@ def cart():
         else:
             return jsonify({"error": 1, "error-msg":"Parametros incorrectos o faltantes"})
         
-
-
 
 #if __name__ == "__main__":
 #  app.run(debug=True)
