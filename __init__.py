@@ -118,9 +118,9 @@ def obtener_informacion_producto(id):
             'descripcion-corta': 'Descubre la fascinante odisea de ARMANDO JOSÉ CALDERÓN, un hombre cuya vida trasciende los límites de lo ordinario en "el niño aquel". Desde sus modestos comienzos en Maicao, LA GUAJIRA-COLOMBIA hasta su destacada labor ministerial en Bucaramanga, esta cautivadora autobiografía te sumergirá en un viaje emocional donde la fe y la determinación desafían todo pronóstico.',
             'descripcion': "...",
             'imagenes': [
-                "static/images/elniдoaquel/foto_01.png",
-                "static/images/elniдoaquel/foto_02.png",
-                "static/images/elniдoaquel/foto_03.png",
+                "https://live.staticflickr.com/65535/53541352177_10a216e3c0_o.png",
+                "https://live.staticflickr.com/65535/53542553219_4414c9666a_o.png",
+                "https://live.staticflickr.com/65535/53541352132_1f384312ab_o.png",
             ]
         },
         {
@@ -131,9 +131,9 @@ def obtener_informacion_producto(id):
             'descripcion-corta': "Palabras memorables es la compilación de más de 150 enseñanzas que contienen una cantidad de temas doctrinales y de formación ministerial de nuestro visionero, Eliceo Duarte. Transcritas por el pastor Armando José Calderón, trabajo que hizo por muchas horas y años para lograr lo que hoy es palabras memorables.",
             'descripcion': "...",
             'imagenes': [
-                "static/images/palabrasmemorables/foto_01.jpg",
-                "static/images/palabrasmemorables/foto_02.png",
-                "static/images/palabrasmemorables/foto_03.png",
+                "https://live.staticflickr.com/65535/53542410328_7392d8a4d0_o.jpg",
+                "https://live.staticflickr.com/65535/53542228811_0d3a009021_o.png",
+                "https://live.staticflickr.com/65535/53542553074_f8c119ff75_o.png",                
             ]
         },
         {
@@ -144,9 +144,9 @@ def obtener_informacion_producto(id):
             'descripcion-corta': "Se trata del relato de la vida de una misionera, de tiempo completo, que por más de cincuenta años se ha dedicado a predicar el evangelio y a enseñar a vivir en Cristo.  Si, es la vida de la hermana Isabel Torres, que ahora, retirada del trajín de la obra, decidió contarnos como fue ese trabajo en diversos países.",
             'descripcion': "...",
             'imagenes': [
-                "static/images/pequeдosinstrumentos/foto_01.jpg",
-                "static/images/pequeдosinstrumentos/foto_02.png",
-                "static/images/pequeдosinstrumentos/foto_03.png",
+                "https://live.staticflickr.com/65535/53542657250_700ab17f7b_o.jpg",
+                "https://live.staticflickr.com/65535/53542410233_64fd16a91c_o.png",
+                "https://live.staticflickr.com/65535/53542657215_07452bf09e_o.png",                
             ]
         }
     ]
