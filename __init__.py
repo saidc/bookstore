@@ -346,7 +346,7 @@ def goHome():
                 pa = porActualizar.pop(0)
                 for i in range(len(carrito)):
                     if( carrito[i]["id"] == pa["id"]):
-                        carrito["cantidad"] = pa["cantidad"]
+                        carrito[i]["cantidad"] = pa["cantidad"]
                         break
             
             print("carrito despues de actualizacion: ", carrito )
