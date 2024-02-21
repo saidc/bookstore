@@ -181,10 +181,17 @@ def index():
         # Si no hay un identificador de sesión, genera uno y almacénalo en las cookies
         session['user_id'] = str(uuid.uuid4())
 
-    print("user_id: ", session['user_id'], session['carrito'] if 'carrito' in session else "")
+    if 'carrito' not in session:
+                session['carrito'] = []
+
+    no_productos = 0
+    for p in session["carrito"]:
+        no_productos += int(p["cantidad"])
+
+    #print("user_id: ", session['user_id'], session['carrito'] if 'carrito' in session else "")
 
     if rq.method == 'GET':
-        return render_template('index.html')
+        return render_template('index.html',noproductos = no_productos)
 
     return redirect('/')
 
@@ -194,15 +201,23 @@ def product():
     if 'user_id' not in session:
         # Si no hay un identificador de sesión, genera uno y almacénalo en las cookies
         session['user_id'] = str(uuid.uuid4())
+    
+    if 'carrito' not in session:
+                session['carrito'] = []
 
-    print( session['user_id'], session['carrito'] if 'carrito' in session else "")
+    no_productos = 0
+
+    for p in session["carrito"]:
+        no_productos += int(p["cantidad"])
+
+    #print( session['user_id'], session['carrito'] if 'carrito' in session else "")
 
     if rq.method == 'GET':
         if "libro" in rq.args:
             libro = rq.args.get("libro")
             libro = obtener_informacion_producto(libro)
             if libro != None:
-                return render_template('product-review.html', libro=libro)
+                return render_template('product-review.html', libro=libro, noproductos = no_productos)
             else:
                 return redirect('/')
 
@@ -300,6 +315,11 @@ def webhook():
 
 @app.route('/goHome', methods=['GET','POST'])
 def goHome():
+
+    if 'user_id' not in session:
+        # Si no hay un identificador de sesión, genera uno y almacénalo en las cookies
+        session['user_id'] = str(uuid.uuid4())
+
     request_data = rq.get_json()
     #print("request_data: ",request_data)
     print("presionaste /goHome")
@@ -318,6 +338,7 @@ def goHome():
             #existentes = []
             porborrar = []
             porActualizar = []
+
             # se verifica los productos que existen
             for i, p in enumerate(carrito):
                 sw = False
@@ -486,6 +507,5 @@ def cart():
         else:
             return jsonify({"error": 1, "error-msg":"Parametros incorrectos o faltantes"})
         
-
 if __name__ == "__main__":
   app.run(debug=True)

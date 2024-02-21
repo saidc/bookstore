@@ -25,15 +25,15 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+	{% block content %}
 	<header>
 	<div class="header-items">
 		<a href="/" target="_self" >{{libro["nombre"]}}</a>
-		<div class="cart" data-in-cart="1">
+		<div class="cart" data-in-cart="{{noproductos}}">
 		<span class="material-symbols-outlined">shopping_cart</span>
 		</div>
 	</div>
 	</header>
-	{% block content %}
 	<div class="pd-wrap">
 		<div class="container">
 			<div class="heading-section">
