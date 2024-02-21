@@ -37,6 +37,7 @@ print( "public_key: ", public_key )
 print( "private_key: ", private_key )
 print( "wompi_secret: ", wompi_secret )
 print( "wompi_url: ", wompi_url )
+
 #FUNCIONES
 def generar_link_de_pago( private_key, nombre, descripcion, valor_cliente_a_pagar, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra):
   global wompi_url
@@ -121,7 +122,15 @@ def obtener_informacion_producto(id):
                 "https://live.staticflickr.com/65535/53541352177_10a216e3c0_o.png",
                 "https://live.staticflickr.com/65535/53542553219_4414c9666a_o.png",
                 "https://live.staticflickr.com/65535/53541352132_1f384312ab_o.png",
-            ]
+            ],
+            'video': {
+                "hasVideo": True,
+                "href": "https://www.flickr.com/photos/200131147@N06/53543632894/in/dateposted-public/",
+                "title": "Video del libro el niño aquel",
+                "img-src": "https://live.staticflickr.com/31337/53543632894_4eb1eb834f_o.jpg",
+                "width": 404,
+                "height": 720,  
+            }	
         },
         {
             'id':"palabrasmemorables",
@@ -134,7 +143,16 @@ def obtener_informacion_producto(id):
                 "https://live.staticflickr.com/65535/53542410328_7392d8a4d0_o.jpg",
                 "https://live.staticflickr.com/65535/53542228811_0d3a009021_o.png",
                 "https://live.staticflickr.com/65535/53542553074_f8c119ff75_o.png",                
-            ]
+            ],
+            'video': {
+                "hasVideo": True,
+                "href": "https://www.flickr.com/photos/200131147@N06/53543633009/in/dateposted-public/",
+                "title": "Video del libro palabras memorables",
+                "img-src": "https://live.staticflickr.com/31337/53543633009_6b147d4317_o.jpg",
+                "width": 270,
+                "height": 360,  
+            }
+            
         },
         {
             'id':"pequeñosinstrumentos",
@@ -147,7 +165,15 @@ def obtener_informacion_producto(id):
                 "https://live.staticflickr.com/65535/53542657250_700ab17f7b_o.jpg",
                 "https://live.staticflickr.com/65535/53542410233_64fd16a91c_o.png",
                 "https://live.staticflickr.com/65535/53542657215_07452bf09e_o.png",                
-            ]
+            ],
+            'video': {
+                "hasVideo": True,
+                "href": "https://www.flickr.com/photos/200131147@N06/53543764645/in/dateposted-public/",
+                "title": "Video del libro pequeños instrumentos",
+                "img-src": "https://live.staticflickr.com/31337/53543764645_6955ccc268_o.jpg",
+                "width": 1920,
+                "height": 1080,  
+            }			
         }
     ]
 
@@ -209,8 +235,6 @@ def product():
 
     for p in session["carrito"]:
         no_productos += int(p["cantidad"])
-
-    #print( session['user_id'], session['carrito'] if 'carrito' in session else "")
 
     if rq.method == 'GET':
         if "libro" in rq.args:
