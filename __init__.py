@@ -301,28 +301,56 @@ def webhook():
 @app.route('/goHome', methods=['GET','POST'])
 def goHome():
     request_data = rq.get_json()
-    print("request_data: ",request_data)
+    #print("request_data: ",request_data)
+    print("presionaste /goHome")
     # se verifica que se obtengan los parametros necesarios para procesar el link de pago
-    if "total" in request_data and "productos" in request_data and "taxvalue" in request_data and "shipping" in request_data:
+    if "productos" in request_data :
         productos   =  request_data["productos"]
-        taxvalue    =  float(request_data["taxvalue"])
-        shipping    =  int(request_data["shipping"])
-        total       =  float(request_data["total"])
         if len(productos) > 0:
+            print(" hay productos en el carrito")
             # Inicializar el carrito si aún no existe en la sesión
             if 'carrito' not in session:
                 session['carrito'] = []
 
             # Crear una copia de la lista del carrito en la sesión antes de realizar cambios
             carrito = deepcopy(session['carrito'])
+            print("carrito antes de actualizacion: ", carrito )
+            #existentes = []
+            porborrar = []
+            porActualizar = []
+            # se verifica los productos que existen
+            for i, p in enumerate(carrito):
+                sw = False
+                for p_t in productos:
+                    if p_t["id"] == p["id"]:
+                        #existentes.append(p_t)
+                        sw = True
+                        if p_t["amount"] != p["cantidad"]:
+                            porActualizar.append({"id":p["id"], "cantidad":p_t["amount"]})
+                            print("por actualizar: ",{"id":p["id"], "cantidad":p_t["amount"]}, " canitada anterior: ", p["cantidad"])
+                        break
+                if sw == False:
+                    porborrar.append(p["id"])
+                    print("por borrar ", p["id"])
 
-            for cart_p in productos:
+            # se borra los productos borrados en el carrito del navegador
+            while len(porborrar) > 0:
+                pb = porborrar.pop(0)
                 for i in range(len(carrito)):
-                    p = carrito[i]
-                    if p["id"] == cart_p["id"] and p["cantidad"] != cart_p["amount"]:
-                        carrito[i]["cantidad"] = cart_p["amount"]
+                    if carrito[i]["id"] == pb:
+                        carrito.pop(i)
+                        break
+
+            # actualizar cantidad 
+            while len(porActualizar) > 0:
+                pa = porActualizar.pop(0)
+                for i in range(len(carrito)):
+                    if( carrito[i]["id"] == pa["id"]):
+                        carrito["cantidad"] = pa["cantidad"]
                         break
             
+            print("carrito despues de actualizacion: ", carrito )
+
             session['carrito'] = carrito
         else:
             session['carrito'] = []
