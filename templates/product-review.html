@@ -110,26 +110,9 @@
 					<li class="nav-item">
 						<a class="nav-link active" id="description-tab" data-toggle="tab" href="#description" role="tab" aria-controls="description" aria-selected="true">Description</a>
 					</li>
-					
 				</ul>
 				<div class="tab-content" id="myTabContent">
 					<div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
-						{% if libro["video"]["hasVideo"] %}
-							<a data-flickr-embed="true" 
-								href='{{libro["video"]["href"]}}' 
-								title='{{libro["video"]["title"]}}'>	
-								<img 	src='{{libro["video"]["img-src"]}}' 
-										width='{{libro["video"]["width"]}}'  
-										height='{{libro["video"]["height"]}}'
-										alt='{{libro["video"]["title"]}}'/>
-							</a>	 
-							<script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
-						{% endif %}
-						<!-- 
-							palabras memorables  <a data-flickr-embed="true" href="https://www.flickr.com/photos/200131147@N06/53543633009/in/dateposted-public/" title="Video del libro palabras memorables">	<img src="https://live.staticflickr.com/31337/53543633009_6b147d4317_o.jpg" width="270"  height="360"  alt="Video del libro palabras memorables"/></a>	 <script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
-							el niño aquel 		 <a data-flickr-embed="true" href="https://www.flickr.com/photos/200131147@N06/53543632894/in/dateposted-public/" title="Video del libro el niño aquel">		<img src="https://live.staticflickr.com/31337/53543632894_4eb1eb834f_o.jpg" width="404"  height="720"  alt="Video del libro el niño aquel"/></a>		 <script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
-							pequeñosinstrumentos <a data-flickr-embed="true" href="https://www.flickr.com/photos/200131147@N06/53543764645/in/dateposted-public/" title="Video del libro pequeños instrumentos"><img src="https://live.staticflickr.com/31337/53543764645_6955ccc268_o.jpg" width="1920" height="1080" alt="Video del libro pequeños instrumentos"/></a> <script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
-						-->
 						<span>{{libro["descripcion"]}}</span>
 					</div>
 				</div>
