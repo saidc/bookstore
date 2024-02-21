@@ -411,7 +411,8 @@ def cart():
                             
                             url = f"https://checkout.wompi.co/l/{payment_link_id}"
                             print( {"error": 0, "url": url})
-                            return jsonify({"error": 0, "url": url})
+                            return redirect(url)
+                            #return jsonify({"error": 0, "url": url})
                         else:
                             print( {"error": 4, "error-msg":"Error al obtener el link de pago, intentar mas tarde"})
                             return( {"error": 4, "error-msg":"Error al obtener el link de pago, intentar mas tarde"})
