@@ -58,8 +58,7 @@ function changed() {
   $(".taxval").text("($"+taxvalue+") ");
 }
 
-
-$("#Home").click(function(){
+function goHome(){
   productos = []
   
   $(".p").each(function() {
@@ -110,7 +109,14 @@ $("#Home").click(function(){
     console.log("Error en la solicitud:", error);
     alert(msg , error);
   });
+}
 
+$("#goHome").click(function(){
+  goHome();
+});
+
+$("#Home").click(function(){
+  goHome();
 });
 
 $("#checkout").click(function() {

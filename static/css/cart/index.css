@@ -17,7 +17,7 @@ header{
 	z-index: 12;   
 }
 
-header .header-items h1{
+header .header-items span{
 	cursor: pointer;
 	text-decoration: none; 
 	color: inherit;
@@ -93,7 +93,7 @@ td {
   
 .amount > input {
     font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, "AppleGothic", sans-serif;
-    color: #000000
+    color: #000000;
     font-size: 16px;
     background: transparent;
     border: none;
@@ -170,4 +170,13 @@ td {
   
 #footer a {
     color: white;
+}
+
+#goHome {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#goHome:hover {
+    color: #0000ff;
 }
