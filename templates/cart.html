@@ -31,7 +31,7 @@
                 </tr>
                 {% for prod in cart %}
                 <tr class="p" data-value='{{prod["id"]}}'>
-                    <td class="image"><img src='{{prod["imagenes"][0]}}' /></td>
+                    <td class="image"><img src='{{prod["imagenes"][0]["miniatura"]}}' /></td>
                     <td class="name">{{prod["nombre"]}}</td>
                     <td class="price">${{prod["precio"]}}</td>
                     <td class="amount"><input type="number" value='{{prod["cantidad"]}}' min="0" /></td>
