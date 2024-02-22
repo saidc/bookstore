@@ -123,17 +123,18 @@ def obtener_informacion_producto(id):
                 'EL NIÑO AQUEL' no es solo una autobiografía, sino un tributo a la fuerza espiritual que impulsó a Armando a dedicar su vida a la fe y al servicio a Dios y a su prójimo. Su historia inspiradora se convierte en un faro de esperanza, recordándonos que, con fe y perseverancia, podemos superar cualquier adversidad y dejar una huella perdurable en la comunidad.
             """,
             'imagenes': [
-                "https://live.staticflickr.com/65535/53541352177_10a216e3c0_o.png",
-                "https://live.staticflickr.com/65535/53542553219_4414c9666a_o.png",
-                "https://live.staticflickr.com/65535/53541352132_1f384312ab_o.png",
+                {"image":"https://live.staticflickr.com/65535/53541352177_10a216e3c0_o.png","miniatura":"https://live.staticflickr.com/65535/53544406384_fe6307a3f7_o.png"}, # foto_01.jpg
+                {"image":"https://live.staticflickr.com/65535/53542553219_4414c9666a_o.png","miniatura":"https://live.staticflickr.com/65535/53544261148_f7999c1aa1_o.png"}, # foto_02.png
+                {"image":"https://live.staticflickr.com/65535/53541352132_1f384312ab_o.png","miniatura":"https://live.staticflickr.com/65535/53544513400_892722f6e3_o.png"}, # foto_03.png 
             ],
             'video': {
                 "hasVideo": True,
                 "href": "https://www.flickr.com/photos/200131147@N06/53543632894/in/dateposted-public/",
                 "title": "Video del libro el niño aquel",
                 "img-src": "https://live.staticflickr.com/31337/53543632894_4eb1eb834f_o.jpg",
-                "width": 404,
-                "height": 720,  
+                "miniatura":"https://live.staticflickr.com/65535/53543210447_33d62c1610_o.png", #elniдoaquel_miniatura_play
+                "width": 540,
+                "height": 540,  
             }	
         },
         {
@@ -147,17 +148,18 @@ def obtener_informacion_producto(id):
                 
                 Leer palabras memorables es de mucha utilidad para el crecimiento cristiano, la instrucción, la edificación para aquellos que se dedican por entero a la enseñanza de las sagradas escrituras y también para los que quieran prepararse para servir al Señor en un futuro. El Evangelio es lo único que Jesús mandó predicar, creer y obedecer para ser salvos. Jesucristo no mandó predicar otra cosa.""",
             'imagenes': [
-                "https://live.staticflickr.com/65535/53542410328_7392d8a4d0_o.jpg",
-                "https://live.staticflickr.com/65535/53542228811_0d3a009021_o.png",
-                "https://live.staticflickr.com/65535/53542553074_f8c119ff75_o.png",                
+                {"image":"https://live.staticflickr.com/65535/53542410328_7392d8a4d0_o.jpg","miniatura":"https://live.staticflickr.com/65535/53544405924_41f8258860_o.jpg"}, # foto_01.jpg
+                {"image":"https://live.staticflickr.com/65535/53542228811_0d3a009021_o.png","miniatura":"https://live.staticflickr.com/65535/53544512980_bdcf470254_o.png"}, # foto_02.png
+                {"image":"https://live.staticflickr.com/65535/53542553074_f8c119ff75_o.png","miniatura":"https://live.staticflickr.com/65535/53544512990_7e8f7b2a12_o.png"}, # foto_03.png
             ],
             'video': {
                 "hasVideo": True,
                 "href": "https://www.flickr.com/photos/200131147@N06/53543633009/in/dateposted-public/",
                 "title": "Video del libro palabras memorables",
                 "img-src": "https://live.staticflickr.com/31337/53543633009_6b147d4317_o.jpg",
-                "width": 270,
-                "height": 360,  
+                "miniatura":"https://live.staticflickr.com/65535/53544083106_49c4dcb8ac_o.png", # palabrasmemorables_miniatura_play
+                "width": 540,
+                "height": 540,  
             }
             
         },
@@ -175,17 +177,18 @@ def obtener_informacion_producto(id):
                 De allí nos lleva por Suramérica, y nos cuenta de su labor en España, Canadá, Francia e inclusive su visita a Suiza.
             """,
             'imagenes': [
-                "https://live.staticflickr.com/65535/53542657250_700ab17f7b_o.jpg",
-                "https://live.staticflickr.com/65535/53542410233_64fd16a91c_o.png",
-                "https://live.staticflickr.com/65535/53542657215_07452bf09e_o.png",                
+                {"image":"https://live.staticflickr.com/65535/53542657250_700ab17f7b_o.jpg","miniatura":"https://live.staticflickr.com/65535/53542657250_700ab17f7b_o.jpg"}, # foto_01.jpg
+                {"image":"https://live.staticflickr.com/65535/53542410233_64fd16a91c_o.png","miniatura":"https://live.staticflickr.com/65535/53542410233_64fd16a91c_o.png"}, # foto_02.png
+                {"image":"https://live.staticflickr.com/65535/53542657215_07452bf09e_o.png","miniatura":"https://live.staticflickr.com/65535/53542657215_07452bf09e_o.png"}, # foto_03.png                
             ],
             'video': {
                 "hasVideo": True,
                 "href": "https://www.flickr.com/photos/200131147@N06/53543764645/in/dateposted-public/",
                 "title": "Video del libro pequeños instrumentos",
                 "img-src": "https://live.staticflickr.com/31337/53543764645_6955ccc268_o.jpg",
-                "width": 1920,
-                "height": 1080,  
+                "miniatura":"https://live.staticflickr.com/65535/53543289562_72d5c3a301_o.png", #pequeдosinstrumentos_miniatura_play
+                "width": 540,
+                "height": 540,  
             }			
         }
     ]

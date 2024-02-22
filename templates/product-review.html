@@ -57,19 +57,19 @@
 						{% endif %}
 						{% for path in libro["imagenes"]%}
 						<div class="item">
-							<img src="{{path}}" />
+							<img src='{{path["image"]}}' />
 						</div>
 						{% endfor %}
 					</div>
 					<div id="thumb" class="owl-carousel product-thumb">
 						{% if libro["video"]["hasVideo"] %}
 							<div class="item">
-								<img src="https://live.staticflickr.com/65535/53543966925_713fe8895c_o.png" />
+								<img src='{{libro["video"]["miniatura"]}}' />
 							</div>
 						{% endif %}
 						{% for path in libro["imagenes"]%}
 						<div class="item">
-							<img src="{{path}}" />
+							<img src='{{path["miniatura"]}}' />
 						</div>
 						{% endfor %}
 					</div>
