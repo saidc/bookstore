@@ -167,7 +167,7 @@ def webhook():
 
                     if(service):
                         print("conexion exitosa")
-                        new_row = [ proceso_compra_id,  "El niño aquel",  80000,    shipping_address,   "sayacorcal@gmail.com",  request_data["data"] ]
+                        new_row = [ proceso_compra_id,  "El niño aquel",  80000,    str(shipping_address),   "sayacorcal@gmail.com",  str(request_data["data"]) ]
                         append_row_value(service, SPREADSHEET_ID, SHEET_NAME, new_row)
                     else:
                         print("conexion fallida")
