@@ -6,7 +6,8 @@ from googleapiclient.discovery import build
 import os.path
 
 def get_token_credentials(TOKEN_FILE, CLIENT_SECRET, SCOPES):
-    
+
+    print("path actual get_token_credentials: ", os.getcwd())
     creds = None 
  
     if os.path.exists(TOKEN_FILE):
