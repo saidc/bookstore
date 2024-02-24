@@ -134,7 +134,7 @@ def webhook():
     request_data = rq.get_json()
     print("webhook request_data: ", request_data)
 
-    wompi_secret = os.environ.get("WOMPI_PRODUCTION_SECRET")
+    wompi_secret = os.environ.get("WOMPI_TEST_SECRET")
     # Verificar la autenticidad del evento
     if verify_event(wompi_secret, request_data):
         print("El webhook recibido es autentico ")
@@ -347,8 +347,8 @@ def cart():
 
                 #print( "variables que generan link de pago: \n", private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
                 #url = "aqui tu url"
-                private_key = os.environ.get("WOMPI_PRODUCTION_PRIVATE_KEY")
-                wompi_url = os.environ.get("WOMPI_PRODUCTION_URL")
+                private_key = os.environ.get("WOMPI_TEST_PRIVATE_KEY")
+                wompi_url = os.environ.get("WOMPI_TEST_URL")
                 response = generar_link_de_pago(wompi_url, private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
                 print("responses.status_code: ", response)
     
