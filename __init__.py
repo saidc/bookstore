@@ -1,3 +1,4 @@
+# coding=utf-8
 from sheet import get_token_credentials, connect_to_sheet_api, append_row_value
 from flask import Flask, render_template, jsonify, redirect, session
 from base_de_datos import obtener_informacion_producto
