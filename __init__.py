@@ -132,12 +132,11 @@ def product():
 @app.route('/webhook', methods=['GET','POST'])
 def webhook():
     request_data = rq.get_json()
-    print("webhook request_data: ", request_data)
-
+    #print("webhook request_data: ", request_data)
     wompi_secret = os.environ.get("WOMPI_TEST_SECRET")
     # Verificar la autenticidad del evento
     if verify_event(wompi_secret, request_data):
-        print("El webhook recibido es autentico ")
+        #print("El webhook recibido es autentico ")
         if "data" in request_data:
             if "transaction" in request_data["data"]:
                 keys = ["id","created_at","status","amount_in_cents","payment_link_id","payment_method","customer_email","shipping_address"]
@@ -177,11 +176,12 @@ def webhook():
                 print("no esta transaction en request data obtenida en el webhook")
         else:
             print("no esta data en request data obtenida en el webhook")
-        return jsonify({"status": "Evento auténtico"})
+        return jsonify({"status": "Evento auténtico"}), 200
     else:
       print("El webhook recibido No es autentico ")
       # El evento no es auténtico, ignóralo
-      return jsonify({"status": "Evento no auténtico"}), 400
+      #return jsonify({"status": "Evento no auténtico"}), 405
+      return jsonify({"error": "Método no permitido"}), 405
 
 @app.route('/goHome', methods=['GET','POST'])
 def goHome():
