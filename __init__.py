@@ -1,219 +1,32 @@
+from sheet import get_token_credentials, connect_to_sheet_api, append_row_value
 from flask import Flask, render_template, jsonify, redirect, session
+from base_de_datos import obtener_informacion_producto
+from wompi import generar_link_de_pago, verify_event
+from tools import getenv_var, obtener_hora_colombia, convert_to_list
 from flask import request as rq
-from datetime import datetime, timedelta
 from datetime import timedelta
-from urllib import request as urllib_rq
-from urllib.error import HTTPError
 from copy import deepcopy
 import platform
-import hashlib
-import tools
 import uuid
 import json
 import os
 
 sist_op = platform.system()
 print( "estas en un sistema " + str(sist_op))
-
 print("path actual: ", os.getcwd())
 delta_time = -5 if sist_op == "Linux" else 0
-env_file_path = ".env"#"myapp/bookstore/.env" if sist_op == "Linux" else ".env" # else "Windows"
+env_file_path = ".env" # "myapp/bookstore/.env" if sist_op == "Linux" else ".env" # else "Windows"
 
 # obtener variables de entorno
-tools.getenv_var(env_file_path=env_file_path)
-
-# Accede a las variables de entorno
-clave_secreta_de_sesion = os.environ.get("clave_secreta_de_sesion")
-
-# ----------> WOMPI <--------------
-# Configura las llaves y la URL base según el ambiente (Sandbox o Producción)
-public_key  = os.environ.get("WOMPI_PRODUCTION_PUBLIC_KEY")
-private_key = os.environ.get("WOMPI_PRODUCTION_PRIVATE_KEY")
-# Secreto proporcionado por Wompi
-wompi_secret = os.environ.get("WOMPI_PRODUCTION_SECRET")
-wompi_url = os.environ.get("WOMPI_PRODUCTION_URL")
-
-print( "public_key: ", public_key )
-print( "private_key: ", private_key )
-print( "wompi_secret: ", wompi_secret )
-print( "wompi_url: ", wompi_url )
-
-#FUNCIONES
-def generar_link_de_pago( private_key, nombre, descripcion, valor_cliente_a_pagar, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra):
-  global wompi_url
-  # "https://production.wompi.co/v1" # version de produccion
-  # "https://sandbox.wompi.co/v1" # Usar la URL de Sandbox para version de prueba
-  base_url = wompi_url  # Usar la URL de Sandbox
-  
-  # Crear el encabezado de autenticación
-  headers = {
-    "Authorization": f"Bearer {private_key}"
-  }
-
-  # Crear el cuerpo de la petición con los detalles del link de pago
-  payment_link_data = {
-    "name": nombre,
-    "description": descripcion,
-    "single_use": True, # True si quiero que despues del primer pago ya no servira el link de pago, False si se puede hacer multiples pagos con el link
-    "collect_shipping": True, # Si deseas que el cliente inserte su información de envío current el checkout, o no
-    "collect_customer_legal_id": False,
-    "currency": "COP",
-    "amount_in_cents": valor_cliente_a_pagar, # Si el pago current por un monto específico, si no lo incluyes el pagador podrá elegir el valor a pagar.
-                                              # los pagos son en centavos , el monto en pesos de debe multiplicar por 100
-    "expires_at": expiration_time,  # Fecha de expiración
-    "redirect_url": Link_de_redireccion, # URL donde será redirigido el cliente una vez termine el proceso de pago
-    "image_url": Link_de_img_logo,
-    "sku": id_Orden_de_Compra, # Identificador interno del producto current tu comercio. Máximo 36 caracteres
-  }
-
-  # Realizar la petición POST para crear el link de pago
-  try:
-    req = urllib_rq.Request(f"{base_url}/payment_links", data=json.dumps(payment_link_data).encode(), headers=headers, method='POST')
-    with urllib_rq.urlopen(req) as response:
-      return response.read().decode()
-  except HTTPError as e:
-    print("Error HTTP:", e.code)
-    print("Respuesta:", e.read().decode())
-    return None
-  
-def verify_event(request_data):
-  global wompi_secret
-  if "signature" not in request_data:
-    return False
-
-  event_signature = request_data["signature"]["checksum"]
-  properties = request_data["signature"]["properties"]
-  data_values = []
-
-  for prop in properties:
-    prop_split = prop.split('.')
-    prop_split_rslt = request_data["data"][prop_split[0]][prop_split[1]]
-    data_values.append(str(prop_split_rslt))
-
-  timestamp = str(request_data["timestamp"])
-  data_string = "".join(data_values)
-  data_string += timestamp
-  data_string += wompi_secret
-
-  # Calcular el checksum SHA256 utilizando hashlib
-  m = hashlib.sha256()
-  m.update(data_string.encode('utf-8'))
-  calculated_checksum = m.hexdigest()#.upper()
-  #print("calculated_checksum: ", calculated_checksum)
-  #print("event_signature: ", event_signature)
-  # Comparar el checksum calculado con el proporcionado en el evento
-  return calculated_checksum == event_signature
-
-def obtener_informacion_producto(id):
-    # Aquí deberías implementar la lógica para obtener la información del producto
-    # Puedes obtener el ID, nombre y precio del producto desde una base de datos o cualquier otra fuente de datos.
-    # Por ahora, simplemente retornaré una lista con diccionarios de ejemplo
-
-    #BASE DE DATOS
-    libros = [
-        {
-            'id':"elniñoaquel",
-            'nombre':"El niño aquel",
-            'precio': 70000,
-            'precio-anterior':90000,
-            'descripcion-corta': 'Descubre la fascinante odisea de ARMANDO JOSÉ CALDERÓN, un hombre cuya vida trasciende los límites de lo ordinario en "el niño aquel". Desde sus modestos comienzos en Maicao, LA GUAJIRA-COLOMBIA hasta su destacada labor ministerial en Bucaramanga, esta cautivadora autobiografía te sumergirá en un viaje emocional donde la fe y la determinación desafían todo pronóstico.',
-            'descripcion': """
-                Descubre la fascinante odisea de ARMANDO JOSÉ CALDERÓN, un hombre cuya vida trasciende los límites de lo ordinario en "el niño aquel". Desde sus modestos comienzos en Maicao, LA GUAJIRA-COLOMBIA hasta su destacada labor ministerial en Bucaramanga, esta cautivadora autobiografía te sumergirá en un viaje emocional donde la fe y la determinación desafían todo pronóstico.
-
-                'EL NIÑO AQUEL' no es solo una autobiografía, sino un tributo a la fuerza espiritual que impulsó a Armando a dedicar su vida a la fe y al servicio a Dios y a su prójimo. Su historia inspiradora se convierte en un faro de esperanza, recordándonos que, con fe y perseverancia, podemos superar cualquier adversidad y dejar una huella perdurable en la comunidad.
-            """,
-            'imagenes': [
-                {"image":"https://live.staticflickr.com/65535/53541352177_10a216e3c0_o.png","miniatura":"https://live.staticflickr.com/65535/53544406384_fe6307a3f7_o.png"}, # foto_01.jpg
-                {"image":"https://live.staticflickr.com/65535/53542553219_4414c9666a_o.png","miniatura":"https://live.staticflickr.com/65535/53544261148_f7999c1aa1_o.png"}, # foto_02.png
-                {"image":"https://live.staticflickr.com/65535/53541352132_1f384312ab_o.png","miniatura":"https://live.staticflickr.com/65535/53544513400_892722f6e3_o.png"}, # foto_03.png 
-            ],
-            'video': {
-                "hasVideo": True,
-                "href": "https://www.flickr.com/photos/200131147@N06/53543632894/in/dateposted-public/",
-                "title": "Video del libro el niño aquel",
-                "img-src": "https://live.staticflickr.com/31337/53543632894_4eb1eb834f_o.jpg",
-                "miniatura":"https://live.staticflickr.com/65535/53543210447_33d62c1610_o.png", #elniдoaquel_miniatura_play
-                "width": 540,
-                "height": 540,  
-            }	
-        },
-        {
-            'id':"palabrasmemorables",
-            'nombre':"Palabras Memorables",
-            'precio': 70000,
-            'precio-anterior':90000,
-            'descripcion-corta': "Palabras memorables es la compilación de más de 150 enseñanzas que contienen una cantidad de temas doctrinales y de formación ministerial de nuestro visionero, Eliceo Duarte. Transcritas por el pastor Armando José Calderón, trabajo que hizo por muchas horas y años para lograr lo que hoy es palabras memorables.",
-            'descripcion': """
-                Palabras memorables es la compilación de más de 150 enseñanzas que contienen una cantidad de temas doctrinales y de formación ministerial de nuestro visionero, Eliceo Duarte. Transcritas por el pastor Armando José Calderón, trabajo que hizo por muchas horas y años para lograr lo que hoy es palabras memorables. 
-                
-                Leer palabras memorables es de mucha utilidad para el crecimiento cristiano, la instrucción, la edificación para aquellos que se dedican por entero a la enseñanza de las sagradas escrituras y también para los que quieran prepararse para servir al Señor en un futuro. El Evangelio es lo único que Jesús mandó predicar, creer y obedecer para ser salvos. Jesucristo no mandó predicar otra cosa.""",
-            'imagenes': [
-                {"image":"https://live.staticflickr.com/65535/53542410328_7392d8a4d0_o.jpg","miniatura":"https://live.staticflickr.com/65535/53544405924_41f8258860_o.jpg"}, # foto_01.jpg
-                {"image":"https://live.staticflickr.com/65535/53542228811_0d3a009021_o.png","miniatura":"https://live.staticflickr.com/65535/53544512980_bdcf470254_o.png"}, # foto_02.png
-                {"image":"https://live.staticflickr.com/65535/53542553074_f8c119ff75_o.png","miniatura":"https://live.staticflickr.com/65535/53544512990_7e8f7b2a12_o.png"}, # foto_03.png
-            ],
-            'video': {
-                "hasVideo": True,
-                "href": "https://www.flickr.com/photos/200131147@N06/53543633009/in/dateposted-public/",
-                "title": "Video del libro palabras memorables",
-                "img-src": "https://live.staticflickr.com/31337/53543633009_6b147d4317_o.jpg",
-                "miniatura":"https://live.staticflickr.com/65535/53544083106_49c4dcb8ac_o.png", # palabrasmemorables_miniatura_play
-                "width": 540,
-                "height": 540,  
-            }
-            
-        },
-        {
-            'id':"pequeñosinstrumentos",
-            'nombre':"Pequeños Instrumentos",
-            'precio': 70000,
-            'precio-anterior':90000,
-            'descripcion-corta': "Se trata del relato de la vida de una misionera, de tiempo completo, que por más de cincuenta años se ha dedicado a predicar el evangelio y a enseñar a vivir en Cristo.  Si, es la vida de la hermana Isabel Torres, que ahora, retirada del trajín de la obra, decidió contarnos como fue ese trabajo en diversos países.",
-            'descripcion': """
-                Se trata del relato de la vida de una misionera, de tiempo completo, que por más de cincuenta años se ha dedicado a predicar el evangelio y a enseñar a vivir en Cristo.  Si, es la vida de la hermana Isabel Torres, que ahora, retirada del trajín de la obra, decidió contarnos como fue ese trabajo en diversos países.
-                
-                Comienza relatando su niñez y conversión, y nos lleva de la mano para explicarnos como fueron los comienzos de su trabajo en la cálida ciudad de Barranquilla, en la costa caribe de Colombia.
-                
-                De allí nos lleva por Suramérica, y nos cuenta de su labor en España, Canadá, Francia e inclusive su visita a Suiza.
-            """,
-            'imagenes': [
-                {"image":"https://live.staticflickr.com/65535/53542657250_700ab17f7b_o.jpg","miniatura":"https://live.staticflickr.com/65535/53542657250_700ab17f7b_o.jpg"}, # foto_01.jpg
-                {"image":"https://live.staticflickr.com/65535/53542410233_64fd16a91c_o.png","miniatura":"https://live.staticflickr.com/65535/53542410233_64fd16a91c_o.png"}, # foto_02.png
-                {"image":"https://live.staticflickr.com/65535/53542657215_07452bf09e_o.png","miniatura":"https://live.staticflickr.com/65535/53542657215_07452bf09e_o.png"}, # foto_03.png                
-            ],
-            'video': {
-                "hasVideo": True,
-                "href": "https://www.flickr.com/photos/200131147@N06/53543764645/in/dateposted-public/",
-                "title": "Video del libro pequeños instrumentos",
-                "img-src": "https://live.staticflickr.com/31337/53543764645_6955ccc268_o.jpg",
-                "miniatura":"https://live.staticflickr.com/65535/53543289562_72d5c3a301_o.png", #pequeдosinstrumentos_miniatura_play
-                "width": 540,
-                "height": 540,  
-            }			
-        }
-    ]
-
-    for book in libros:
-        if book["id"] == id:
-            return book
-    else:
-        return None
-
-def obtener_hora_colombia(delta):
-    # Obtener la hora actual en UTC
-    hora_actual_utc = datetime.now() # datetime.utcnow() 
-    diferencia_horas = timedelta(hours=delta)
-    hora_colombia = hora_actual_utc + diferencia_horas
-    return hora_colombia.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+getenv_var(env_file_path=env_file_path)
 
 print("hora Colombia" , obtener_hora_colombia(delta_time))
 
 #SERVIDOR FLASK
-
 app = Flask(__name__)
 
 # Configuración para la sesión
-app.secret_key = clave_secreta_de_sesion
+app.secret_key = os.environ.get("clave_secreta_de_sesion") 
 app.permanent_session_lifetime = timedelta(hours=1) # la sesion se vence en 1 horas
 
 @app.route('/', methods=['GET','POST'])
@@ -320,8 +133,9 @@ def webhook():
     request_data = rq.get_json()
     print("webhook request_data: ", request_data)
 
+    wompi_secret = os.environ.get("WOMPI_PRODUCTION_SECRET")
     # Verificar la autenticidad del evento
-    if verify_event(request_data):
+    if verify_event(wompi_secret, request_data):
         print("El webhook recibido es autentico ")
         if "data" in request_data:
             if "transaction" in request_data["data"]:
@@ -330,8 +144,8 @@ def webhook():
                 keys_in_request = [k in request_data["data"]["transaction"] for k in keys]
                 if not False in keys_in_request:
                     print( "el request contiene los siguientes keys: ", keys )
-                    payment_link_id = request_data["data"]["transaction"]["payment_link_id"]
                     proceso_compra_id = request_data["data"]["transaction"]["id"]
+                    payment_link_id = request_data["data"]["transaction"]["payment_link_id"]
                     estado_compra = request_data["data"]["transaction"]["status"]
                     shipping_address = request_data["data"]["transaction"]["shipping_address"]
                     
@@ -341,6 +155,21 @@ def webhook():
                     print("     proceso_compra_id: ", proceso_compra_id)
                     print("     estado_compra: ", estado_compra) 
                     print("     shipping_address: ", shipping_address) 
+                    
+                    TOKEN_FILE = os.environ.get("SHEET_TOKEN_FILE")
+                    CLIENT_SECRET = os.environ.get("SHEET_CLIENT_SECRET") 
+                    SCOPES = convert_to_list( os.environ.get("SHEET_SCOPES") )
+                    SPREADSHEET_ID = os.environ.get("SPREADSHEET_ID") 
+                    SHEET_NAME = os.environ.get("SHEET_NAME") 
+                    creds = get_token_credentials(TOKEN_FILE, CLIENT_SECRET, SCOPES)
+                    service = connect_to_sheet_api(creds)
+
+                    if(service):
+                        print("conexion exitosa")
+                        new_row = [ proceso_compra_id,  "El niño aquel",  80000,    shipping_address,   "sayacorcal@gmail.com",  request_data["data"] ]
+                        append_row_value(service, SPREADSHEET_ID, SHEET_NAME, new_row)
+                    else:
+                        print("conexion fallida")
                 else:
                     print(f"la pregunta not false in {keys_in_request} \n segun la lista es {keys}") 
             else:
@@ -422,7 +251,6 @@ def goHome():
 
 @app.route('/cart', methods=['GET','POST'])
 def cart():
-    global private_key
     # Verifica si ya hay un identificador de sesión en las cookies
     if 'user_id' not in session:
         # Si no hay un identificador de sesión, genera uno y almacénalo en las cookies
@@ -516,9 +344,11 @@ def cart():
                 Link_de_redireccion = "https://api.whatsapp.com/send?phone=15147125576&text=Hola%20DTB%20hice%20una%20compra%2C%20mi%20numero%20de%20pedido%20es%20("+id_Orden_de_Compra+")"
                 Link_de_img_logo = "https://saidc.pythonanywhere.com/static/images/hero_bg_1.jpg"
 
-                print( "variables que generan link de pago: \n", private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
+                #print( "variables que generan link de pago: \n", private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
                 #url = "aqui tu url"
-                response = generar_link_de_pago( private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
+                private_key = os.environ.get("WOMPI_PRODUCTION_PRIVATE_KEY")
+                wompi_url = os.environ.get("WOMPI_PRODUCTION_URL")
+                response = generar_link_de_pago(wompi_url, private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
                 print("responses.status_code: ", response)
     
                 if response is not None:
@@ -550,3 +380,5 @@ def cart():
         
 if __name__ == "__main__":
   app.run(debug=True)
+
+

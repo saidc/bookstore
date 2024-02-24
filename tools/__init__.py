@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+import ast
 import os
 
 def getenv_var(env_file_path):
@@ -13,3 +15,23 @@ def getenv_var(env_file_path):
                     #print("key:",key, " - value:",value)
     else:
         print("el path: ", env_file_path,  " no existe")
+
+def obtener_hora_colombia(delta):
+    # Obtener la hora actual en UTC
+    hora_actual_utc = datetime.now() # datetime.utcnow() 
+    diferencia_horas = timedelta(hours=delta)
+    hora_colombia = hora_actual_utc + diferencia_horas
+    return hora_colombia.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+def convert_to_list(value):
+    try:
+        # Intenta evaluar el valor como una expresión de Python
+        evaluated_value = ast.literal_eval(value)
+        # Verifica si el resultado es una lista
+        if isinstance(evaluated_value, list):
+            return evaluated_value
+    except (SyntaxError, ValueError):
+        pass  # Ignora errores de evaluación
+
+    # Si no se pudo evaluar como lista, devuelve el valor original
+    return value
