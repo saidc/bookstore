@@ -2,7 +2,7 @@
 from sheet import get_token_credentials, connect_to_sheet_api, append_row_value
 from flask import Flask, render_template, jsonify, redirect, session
 from base_de_datos import obtener_informacion_producto
-from wompi import generar_link_de_pago, verify_event
+from wompi import generar_link_de_pago, verify_event, get_webhook_param
 from tools import getenv_var, obtener_hora_colombia, convert_to_list
 from flask import request as rq
 from datetime import timedelta
@@ -136,42 +136,27 @@ def webhook():
     wompi_secret = os.environ.get("WOMPI_TEST_SECRET")
     # Verificar la autenticidad del evento
     if verify_event(wompi_secret, request_data):
-        #print("El webhook recibido es autentico ")
         if "data" in request_data:
             if "transaction" in request_data["data"]:
-                keys = ["id","created_at","status","amount_in_cents","payment_link_id","payment_method","customer_email","shipping_address"]
-                # se verifica si request["data"]["transaction"] contiene la lista de keys 
-                keys_in_request = [k in request_data["data"]["transaction"] for k in keys]
-                if not False in keys_in_request:
-                    print( "el request contiene los siguientes keys: ", keys )
-                    proceso_compra_id = request_data["data"]["transaction"]["id"]
-                    payment_link_id = request_data["data"]["transaction"]["payment_link_id"]
-                    estado_compra = request_data["data"]["transaction"]["status"]
-                    shipping_address = request_data["data"]["transaction"]["shipping_address"]
-                    
-                    #user_id, creditos_comprados = dbm.actualizar_proceso_compra(payment_link_id, proceso_compra_id, estado_compra)
-                    print("variables de respuesta de pago: \n", )
-                    print("     payment_link_id: ", payment_link_id)
-                    print("     proceso_compra_id: ", proceso_compra_id)
-                    print("     estado_compra: ", estado_compra) 
-                    print("     shipping_address: ", shipping_address) 
-                    
-                    TOKEN_FILE = os.environ.get("SHEET_TOKEN_FILE")
-                    CLIENT_SECRET = os.environ.get("SHEET_CLIENT_SECRET") 
-                    SCOPES = convert_to_list( os.environ.get("SHEET_SCOPES") )
-                    SPREADSHEET_ID = os.environ.get("SPREADSHEET_ID") 
-                    SHEET_NAME = os.environ.get("SHEET_NAME") 
-                    creds = get_token_credentials(TOKEN_FILE, CLIENT_SECRET, SCOPES)
-                    service = connect_to_sheet_api(creds)
+                
+                TOKEN_FILE = os.environ.get("SHEET_TOKEN_FILE")
+                CLIENT_SECRET = os.environ.get("SHEET_CLIENT_SECRET") 
+                SCOPES = convert_to_list( os.environ.get("SHEET_SCOPES") )
+                SPREADSHEET_ID = os.environ.get("SPREADSHEET_ID") 
+                SHEET_NAME = os.environ.get("SHEET_NAME") 
+                creds = get_token_credentials(TOKEN_FILE, CLIENT_SECRET, SCOPES)
+                service = connect_to_sheet_api(creds)
 
-                    if(service):
-                        print("conexion exitosa")
-                        new_row = [ proceso_compra_id,  "El niño aquel",  80000,    str(shipping_address),   "sayacorcal@gmail.com",  str(request_data["data"]) ]
-                        append_row_value(service, SPREADSHEET_ID, SHEET_NAME, new_row)
-                    else:
-                        print("conexion fallida")
+                if(service):
+                    print("conexion exitosa")
+                    transaction_data = request_data["data"]["transaction"]
+                    row = get_webhook_param( transaction_data )
+                                
+                    #new_row = [ proceso_compra_id,  "El niño aquel",  80000,    str(shipping_address),   "sayacorcal@gmail.com",  str(request_data["data"]) ]
+                    rslt = append_row_value(service, SPREADSHEET_ID, SHEET_NAME, row)
+                    print("result: ", rslt)
                 else:
-                    print(f"la pregunta not false in {keys_in_request} \n segun la lista es {keys}") 
+                    print("conexion fallida")
             else:
                 print("no esta transaction en request data obtenida en el webhook")
         else:
@@ -180,7 +165,6 @@ def webhook():
     else:
       print("El webhook recibido No es autentico ")
       # El evento no es auténtico, ignóralo
-      #return jsonify({"status": "Evento no auténtico"}), 405
       return jsonify({"error": "Método no permitido"}), 405
 
 @app.route('/goHome', methods=['GET','POST'])
