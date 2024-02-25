@@ -8,6 +8,7 @@ from flask import request as rq
 from datetime import timedelta
 from copy import deepcopy
 import platform
+import psutil
 import uuid
 import json
 import os
@@ -357,6 +358,17 @@ def cart():
         else:
             return jsonify({"error": 1, "error-msg":"Parametros incorrectos o faltantes"})
         
+@app.route('/load')
+def get_load():
+    # Obtener métricas de carga del sistema
+    cpu_percent = psutil.cpu_percent()
+    memory_percent = psutil.virtual_memory().percent
+
+    return {
+        'cpu_percent': cpu_percent,
+        'memory_percent': memory_percent
+    }
+
 if __name__ == "__main__":
   app.run(debug=True)
 
