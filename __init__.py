@@ -274,10 +274,10 @@ def cart():
                 p = obtener_informacion_producto(prod["id"])
                 # se verifica que el producto exista en la base de datos
                 if p != None:
-                    imageSrc = prod["imageSrc"]
+                    imageSrc = p["imagenes"][0]["image"]
                     amount = int(prod["amount"])
                     price = int(p["precio"])
-                    name = prod["nombre"]
+                    name = p["nombre"]
 
                     # se va sumando la cantidad de libros a comprar
                     total_amount = total_amount + amount
