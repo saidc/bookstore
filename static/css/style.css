@@ -593,16 +593,18 @@ h1, h2, h3, h4, h5, h6, figure {
   margin-right: 4px;
   margin-bottom: 4px;
   font-family: "Varela Round", Arial, sans-serif;
-  font-size: 16px;
-  font-weight: 400;
+  font-size: 26px;
+  font-weight: bold;
+  /* font-weight: 400; */
   -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
   -ms-border-radius: 0px;
-  border-radius: 0px;
+  border-radius: 16px;
   -webkit-transition: 0.5s;
   -o-transition: 0.5s;
   transition: 0.5s;
   padding: 12px 20px;
+  background: #FFFC55;
 }
 .btn.btn-md {
   padding: 4px 20px !important;
