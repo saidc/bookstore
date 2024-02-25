@@ -143,7 +143,51 @@ $("#checkout").click(function() {
 
   console.log(productos.length," productos: ",productos)
   console.log("numero de productos seleccionados: ", numero_de_productos)
-  
+  if (numero_de_productos <= 20){
+    if (productos.length > 0 ){
+      //fetch("https://tecwoz.alwaysdata.net/buycredits", {
+      //fetch("http://127.0.0.1:5000/cart", {
+      fetch("/cart", {
+        method: "POST", // Puedes usar POST u otro método según tus necesidades
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ 
+          productos: productos,
+          taxvalue: taxvalue,
+          shipping:shipping,
+          total: total
+        }) // Enviar el valor del input como JSON
+      }).then(function(response) {
+        if (response.ok) {
+          return response.json(); // Parsear la respuesta JSON
+        } else {
+          msg = "Ocurrio un error an realizar la solicitud de pago, Intentalo mas tarte!!"
+          console.log(msg)
+          alert(msg);
+          throw new Error("Error en la respuesta del servidor");
+        }
+      }).then(function(data){
+        console.log("data de respuesta: ", data)
+        if( data.error == 0 ){
+          // aqui se redirecciona a la url obtenida
+          print("url obtenido: ", data.url)
+          window.location.href = data.url;
+        }else if(data.error >= 1 ){
+          //msg = "Error, falta de parametros para generar el pago, intentalo mas tarde"
+          alert(data["error-msg"]);
+        }
+      }).catch(function(error) {
+        msg = "Ocurrio un error an realizar la solicitud de pago, Intentalo mas tarte!!"
+        console.log("Error en la solicitud:", error);
+        alert(msg , error);
+      });
+    }else{
+      alert("No hay productos en el carrito para comprar");
+    }
+  }else{
+    alert("No puedes comprar mas de 20 libros")
+  }
 });
 
 changed();
