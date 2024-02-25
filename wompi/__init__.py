@@ -88,7 +88,7 @@ def get_webhook_param( transaction_data ):
   redirect_url          = transaction_data["redirect_url"]        if "redirect_url" in shipping_address else None
   payment_link_id       = transaction_data["payment_link_id"]     if "payment_link_id" in shipping_address else None
   
-  return {
+  return [
     str( proceso_compra_id ) , # "proceso_compra_id"
     str( created_at ) , # "created_at"
     str( finalized_at ) , # "finalized_at"
@@ -107,7 +107,7 @@ def get_webhook_param( transaction_data ):
     str( postal_code ) , # "postal_code"
     str( redirect_url ) , # "redirect_url"
     str( payment_link_id ) , # "payment_link_id"
-  }
+  ]
 
 def extract_shipping_address(shipping_address):
   if shipping_address != None:
