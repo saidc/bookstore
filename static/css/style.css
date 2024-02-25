@@ -163,7 +163,7 @@ h1, h2, h3, h4, h5, h6, figure {
     display: -moz-inline-stack;
     display: inline-block;
     zoom: 1;
-    *display: inline;
+    display: inline;
     text-align: center;
   }
 }
@@ -201,6 +201,7 @@ h1, h2, h3, h4, h5, h6, figure {
   #fh5co-header .fh5co-intro-img {
     bottom: 18em;
     z-index: -2;
+    display: none;
   }
 }
 #fh5co-header .fh5co-intro-img img {
@@ -271,7 +272,7 @@ h1, h2, h3, h4, h5, h6, figure {
   display: -moz-inline-stack;
   display: inline-block;
   zoom: 1;
-  *display: inline;
+  display: inline;
 }
 .fh5co-testimonial .testimony-slide figure img {
   width: 90px;
@@ -314,7 +315,7 @@ h1, h2, h3, h4, h5, h6, figure {
   display: -moz-inline-stack;
   display: inline-block;
   zoom: 1;
-  *display: inline;
+  display: inline;
 }
 .review figure img {
   width: 90px;
@@ -502,7 +503,7 @@ h1, h2, h3, h4, h5, h6, figure {
   display: -moz-inline-stack;
   display: inline-block;
   zoom: 1;
-  *display: inline;
+  display: inline;
 }
 #footer .fh5co-social li a {
   padding: 20px;
