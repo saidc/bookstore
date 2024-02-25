@@ -67,7 +67,7 @@ def verify_event(wompi_secret, request_data):
   return calculated_checksum == event_signature
 
 def get_webhook_param( transaction_data ):
-  shipping_address = extract_shipping_address(transaction_data["shipping_address"] if "shipping_address" in shipping_address else None)
+  shipping_address = extract_shipping_address(transaction_data["shipping_address"] if "shipping_address" in transaction_data["shipping_address"] else None)
   
   proceso_compra_id     = transaction_data["id"]                  if "id" in shipping_address else None
   created_at            = transaction_data["created_at"]          if "created_at" in shipping_address else None
