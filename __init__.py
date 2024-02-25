@@ -321,7 +321,7 @@ def cart():
                     Costo de envio: {h_shipping}
                     total:  {h_total}
                 """
-                valor_a_pagar_centavos = h_total * 100  # este pago debe ser en centavos de pesos, 100 pesos debe enviarse como 10000
+                valor_a_pagar_centavos = int(h_total) * 100  # este pago debe ser en centavos de pesos, 100 pesos debe enviarse como 10000
                 
                 expiration_time = obtener_hora_colombia(delta_time+6) # el link de pago expira en 2 horas
                 Link_de_redireccion = "https://api.whatsapp.com/send?phone=15147125576&text=Hola%20DTB%20hice%20una%20compra%2C%20mi%20numero%20de%20pedido%20es%20("+id_Orden_de_Compra+")"
@@ -329,6 +329,7 @@ def cart():
 
                 private_key = os.environ.get("WOMPI_TEST_PRIVATE_KEY")
                 wompi_url = os.environ.get("WOMPI_TEST_URL")
+
                 response = generar_link_de_pago(wompi_url, private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
                 
                 if response is not None:
