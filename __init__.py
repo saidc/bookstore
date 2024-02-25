@@ -133,7 +133,7 @@ def product():
 @app.route('/webhook', methods=['GET','POST'])
 def webhook():
     request_data = rq.get_json()
-    wompi_secret = os.environ.get("WOMPI_TEST_SECRET")
+    wompi_secret = os.environ.get("WOMPI_PRODUCTION_SECRET")
     # Verificar la autenticidad del evento
     if verify_event(wompi_secret, request_data):
         if "data" in request_data:
@@ -327,8 +327,8 @@ def cart():
                 Link_de_redireccion = "https://api.whatsapp.com/send?phone=15147125576&text=Hola%20DTB%20hice%20una%20compra%2C%20mi%20numero%20de%20pedido%20es%20("+id_Orden_de_Compra+")"
                 Link_de_img_logo = "https://saidc.pythonanywhere.com/static/images/hero_bg_1.jpg"
 
-                private_key = os.environ.get("WOMPI_TEST_PRIVATE_KEY")
-                wompi_url = os.environ.get("WOMPI_TEST_URL")
+                private_key = os.environ.get("WOMPI_PRODUCTION_PRIVATE_KEY")
+                wompi_url = os.environ.get("WOMPI_PRODUCTION_URL")
 
                 response = generar_link_de_pago(wompi_url, private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
                 
