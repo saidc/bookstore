@@ -12,6 +12,7 @@ import uuid
 import json
 import os
 
+
 sist_op = platform.system()
 print( "estas en un sistema " + str(sist_op))
 print("path actual: ", os.getcwd())
@@ -132,7 +133,6 @@ def product():
 @app.route('/webhook', methods=['GET','POST'])
 def webhook():
     request_data = rq.get_json()
-    #print("webhook request_data: ", request_data)
     wompi_secret = os.environ.get("WOMPI_TEST_SECRET")
     # Verificar la autenticidad del evento
     if verify_event(wompi_secret, request_data):
@@ -241,8 +241,8 @@ def cart():
         # Si no hay un identificador de sesión, genera uno y almacénalo en las cookies
         session['user_id'] = str(uuid.uuid4())
 
-    #print( session['user_id'], session['carrito'] if 'carrito' in session else "")
-
+    # print( session['user_id'], session['carrito'] if 'carrito' in session else "")
+        
     if rq.method == 'GET':
         # Inicializar el carrito si aún no existe en la sesión
         if 'carrito' not in session:
@@ -254,32 +254,30 @@ def cart():
         request_data = rq.get_json()
         print("request_data: ",request_data)
         # se verifica que se obtengan los parametros necesarios para procesar el link de pago
-        if "total" in request_data and "productos" in request_data and "taxvalue" in request_data and "shipping" in request_data:
+        if "productos" in request_data: # and "total" in request_data and "taxvalue" in request_data and "shipping" in request_data:
             productos   =  request_data["productos"]
-            taxvalue    =  float(request_data["taxvalue"])
-            shipping    =  int(request_data["shipping"])
-            total       =  float(request_data["total"])
+            #taxvalue    =  float(request_data["taxvalue"])
+            #shipping    =  int(request_data["shipping"])
+            #total       =  float(request_data["total"])
 
-            #print(type(productos),type(taxvalue),type(shipping),type(total))
             # calculara el total a pagar
-            h_total = 0
+            h_total = 0 
             # calcula el costo de envio
-            h_shipping = 0
+            h_shipping = 0 
             # calcula el numero total de libros
-            total_amount = 0
+            total_amount = 0 
             # obtendra las lista de productos distintos con su subtotal
-            productos_comprar = []
+            productos_comprar = [] 
             for prod in productos:
-                # id del producto
-                id = prod["id"]
+                
                 # se obtiene el producto de la base de datos con el id
-                p = obtener_informacion_producto(id)
+                p = obtener_informacion_producto(prod["id"])
                 # se verifica que el producto exista en la base de datos
                 if p != None:
                     imageSrc = prod["imageSrc"]
                     amount = int(prod["amount"])
-                    price = int(prod["price"])
-                    name = prod["name"]
+                    price = int(p["precio"])
+                    name = prod["nombre"]
 
                     # se va sumando la cantidad de libros a comprar
                     total_amount = total_amount + amount
@@ -289,23 +287,20 @@ def cart():
                     h_total = h_total + subtotal
                     # se añade los datos calculados del producto a las lista de productos a comprar
                     productos_comprar.append({
-                        "id": id,
+                        "id": p["id"],
                         "name":name,
                         "image": imageSrc,
-                        "amount":amount,
                         "price":price,
+                        "amount":amount,
                         "subtotal": subtotal
                     })
                     
                 else:
-                    return jsonify({"error": 2, "error-msg":"Un producto a comprar no existe"})
+                    return jsonify({"error": 2, "error-msg":"Producto Errorneo o inexistente"})
             
-            if total_amount < 100:
-                #print(h_total, total)
-                #print(productos_comprar, taxvalue/h_total )
-                
-                h_shipping = 10000 if total_amount < 10 else 20000 if total_amount < 25 else 35000 if total_amount < 50 else 50000 if total_amount < 75 else 65000
-                nombre = "compra de libro cristiano" if total_amount == 1 else "Compra de libros cristiano"
+            if total_amount < 20:
+                h_shipping = 10000 if total_amount < 10 else 20000 
+                nombre = "compra de libro cristiano" if total_amount <= 1 else "Compra de libros cristiano"
                 id_Orden_de_Compra = str(uuid.uuid4())
                 descripcion = "" 
                 for pr in productos_comprar:
@@ -318,8 +313,11 @@ def cart():
                         subtotal: {subtotal}
 
                     """
-                h_total += h_shipping
+
+                tax_value = h_total * 0.19
+                h_total += h_shipping + tax_value
                 descripcion = descripcion + f"""
+                    Impuesto (19%): {tax_value}
                     Costo de envio: {h_shipping}
                     total:  {h_total}
                 """
@@ -329,13 +327,10 @@ def cart():
                 Link_de_redireccion = "https://api.whatsapp.com/send?phone=15147125576&text=Hola%20DTB%20hice%20una%20compra%2C%20mi%20numero%20de%20pedido%20es%20("+id_Orden_de_Compra+")"
                 Link_de_img_logo = "https://saidc.pythonanywhere.com/static/images/hero_bg_1.jpg"
 
-                #print( "variables que generan link de pago: \n", private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
-                #url = "aqui tu url"
                 private_key = os.environ.get("WOMPI_TEST_PRIVATE_KEY")
                 wompi_url = os.environ.get("WOMPI_TEST_URL")
                 response = generar_link_de_pago(wompi_url, private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
-                print("responses.status_code: ", response)
-    
+                
                 if response is not None:
                     try:
                         response_data = json.loads(response)
@@ -344,10 +339,8 @@ def cart():
                             payment_link_id = data["id"]
                             fecha_de_creacion = data["created_at"]
                             fecha_de_expiracion = data["expires_at"]
-                            print("Link de pago --> fecha_de_creacion: ",fecha_de_creacion, " fecha_de_expiracion: ",fecha_de_expiracion)
                             
                             url = f"https://checkout.wompi.co/l/{payment_link_id}"
-                            print( {"error": 0, "url": url})
                             session['carrito'] = []
                             return jsonify({"error": 0, "url": url})
                         else:
@@ -359,7 +352,7 @@ def cart():
                 else:
                     return jsonify({"error": 4, "error-msg":"Error al obtener el link de pago, intentar mas tarde"})
             else:
-                return jsonify({"error": 3, "error-msg":"la cantidad maxima son 100 libros por compra"})
+                return jsonify({"error": 3, "error-msg":"la cantidad maxima son 20 libros por compra"})
         else:
             return jsonify({"error": 1, "error-msg":"Parametros incorrectos o faltantes"})
         
