@@ -21,7 +21,7 @@ def obtener_informacion_producto(id):
             'imagenes': [
                 {"image":"https://live.staticflickr.com/65535/53550559789_776de25b1c_o.png","miniatura":"https://live.staticflickr.com/65535/53544406384_fe6307a3f7_o.png"}, # foto_01.jpg
                 {"image":"https://live.staticflickr.com/65535/53542553219_4414c9666a_o.png","miniatura":"https://live.staticflickr.com/65535/53544261148_f7999c1aa1_o.png"}, # foto_02.png
-                {"image":"https://live.staticflickr.com/65535/53543232707_a2bacf13a7_z.jpg","miniatura":"https://live.staticflickr.com/65535/53544513400_892722f6e3_o.png"}, # foto_03.png 
+                {"image":"https://live.staticflickr.com/65535/53550679674_768fe6f88d_o.png","miniatura":"https://live.staticflickr.com/65535/53544513400_892722f6e3_o.png"}, # foto_03.png 
             ],
             'video': {
                 "hasVideo": True,
