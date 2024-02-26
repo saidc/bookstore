@@ -11,6 +11,7 @@ env/
 credentials.json
 token.json
 ftp_script.txt
+script.sh
 # Flask related
 instance/
 
