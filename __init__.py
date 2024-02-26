@@ -29,7 +29,9 @@ print("hora Colombia" , obtener_hora_colombia(delta_time))
 app = Flask(__name__)
 
 # Configuración para la sesión
+print("clave_secreta_de_sesion: ", os.environ.get("clave_secreta_de_sesion") )
 app.secret_key = os.environ.get("clave_secreta_de_sesion") 
+
 app.permanent_session_lifetime = timedelta(hours=1) # la sesion se vence en 1 horas
 
 @app.route('/', methods=['GET','POST'])
