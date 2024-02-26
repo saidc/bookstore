@@ -316,9 +316,8 @@ def cart():
                     """
 
                 tax_value = h_total * 0.19
-                h_total += h_shipping + tax_value
+                h_total += h_shipping #+ tax_value
                 descripcion = descripcion + f"""
-                    Impuesto (19%): {tax_value}
                     Costo de envio: {h_shipping}
                     total:  {h_total}
                 """

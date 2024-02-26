@@ -54,7 +54,7 @@ function changed() {
     total = (Math.round(a*100)/100).toFixed(2);
   }
   $(".realtotal").text(total);
-  taxvalue = (Math.round(subtotal*19)/100).toFixed(2)
+  taxvalue = (Math.round(subtotal*0)/100).toFixed(2)
   $(".taxval").text("($"+taxvalue+") ");
 }
 
