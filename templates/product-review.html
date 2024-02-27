@@ -140,7 +140,19 @@
 	</div>
 	{% if pais == None %}
 		<script>
-			precios = '{{libro["precio"]}}'
+			precios = []
+		</script>
+		{% for p in libro["precio"]%}
+			<script> 
+				precios.push({
+					'pais':'{{p["pais"]}}',
+					'precio':'{{p["precio"]}}',
+					'precio-anterior':'{{p["precio-anterior"]}}'
+				})
+			</script>
+		{% endfor %}
+		<script>
+			
 			console.log("precios: ", precios)
 			document.addEventListener("DOMContentLoaded", function() {
 			// Obtener elementos del DOM
