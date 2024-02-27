@@ -55,86 +55,6 @@ def index():
 
     return redirect('/')
 
-@app.route('/product-review', methods=['GET','POST'])
-def product():
-    # Verifica si ya hay un identificador de sesión en las cookies
-    if 'user_id' not in session:
-        # Si no hay un identificador de sesión, genera uno y almacénalo en las cookies
-        session['user_id'] = str(uuid.uuid4())
-    
-    if 'carrito' not in session:
-        session['carrito'] = []
-
-    no_productos = 0
-    pais_producto = None
-
-    for p in session["carrito"]:
-        no_productos += int(p["cantidad"])
-        if pais_producto == None:
-            pais_producto = p["pais"]
-    if rq.method == 'GET':
-        if "libro" in rq.args:
-            id = rq.args.get("libro")
-            libro = obtener_informacion_producto(id)
-            if libro != None:
-                return render_template('product-review.html', libro=libro, noproductos = no_productos, pais=pais_producto)
-            else:
-                return redirect('/')
-
-    elif rq.method == 'POST' :
-        if "libro" in rq.form and "pais" in rq.form and "quantity" in rq.form:
-            print("request.form: ", rq.form)
-            id    = rq.form["libro"]
-            pais     = rq.form["pais"]
-            cantidad = int(rq.form["quantity"])
-
-            # Obtener información del producto
-            info_producto = obtener_informacion_producto(id)
-
-            # Inicializar el carrito si aún no existe en la sesión
-            if 'carrito' not in session:
-                session['carrito'] = []
-
-            # Crear una copia de la lista del carrito en la sesión antes de realizar cambios
-            carrito = deepcopy(session['carrito'])
-
-            al_ready_exist = False
-            index = -1
-            for i in range(len(carrito)) :
-                p = carrito[i]
-                if p['id'] == id:
-                    index = i
-                    al_ready_exist = True
-                    break
-
-            if al_ready_exist:
-                rv_p = carrito.pop(index)
-                carrito.insert(index,{
-                    'id': info_producto['id'],
-                    'nombre': info_producto['nombre'],
-                    'precio': info_producto['precio'],
-                    'imagenes': info_producto['imagenes'],
-                    'pais'  : pais,
-                    'cantidad': rv_p['cantidad'] + cantidad
-                })
-
-            else:
-                # Agregar información del producto al carrito en la sesión
-                carrito.append({
-                    'id': info_producto['id'],
-                    'nombre': info_producto['nombre'],
-                    'precio': info_producto['precio'],
-                    'imagenes': info_producto['imagenes'],
-                    'pais'  : pais,
-                    'cantidad': cantidad
-                })
-
-            session['carrito'] = carrito
-
-            return redirect('/cart')
-
-    return redirect('/')
-
 @app.route('/webhook', methods=['GET','POST'])
 def webhook():
     request_data = rq.get_json()
@@ -238,6 +158,87 @@ def goHome():
         return jsonify({"error": 2, "msg":"se actualizo "})
     else:
         return jsonify({"error": 1, "error-msg":"error al actualizar cookie"})
+
+@app.route('/product-review', methods=['GET','POST'])
+def product():
+    # Verifica si ya hay un identificador de sesión en las cookies
+    if 'user_id' not in session:
+        # Si no hay un identificador de sesión, genera uno y almacénalo en las cookies
+        session['user_id'] = str(uuid.uuid4())
+    
+    if 'carrito' not in session:
+        session['carrito'] = []
+
+    no_productos = 0
+    pais_producto = None
+
+    for p in session["carrito"]:
+        no_productos += int(p["cantidad"])
+        if pais_producto == None:
+            pais_producto = p["pais"]
+            
+    if rq.method == 'GET':
+        if "libro" in rq.args:
+            id = rq.args.get("libro")
+            libro = obtener_informacion_producto(id)
+            if libro != None:
+                return render_template('product-review.html', libro=libro, noproductos = no_productos, pais=pais_producto)
+            else:
+                return redirect('/')
+
+    elif rq.method == 'POST' :
+        if "libro" in rq.form and "pais" in rq.form and "quantity" in rq.form:
+            print("request.form: ", rq.form)
+            id    = rq.form["libro"]
+            pais     = rq.form["pais"]
+            cantidad = int(rq.form["quantity"])
+
+            # Obtener información del producto
+            info_producto = obtener_informacion_producto(id)
+                        
+            # Inicializar el carrito si aún no existe en la sesión
+            if 'carrito' not in session:
+                session['carrito'] = []
+
+            # Crear una copia de la lista del carrito en la sesión antes de realizar cambios
+            carrito = deepcopy(session['carrito'])
+
+            al_ready_exist = False
+            index = -1
+            for i in range(len(carrito)) :
+                p = carrito[i]
+                if p['id'] == id:
+                    index = i
+                    al_ready_exist = True
+                    break
+
+            if al_ready_exist:
+                rv_p = carrito.pop(index)
+                carrito.insert(index,{
+                    'id': info_producto['id'],
+                    'nombre': info_producto['nombre'],
+                    'precio': [p["precio"] for p in info_producto['precio'] if p["pais"] == pais][0],
+                    'imagenes': info_producto['imagenes'],
+                    'pais'  : pais,
+                    'cantidad': rv_p['cantidad'] + cantidad
+                })
+
+            else:
+                # Agregar información del producto al carrito en la sesión
+                carrito.append({
+                    'id': info_producto['id'],
+                    'nombre': info_producto['nombre'],
+                    'precio': info_producto['precio'],
+                    'imagenes': info_producto['imagenes'],
+                    'pais'  : pais,
+                    'cantidad': cantidad
+                })
+
+            session['carrito'] = carrito
+
+            return redirect('/cart')
+
+    return redirect('/')
 
 @app.route('/cart', methods=['GET','POST'])
 def cart():
