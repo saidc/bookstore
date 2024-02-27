@@ -49,7 +49,24 @@
                 </tr>
                 <tr>
                     <td style="border-top:1px solid white" colspan="6"><br />
-                        Con 0% de impuesto <span class="taxval"></span> y $<span class="shipping">10000</span> de costo de envio:<br />
+                        Con 0% de impuesto <span class="taxval"></span> y 
+                        {% if pais == "COLOMBIA" %}
+                            {% if no_productos <= 10 %}
+                                $<span class="shipping">10000</span>
+                            {% endif %}
+                            {% if no_productos > 10 %}
+                                $<span class="shipping">20000</span>
+                            {% endif %}
+                        {% endif %}
+                        {% if pais != "COLOMBIA" %}    
+                            {% if no_productos <= 10 %}
+                                $<span class="shipping">10</span>
+                            {% endif %}
+                            {% if no_productos > 10 %}
+                                $<span class="shipping">20</span>
+                            {% endif %}
+                        {% endif %}
+                         de costo de envio:<br />
                         <span class="big">Total: $<span class="realtotal">0</span></span>
                     </td>
                 </tr>

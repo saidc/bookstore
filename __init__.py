@@ -262,7 +262,7 @@ def cart():
             pais_producto = p["pais"]
 
     if rq.method == 'GET':
-        return render_template('cart.html', cart=session['carrito'])
+        return render_template('cart.html', cart=session['carrito'], pais=pais_producto, no_productos=no_productos)
     else:
         # se obtiene los parametros enviados para el metodo de pago
         request_data = rq.get_json()

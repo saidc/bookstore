@@ -1,3 +1,34 @@
+console.log("precios: ", precios)
+document.addEventListener("DOMContentLoaded", function() {
+    // Obtener elementos del DOM
+    var selectPais = document.getElementById("size");
+    var precioNormal = document.querySelector(".product-price-discount span:first-child");
+    var precioDescuento = document.querySelector(".product-price-discount span:last-child");
+
+    // Función para cambiar los precios según el país seleccionado
+    function cambiarPrecio() {
+        var paisSeleccionado = selectPais.value.toUpperCase();
+        var precio = -1
+        var precio_anterior = -1
+        for (i = 0; i< precios.length; i++){
+            if (paisSeleccionado == precios[i]["pais"]){
+                precio = precios[i]["precio"]
+                precio_anterior = precios[i]["precio-anterior"]
+                precioNormal.textContent = "$"+precio;
+                precioDescuento.textContent = "$"+precio_anterior;
+                break
+            }
+        }
+        
+    }
+
+    // Agregar evento change al select para detectar cambios en la selección
+    selectPais.addEventListener("change", cambiarPrecio);
+
+    // Llamar a cambiarPrecio() para establecer los precios iniciales según el país seleccionado
+    cambiarPrecio();
+});
+    
 $("#cart").click(function(){
     window.location.href = "/cart";
 });
