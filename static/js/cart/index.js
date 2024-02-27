@@ -48,7 +48,7 @@ function changed() {
 
   $(".totalpricesubtotal").text("$"+(Math.round(subtotal*100)/100).toFixed(2));
   shipping = parseFloat($(".shipping").text()) 
-  var a = (subtotal/100*119)+ shipping
+  var a = (subtotal/100*1)+ shipping
   total = 0;
   if(cantidad_productos > 0){
     total = (Math.round(a*100)/100).toFixed(2);
