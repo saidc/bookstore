@@ -228,7 +228,7 @@ def product():
                 carrito.append({
                     'id': info_producto['id'],
                     'nombre': info_producto['nombre'],
-                    'precio': info_producto['precio'],
+                    'precio': [p["precio"] for p in info_producto['precio'] if p["pais"] == pais][0],
                     'imagenes': info_producto['imagenes'],
                     'pais'  : pais,
                     'cantidad': cantidad
