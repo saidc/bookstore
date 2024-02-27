@@ -13,6 +13,7 @@ import uuid
 import json
 import os
 
+ESTADO_PROYECTO="TEST" # PROD
 
 sist_op = platform.system()
 print( "estas en un sistema " + str(sist_op))
@@ -58,7 +59,7 @@ def index():
 @app.route('/webhook', methods=['GET','POST'])
 def webhook():
     request_data = rq.get_json()
-    wompi_secret = os.environ.get("WOMPI_PRODUCTION_SECRET")
+    wompi_secret = os.environ.get("WOMPI_PRODUCTION_SECRET") if ESTADO_PROYECTO == "PROD" else os.environ.get("WOMPI_TEST_SECRET")
     # Verificar la autenticidad del evento
     if verify_event(wompi_secret, request_data):
         if "data" in request_data:
@@ -248,12 +249,19 @@ def cart():
         session['user_id'] = str(uuid.uuid4())
 
     # print( session['user_id'], session['carrito'] if 'carrito' in session else "")
-        
-    if rq.method == 'GET':
-        # Inicializar el carrito si aún no existe en la sesión
-        if 'carrito' not in session:
-            session['carrito'] = []
+    # Inicializar el carrito si aún no existe en la sesión
+    if 'carrito' not in session:
+        session['carrito'] = []
 
+    no_productos = 0
+    pais_producto = None
+
+    for p in session["carrito"]:
+        no_productos += int(p["cantidad"])
+        if pais_producto == None:
+            pais_producto = p["pais"]
+
+    if rq.method == 'GET':
         return render_template('cart.html', cart=session['carrito'])
     else:
         # se obtiene los parametros enviados para el metodo de pago
@@ -282,7 +290,7 @@ def cart():
                 if p != None:
                     imageSrc = p["imagenes"][0]["image"]
                     amount = int(prod["amount"])
-                    price = int(p["precio"])
+                    price = int([p2["precio"] for p2 in p['precio'] if p2["pais"] == pais_producto ][0])
                     name = p["nombre"]
 
                     # se va sumando la cantidad de libros a comprar
@@ -300,7 +308,6 @@ def cart():
                         "amount":amount,
                         "subtotal": subtotal
                     })
-                    
                 else:
                     return jsonify({"error": 2, "error-msg":"Producto Errorneo o inexistente"})
             
@@ -331,10 +338,9 @@ def cart():
                 expiration_time = obtener_hora_colombia(delta_time+6) # el link de pago expira en 2 horas
                 Link_de_redireccion = "https://api.whatsapp.com/send?phone=15147125576&text=Hola%20DTB%20hice%20una%20compra%2C%20mi%20numero%20de%20pedido%20es%20("+id_Orden_de_Compra+")"
                 Link_de_img_logo = "https://saidc.pythonanywhere.com/static/images/hero_bg_1.jpg"
-
-                private_key = os.environ.get("WOMPI_PRODUCTION_PRIVATE_KEY")
-                wompi_url = os.environ.get("WOMPI_PRODUCTION_URL")
-
+                
+                private_key = os.environ.get("WOMPI_PRODUCTION_PRIVATE_KEY")if ESTADO_PROYECTO == "PROD" else os.environ.get("WOMPI_TEST_PRIVATE_KEY")
+                wompi_url = os.environ.get("WOMPI_PRODUCTION_URL") if ESTADO_PROYECTO == "PROD" else os.environ.get("WOMPI_TEST_URL")
                 response = generar_link_de_pago(wompi_url, private_key, nombre, descripcion, valor_a_pagar_centavos, expiration_time, Link_de_redireccion, Link_de_img_logo, id_Orden_de_Compra)
                 
                 if response is not None:
