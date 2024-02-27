@@ -79,7 +79,21 @@
 						<div class="product-dtl">
 							<div class="product-info">
 								<div class="product-name">{{libro["nombre"]}}</div>
-								<div class="product-price-discount"><span>${{libro["precio"]}}</span><span class="line-through">${{libro["precio-anterior"]}}</span></div>
+								<div class="product-price-discount">
+									{% if pais == None %}
+										<span>${{libro["precio"][0]["precio"]}}</span>
+										<span class="line-through">${{libro["precio"][0]["precio-anterior"]}}</span>
+									{% endif %}
+									{% if pais != None %}
+										{% for p in libro["precio"]%}
+											{% if p["pais"] == pais %}
+												<span>${{p["precio"]}}</span>
+												<span class="line-through">${{libro["precio-anterior"]}}</span>
+												{{break}}
+											{% endif %}
+										{% endfor %}
+									{% endif %}
+								</div>
 							</div>
 							<p>{{libro["descripcion-corta"]}}</p>
 							<div class="row">

@@ -10,8 +10,11 @@ def obtener_informacion_producto(id):
         {
             'id':"elniñoaquel",
             'nombre':"El niño aquel",
-            'precio': 30000,
-            'precio-anterior':40000,
+            'precio': [
+                {"pais":"COLOMBIA",       "precio":30000, "precio-anterior":40000, "moneda":"COP"},
+                {"pais":"CANADA",         "precio":30,    "precio-anterior":40,    "moneda":"USD"},
+                {"pais":"ESTADOS UNIDOS", "precio":30,    "precio-anterior":40,    "moneda":"USD"}
+                ],
             'descripcion-corta': 'Descubre la fascinante odisea de ARMANDO JOSÉ CALDERÓN, un hombre cuya vida trasciende los límites de lo ordinario en "el niño aquel". Desde sus modestos comienzos en Maicao, LA GUAJIRA-COLOMBIA hasta su destacada labor ministerial en Bucaramanga, esta cautivadora autobiografía te sumergirá en un viaje emocional donde la fe y la determinación desafían todo pronóstico.',
             'descripcion': """
                 Descubre la fascinante odisea de ARMANDO JOSÉ CALDERÓN, un hombre cuya vida trasciende los límites de lo ordinario en "el niño aquel". Desde sus modestos comienzos en Maicao, LA GUAJIRA-COLOMBIA hasta su destacada labor ministerial en Bucaramanga, esta cautivadora autobiografía te sumergirá en un viaje emocional donde la fe y la determinación desafían todo pronóstico.
@@ -36,8 +39,11 @@ def obtener_informacion_producto(id):
         {
             'id':"palabrasmemorables",
             'nombre':"Palabras Memorables",
-            'precio': 60000,
-            'precio-anterior':70000,
+            'precio': [
+                {"pais":"COLOMBIA",       "precio":60000, "precio-anterior":70000, "moneda":"COP"},
+                {"pais":"CANADA",         "precio":40,    "precio-anterior":50,    "moneda":"USD"},
+                {"pais":"ESTADOS UNIDOS", "precio":40,    "precio-anterior":50,    "moneda":"USD"}
+                ],
             'descripcion-corta': "Palabras memorables es la compilación de más de 150 enseñanzas que contienen una cantidad de temas doctrinales y de formación ministerial de nuestro visionero, Eliceo Duarte. Transcritas por el pastor Armando José Calderón, trabajo que hizo por muchas horas y años para lograr lo que hoy es palabras memorables.",
             'descripcion': """
                 Palabras memorables es la compilación de más de 150 enseñanzas que contienen una cantidad de temas doctrinales y de formación ministerial de nuestro visionero, Eliceo Duarte. Transcritas por el pastor Armando José Calderón, trabajo que hizo por muchas horas y años para lograr lo que hoy es palabras memorables. 
@@ -62,8 +68,11 @@ def obtener_informacion_producto(id):
         {
             'id':"pequeñosinstrumentos",
             'nombre':"Pequeños Instrumentos",
-            'precio': 30000,
-            'precio-anterior':40000,
+            'precio': [
+                {"pais":"COLOMBIA",       "precio":30000, "precio-anterior":40000,   "moneda":"COP"},
+                {"pais":"CANADA",         "precio":30,    "precio-anterior":40,      "moneda":"USD"},
+                {"pais":"ESTADOS UNIDOS", "precio":30,    "precio-anterior":40,      "moneda":"USD"}
+                ],
             'descripcion-corta': "Se trata del relato de la vida de una misionera, de tiempo completo, que por más de cincuenta años se ha dedicado a predicar el evangelio y a enseñar a vivir en Cristo.  Si, es la vida de la hermana Isabel Torres, que ahora, retirada del trajín de la obra, decidió contarnos como fue ese trabajo en diversos países.",
             'descripcion': """
                 Se trata del relato de la vida de una misionera, de tiempo completo, que por más de cincuenta años se ha dedicado a predicar el evangelio y a enseñar a vivir en Cristo.  Si, es la vida de la hermana Isabel Torres, que ahora, retirada del trajín de la obra, decidió contarnos como fue ese trabajo en diversos países.
