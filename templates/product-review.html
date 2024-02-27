@@ -163,26 +163,18 @@
 			// Función para cambiar los precios según el país seleccionado
 			function cambiarPrecio() {
 				var paisSeleccionado = selectPais.value.toUpperCase();
-
-				switch (paisSeleccionado) {
-				case "COLOMBIA":
-					precioNormal.textContent = "$30000";
-					precioDescuento.textContent = "$40000";
-					break;
-				case "CANADA":
-					precioNormal.textContent = "$30";
-					precioDescuento.textContent = "$40";
-					break;
-				case "ESTADOS UNIDOS":
-					precioNormal.textContent = "$30";
-					precioDescuento.textContent = "$40";
-					break;
-				default:
-					// Si no se reconoce el país, se mantienen los precios originales
-					precioNormal.textContent = "$30000";
-					precioDescuento.textContent = "$40000";
-					break;
+				var precio = -1
+				var precio_anterior = -1
+				for (i = 0; i< precios.length; i++){
+					if (paisSeleccionado == precios[i]["pais"]){
+						precio = precios[i]["precio"]
+						precio_anterior = precios[i]["precio-anterior"]
+						precioNormal.textContent = "$"+precio;
+						precioDescuento.textContent = "$"+precio_anterior;
+						break
+					}
 				}
+				
 			}
 
 			// Agregar evento change al select para detectar cambios en la selección
