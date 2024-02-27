@@ -274,6 +274,9 @@ def cart():
             #shipping    =  int(request_data["shipping"])
             #total       =  float(request_data["total"])
 
+            if pais_producto != "COLOMBIA":
+                dolar = obtener_precio_dolar()
+
             # calculara el total a pagar
             h_total = 0 
             # calculara el total a pagar en dolar
@@ -298,7 +301,7 @@ def cart():
                     dolar_price = -1
 
                     if pais_producto != "COLOMBIA":
-                        dolar = obtener_precio_dolar()
+                        #dolar = obtener_precio_dolar()
                         dolar_price = price
                         price = int(price * dolar)
 
@@ -331,9 +334,13 @@ def cart():
                 h_shipping = 10000 if total_amount < 10 else 20000 
                 h_dolar_shipping = 0
                 if total_amount < 10:
-                    h_dolar_shipping = 10
+                    if pais_producto != "COLOMBIA":
+                        h_dolar_shipping = 10
+                        h_shipping = h_dolar_shipping * dolar
                 else:
-                    h_dolar_shipping = 20
+                    if pais_producto != "COLOMBIA":
+                        h_dolar_shipping = 20
+                        h_shipping = h_dolar_shipping * dolar
 
                 nombre = "compra de libro cristiano" if total_amount <= 1 else "Compra de libros cristiano"
                 id_Orden_de_Compra = str(uuid.uuid4())
