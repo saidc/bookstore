@@ -329,6 +329,7 @@ def cart():
             
             if total_amount < 20:
                 h_shipping = 10000 if total_amount < 10 else 20000 
+                h_dolar_shipping = 0
                 if total_amount < 10:
                     h_dolar_shipping = 10
                 else:
@@ -347,8 +348,8 @@ def cart():
 
                     descripcion = descripcion + f"""
                         Nombre: {name}
-                        Cantidad: {amount} {moneda}
-                        subtotal: {subtotal}
+                        Cantidad: {amount}
+                        subtotal: {subtotal} {moneda}
                     """
                     if pais_producto != "COLOMBIA":
                         descripcion += f"""
@@ -369,6 +370,7 @@ def cart():
                 """
                 if pais_producto != "COLOMBIA":
                     descripcion += f"""
+                        Costo de envio en Dolar: {h_dolar_shipping}
                         Dolar Total: {h_dolar_total}
                     """
 
