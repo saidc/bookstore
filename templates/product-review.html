@@ -146,8 +146,8 @@
 			<script> 
 				precios.push({
 					'pais':'{{p["pais"]}}',
-					'precio':'{{p["precio"]}}',
-					'precio-anterior':'{{p["precio-anterior"]}}'
+					'precio':parseInt('{{p["precio"]}}'),
+					'precio-anterior':parseInt('{{p["precio-anterior"]}}')
 				})
 			</script>
 		{% endfor %}
