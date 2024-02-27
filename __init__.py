@@ -349,7 +349,7 @@ def cart():
                     descripcion = descripcion + f"""
                         Nombre: {name}
                         Cantidad: {amount}
-                        subtotal: {subtotal} {moneda}
+                        subtotal: {subtotal} 
                     """
                     if pais_producto != "COLOMBIA":
                         descripcion += f"""
