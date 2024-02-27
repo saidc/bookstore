@@ -3,7 +3,7 @@ from sheet import get_token_credentials, connect_to_sheet_api, append_row_value
 from flask import Flask, render_template, jsonify, redirect, session
 from base_de_datos import obtener_informacion_producto
 from wompi import generar_link_de_pago, verify_event, get_webhook_param
-from tools import getenv_var, obtener_hora_colombia, convert_to_list
+from tools import getenv_var, obtener_hora_colombia, convert_to_list, obtener_precio_dolar
 from flask import request as rq
 from datetime import timedelta
 from copy import deepcopy
@@ -276,6 +276,9 @@ def cart():
 
             # calculara el total a pagar
             h_total = 0 
+            # calculara el total a pagar en dolar
+            h_dolar_total = 0 
+
             # calcula el costo de envio
             h_shipping = 0 
             # calcula el numero total de libros
@@ -292,13 +295,23 @@ def cart():
                     amount = int(prod["amount"])
                     price = int([p2["precio"] for p2 in p['precio'] if p2["pais"] == pais_producto ][0])
                     name = p["nombre"]
+                    dolar_price = -1
+
+                    if pais_producto != "COLOMBIA":
+                        dolar = obtener_precio_dolar()
+                        dolar_price = price
+                        price = int(price * dolar)
+
 
                     # se va sumando la cantidad de libros a comprar
                     total_amount = total_amount + amount
                     # se va calculanto el subtotal de un tipo de libro
                     subtotal = amount * price
+                    dolar_subtotal = amount * dolar_price
                     # se va sumando todos los subtotales para obtener el monto total a pagar
                     h_total = h_total + subtotal
+                    h_dolar_total += dolar_subtotal
+
                     # se añade los datos calculados del producto a las lista de productos a comprar
                     productos_comprar.append({
                         "id": p["id"],
@@ -306,33 +319,59 @@ def cart():
                         "image": imageSrc,
                         "price":price,
                         "amount":amount,
-                        "subtotal": subtotal
+                        "subtotal": subtotal,
+                        "price_dolar":dolar_price,
+                        "dolar_subtotal":dolar_subtotal
+
                     })
                 else:
                     return jsonify({"error": 2, "error-msg":"Producto Errorneo o inexistente"})
             
             if total_amount < 20:
                 h_shipping = 10000 if total_amount < 10 else 20000 
+                if total_amount < 10:
+                    h_dolar_shipping = 10
+                else:
+                    h_dolar_shipping = 20
+
                 nombre = "compra de libro cristiano" if total_amount <= 1 else "Compra de libros cristiano"
                 id_Orden_de_Compra = str(uuid.uuid4())
                 descripcion = "" 
+                moneda = "COP" if pais_producto == "COLOMBIA" else "USD"
+
                 for pr in productos_comprar:
                     name = pr["name"]
                     amount = pr["amount"]
                     subtotal = pr["subtotal"]
+                    dolar_subtotal = pr["dolar_subtotal"]
+
                     descripcion = descripcion + f"""
                         Nombre: {name}
-                        Cantidad: {amount}
+                        Cantidad: {amount} {moneda}
                         subtotal: {subtotal}
-
                     """
+                    if pais_producto != "COLOMBIA":
+                        descripcion += f"""
+                            Dolar subtotal: {dolar_subtotal}
+
+                        """
+                    else:
+                        descripcion += f"""
+                        
+                        """
 
                 tax_value = h_total * 0.19
                 h_total += h_shipping #+ tax_value
+                h_dolar_total += h_dolar_shipping
                 descripcion = descripcion + f"""
                     Costo de envio: {h_shipping}
                     total:  {h_total}
                 """
+                if pais_producto != "COLOMBIA":
+                    descripcion += f"""
+                        Dolar Total: {h_dolar_total}
+                    """
+
                 valor_a_pagar_centavos = int(h_total) * 100  # este pago debe ser en centavos de pesos, 100 pesos debe enviarse como 10000
                 
                 expiration_time = obtener_hora_colombia(delta_time+6) # el link de pago expira en 2 horas

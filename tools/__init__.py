@@ -1,4 +1,7 @@
 from datetime import datetime, timedelta
+import urllib.request
+import base64
+import json
 import ast
 import os
 
@@ -35,3 +38,45 @@ def convert_to_list(value):
 
     # Si no se pudo evaluar como lista, devuelve el valor original
     return value
+
+def obtener_precio_dolar():
+    try:
+        # URL base de la API
+        base_url = "https://www.datos.gov.co/api/id/32sa-8pi3.json"
+        
+        # Calcular la fecha de hoy
+        fecha_actual = datetime.now()
+        
+        # Construir la consulta
+        consulta = "?$query=select%20*%2C%20%3Aid%20order%20by%20%60vigenciadesde%60%20desc%20limit%20100"
+        url = f"{base_url}{consulta}"
+
+        # Headers
+        headers = {
+            "accept": "application/json",
+            "x-app-token": "U29jcmF0YS0td2VraWNrYXNz0",
+            "x-csrf-token": "r1uXrJjAY/pQF4HkN6eSIp5c9P3hnbUvAGPH/TzPlw2ybnPCKtLmaOetCVkA3sS5CSmUZn+rpV34I0K3OMi0cQ==",
+            "x-socrata-federation": "Honey Badger"
+        }
+
+        # Crear un objeto de solicitud y agregar los encabezados necesarios
+        solicitud = urllib.request.Request(url, headers=headers)
+
+        # Realizar la solicitud GET
+        respuesta = urllib.request.urlopen(solicitud)
+        
+        # Leer la respuesta y cargar los datos JSON
+        datos = json.loads(respuesta.read().decode())
+
+        # Ordenar los datos por la fecha de vigencia desde de forma descendente
+        datos_ordenados = sorted(datos, key=lambda x: x['vigenciadesde'], reverse=True)
+
+        # Tomar el primer valor de la lista (el más cercano a la fecha actual)
+        valor_mas_cercano = int(float(datos_ordenados[0]['valor']))
+
+        return valor_mas_cercano
+
+    except Exception as e:
+        print("Error al obtener el precio del dólar:", e)
+        return 4000
+    
