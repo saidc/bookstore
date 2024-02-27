@@ -100,7 +100,6 @@
 								<div class="col-md-6">
 									<label for="pais">Pais</label>
 									<select id="size" name="pais" class="form-control">
-										
 										{% if pais == None %}
 											<option>COLOMBIA</option>
 											<option>CANADA</option>
@@ -139,6 +138,49 @@
 			</div>
 		</div>
 	</div>
+	{% if pais == None %}
+		<script>
+			 precios = '{{libro["precio"]}}'
+			console.log("precios: ", precio)
+			document.addEventListener("DOMContentLoaded", function() {
+			// Obtener elementos del DOM
+			var selectPais = document.getElementById("size");
+			var precioNormal = document.querySelector(".product-price-discount span:first-child");
+			var precioDescuento = document.querySelector(".product-price-discount span:last-child");
+
+			// Función para cambiar los precios según el país seleccionado
+			function cambiarPrecio() {
+				var paisSeleccionado = selectPais.value.toUpperCase();
+
+				switch (paisSeleccionado) {
+				case "COLOMBIA":
+					precioNormal.textContent = "$30000";
+					precioDescuento.textContent = "$40000";
+					break;
+				case "CANADA":
+					precioNormal.textContent = "$30";
+					precioDescuento.textContent = "$40";
+					break;
+				case "ESTADOS UNIDOS":
+					precioNormal.textContent = "$30";
+					precioDescuento.textContent = "$40";
+					break;
+				default:
+					// Si no se reconoce el país, se mantienen los precios originales
+					precioNormal.textContent = "$30000";
+					precioDescuento.textContent = "$40000";
+					break;
+				}
+			}
+
+			// Agregar evento change al select para detectar cambios en la selección
+			selectPais.addEventListener("change", cambiarPrecio);
+
+			// Llamar a cambiarPrecio() para establecer los precios iniciales según el país seleccionado
+			cambiarPrecio();
+			});
+		</script>
+	{% endif %}
 	{% endblock %}
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
