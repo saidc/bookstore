@@ -63,31 +63,33 @@ def product():
         session['user_id'] = str(uuid.uuid4())
     
     if 'carrito' not in session:
-                session['carrito'] = []
+        session['carrito'] = []
 
     no_productos = 0
+    pais_producto = None
 
     for p in session["carrito"]:
         no_productos += int(p["cantidad"])
-
+        if pais_producto == None:
+            pais_producto = p["pais"]
     if rq.method == 'GET':
         if "libro" in rq.args:
-            libro = rq.args.get("libro")
-            libro = obtener_informacion_producto(libro)
+            id = rq.args.get("libro")
+            libro = obtener_informacion_producto(id)
             if libro != None:
-                return render_template('product-review.html', libro=libro, noproductos = no_productos)
+                return render_template('product-review.html', libro=libro, noproductos = no_productos, pais=pais_producto)
             else:
                 return redirect('/')
 
     elif rq.method == 'POST' :
         if "libro" in rq.form and "pais" in rq.form and "quantity" in rq.form:
             print("request.form: ", rq.form)
-            libro    = rq.form["libro"]
+            id    = rq.form["libro"]
             pais     = rq.form["pais"]
             cantidad = int(rq.form["quantity"])
 
             # Obtener información del producto
-            info_producto = obtener_informacion_producto(libro)
+            info_producto = obtener_informacion_producto(id)
 
             # Inicializar el carrito si aún no existe en la sesión
             if 'carrito' not in session:
@@ -100,7 +102,7 @@ def product():
             index = -1
             for i in range(len(carrito)) :
                 p = carrito[i]
-                if p['id'] == libro:
+                if p['id'] == id:
                     index = i
                     al_ready_exist = True
                     break

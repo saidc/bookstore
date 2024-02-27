@@ -86,10 +86,15 @@
 								<div class="col-md-6">
 									<label for="pais">Pais</label>
 									<select id="size" name="pais" class="form-control">
-										<option>COLOMBIA</option>
-										<option>CANADA</option>
-										<option>ESTADOS UNIDOS</option>
 										
+										{% if pais == None %}
+											<option>COLOMBIA</option>
+											<option>CANADA</option>
+											<option>ESTADOS UNIDOS</option>
+										{% endif %}
+										{% if pais != None %}
+											<option>{{pais}}</option>
+										{% endif %}
 									</select>
 								</div>
 							</div>
