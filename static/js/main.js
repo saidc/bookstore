@@ -1,28 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
-	var days = 3;
-	var dias_en_segundos = 267840;
-
-	fetch("/count_down", {
-		method: "POST",
-		headers: {"Content-Type": "application/json"},
-		body: JSON.stringify({}) 
-	}).then(function(response) {
-		if (response.ok) {return response.json();} else {
-			msg = "Ocurrio un error al obtener el countdown";
-			console.log(msg);
-			throw new Error(msg);
-		}
-	}).then(function(data){
-		console.log("data de respuesta: ", data );
-		console.log("count_down: ", data["count_down"] );
-		dias_en_segundos = data["count_down"]
-	}).catch(function(error) {
-		msg = "Ocurrio un error al obtener el countdown";
-		console.log(msg, error);
-	});
-
-	// Unix timestamp (in seconds) to count down to
-	
+function inicializarCountDown(dias_en_segundos){
 	var twoDaysFromNow = (new Date().getTime() / 1000) + dias_en_segundos + 1;
 
 	// Set up FlipDown
@@ -35,6 +11,36 @@ document.addEventListener('DOMContentLoaded', () => {
 		.ifEnded(() => {
 		console.log('The countdown has ended!');
 		});
+}
+document.addEventListener('DOMContentLoaded', () => {
+	var days = 3;
+	var dias_en_segundos = 267840;
+
+	fetch("/count_down", {
+		method: "POST",
+		headers: {"Content-Type": "application/json"},
+		body: JSON.stringify({}) 
+	}).then(function(response) {
+		if (response.ok) {return response.json();} else {
+			msg = "Ocurrio un error al obtener el countdown";
+			console.log(msg);
+			inicializarCountDown(dias_en_segundos)
+			throw new Error(msg);
+		}
+	}).then(function(data){
+		console.log("data de respuesta: ", data );
+		console.log("count_down: ", data["count_down"] );
+		dias_en_segundos = data["count_down"]
+		inicializarCountDown(dias_en_segundos)
+	}).catch(function(error) {
+		msg = "Ocurrio un error al obtener el countdown";
+		console.log(msg, error);
+		inicializarCountDown(dias_en_segundos)
+	});
+
+	// Unix timestamp (in seconds) to count down to
+	
+	
 });
 
 $("#cart").click(function(){
