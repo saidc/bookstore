@@ -410,7 +410,8 @@ def cart():
                 valor_a_pagar_centavos = int(h_total) * 100  # este pago debe ser en centavos de pesos, 100 pesos debe enviarse como 10000
                 
                 expiration_time = obtener_hora_colombia(delta_time+6) # el link de pago expira en 2 horas
-                Link_de_redireccion = "https://api.whatsapp.com/send?phone=15147125576&text=Hola%20DTB%20hice%20una%20compra%2C%20mi%20numero%20de%20pedido%20es%20("+id_Orden_de_Compra+")"
+                #Link_de_redireccion = "https://api.whatsapp.com/send?phone=15147125576&text=Hola%20DTB%20hice%20una%20compra%2C%20mi%20numero%20de%20pedido%20es%20("+id_Orden_de_Compra+")"
+                Link_de_redireccion = f"https://server01sayacorcal.alwaysdata.net/purchase_confirmation?id_Orden_de_Compra={id_Orden_de_Compra}"
                 Link_de_img_logo = "https://saidc.pythonanywhere.com/static/images/hero_bg_1.jpg"
                 
                 private_key = os.environ.get("WOMPI_PRODUCTION_PRIVATE_KEY")if ESTADO_PROYECTO == "PROD" else os.environ.get("WOMPI_TEST_PRIVATE_KEY")
