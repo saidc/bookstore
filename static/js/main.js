@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 });
 
-
 $("#cart").click(function(){
 	window.location.href = "/cart";
 });
