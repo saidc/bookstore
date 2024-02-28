@@ -5,6 +5,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient import errors
 import os.path
+import tools
 
 def get_token_credentials(TOKEN_FILE, CLIENT_SECRET, SCOPES):
 
@@ -113,7 +114,7 @@ def send_email(creds,SCRIPT_ID,email,asunto,descripcion):
    except errors.HttpError as error:
     print(error.content)
 
-def test_exec():
+def test_get_variables():
     TOKEN_FILE = "token.json"
     CLIENT_SECRET = "credentials.json"
     SCOPES = [
@@ -124,10 +125,46 @@ def test_exec():
        'https://www.googleapis.com/auth/script.projects',
        'https://www.googleapis.com/auth/script.send_mail'
        ]
-
-    SCRIPT_ID = "AKfycbwcHByCWYAlcyCNTXXzi_GDklb52oNZo3UJlDWjesDCj5tZIs_xFOobKW1Xdb1zrlSr"
+    valores_spreadsheet_id = "1BWo5R_LGFy2ygnx9G_xMmws3hgWHSPN-MtOIy-Ku3EQ"
+    valores_sheet_name = "variables"
     creds = get_token_credentials(TOKEN_FILE, CLIENT_SECRET, SCOPES)
-    execute_function(creds,SCRIPT_ID)
+    service = connect_to_sheet_api(creds)
+    if(service):
+       print("conexion exitosa")
+       rows = get_rows(service ,valores_spreadsheet_id , valores_sheet_name)
+       print(rows)
+       index = -1
+       for i in range(len(rows)):
+          row = rows[i]
+          if(row[0]=="count_down"):
+             index = i
+             break
+       if index > 0:
+          days_of_count_down_text = rows[index][1]
+          seconds_remaining = tools.calculate_seconds_remaining(days_of_count_down_text)
+          print("Segundos restantes:", seconds_remaining, " minutos:", int(seconds_remaining/60), " horas", int((seconds_remaining/60)/60) , " dias: ", int(((seconds_remaining/60)/60))/24)
+       else:
+          print("no se encontro la variable count_down")
+    else:
+       print("conexion fallida")
+
+#def test_exec():
+#    TOKEN_FILE = "token.json"
+#    CLIENT_SECRET = "credentials.json"
+#    SCOPES = [
+#       'https://www.googleapis.com/auth/spreadsheets',
+#       'https://www.googleapis.com/auth/spreadsheets.readonly',
+#       'https://www.googleapis.com/auth/drive',
+#       'https://www.googleapis.com/auth/admin.directory.user',
+#       'https://www.googleapis.com/auth/script.projects',
+#       'https://www.googleapis.com/auth/script.send_mail'
+#       ]
+#    email = "sayacorcal@gmail.com"
+#    asunto = "correo test from bookstore "
+#    descripcion = "descripcion test bookstore tienda el niño aquel"
+#    SCRIPT_ID = "AKfycbwcHByCWYAlcyCNTXXzi_GDklb52oNZo3UJlDWjesDCj5tZIs_xFOobKW1Xdb1zrlSr"
+#    creds = get_token_credentials(TOKEN_FILE, CLIENT_SECRET, SCOPES)
+#    send_email(creds,SCRIPT_ID,email,asunto,descripcion)
 
 #   TOKEN_FILE = "token.json"
 #   CLIENT_SECRET = "credentials.json"

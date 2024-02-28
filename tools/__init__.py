@@ -79,4 +79,17 @@ def obtener_precio_dolar():
     except Exception as e:
         print("Error al obtener el precio del dólar:", e)
         return 4000
-    
+
+# Función para obtener la fecha y hora actual
+def get_current_datetime():
+    now = datetime.now()
+    return now
+
+# Función para calcular segundos restantes hasta days_of_count_down
+def calculate_seconds_remaining(days_of_count_down_text):
+    days_of_count_down = datetime.strptime(days_of_count_down_text, "%Y-%m-%d %H:%M:%S")
+    # Convertir la cadena de texto a un objeto datetime
+    current_datetime = get_current_datetime()
+    time_difference = days_of_count_down - current_datetime
+    seconds_remaining = int(time_difference.total_seconds())
+    return seconds_remaining

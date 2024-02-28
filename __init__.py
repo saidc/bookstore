@@ -1,9 +1,9 @@
 # coding=utf-8
-from sheet import get_token_credentials, connect_to_sheet_api, append_row_value, send_email
+from sheet import get_token_credentials, get_rows, connect_to_sheet_api, append_row_value, send_email
 from flask import Flask, render_template, jsonify, redirect, session
 from base_de_datos import obtener_informacion_producto
 from wompi import generar_link_de_pago, verify_event, get_webhook_param, get_webhook_param_json
-from tools import getenv_var, obtener_hora_colombia, convert_to_list, obtener_precio_dolar
+from tools import getenv_var, obtener_hora_colombia, convert_to_list, obtener_precio_dolar, calculate_seconds_remaining
 from flask import request as rq
 from datetime import timedelta
 from copy import deepcopy
@@ -456,11 +456,48 @@ def get_load():
     # Obtener métricas de carga del sistema
     cpu_percent = psutil.cpu_percent()
     memory_percent = psutil.virtual_memory().percent
-
-    return {
+    return jsonify({
         'cpu_percent': cpu_percent,
         'memory_percent': memory_percent
-    }
+    }), 200
+
+@app.route('/count_down')
+def count_down():
+    TOKEN_FILE = os.environ.get("SHEET_TOKEN_FILE")
+    CLIENT_SECRET = os.environ.get("SHEET_CLIENT_SECRET") 
+    SCOPES = convert_to_list( os.environ.get("SHEET_SCOPES") )
+    VALORES_SPREADSHEET_ID = os.environ.get("VALORES_SPREADSHEET_ID") 
+    VALORES_SHEET_NAME = os.environ.get("VALORES_SHEET_NAME") 
+    
+    creds = get_token_credentials(TOKEN_FILE, CLIENT_SECRET, SCOPES)
+    service = connect_to_sheet_api(creds)
+    if(service):
+       print("conexion exitosa")
+       rows = get_rows(service ,VALORES_SPREADSHEET_ID , VALORES_SHEET_NAME)
+       #print(rows)
+       index = -1
+       for i in range(len(rows)):
+          row = rows[i]
+          if(row[0]=="count_down"):
+             index = i
+             break
+       if index > 0:
+          days_of_count_down_text = rows[index][1]
+          seconds_remaining =  calculate_seconds_remaining(days_of_count_down_text)
+          print("Segundos restantes:", seconds_remaining, " minutos:", int(seconds_remaining/60), " horas", int((seconds_remaining/60)/60) , " dias: ", int(((seconds_remaining/60)/60))/24)
+          return jsonify({
+              'count_down': seconds_remaining
+              }), 200
+       else:
+          print("no se encontro la variable count_down")
+          return jsonify({
+              'count_down': 267840
+              }), 200
+    else:
+       print("conexion fallida")
+       return jsonify({
+           'count_down': 267840
+           }), 200
 
 if __name__ == "__main__":
   app.run(debug=True)
