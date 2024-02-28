@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}).then(function(data){
 		console.log("data de respuesta: ", data );
 		console.log("count_down: ", data["count_down"] );
+		dias_en_segundos = data["count_down"]
 	}).catch(function(error) {
 		msg = "Ocurrio un error al obtener el countdown";
 		console.log(msg, error);
