@@ -85,7 +85,7 @@ h1, h2, h3, h4, h5, h6, figure {
   background-repeat: no-repeat;
   background-position: top center;
   position: relative;
-  margin-bottom: 26em;
+  /*margin-bottom: 26em;*/
 }
 @media screen and (max-width: 480px) {
   #fh5co-header {
