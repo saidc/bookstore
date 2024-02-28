@@ -3,6 +3,7 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from googleapiclient import errors
 import os.path
 
 def get_token_credentials(TOKEN_FILE, CLIENT_SECRET, SCOPES):
@@ -98,6 +99,35 @@ def batch_update_row_value(service=None, spreadsheet_id=None, sheet_name=None, r
     except Exception as error:
         print(f"An error occurred: {error}")
         return error
+
+def send_email(creds,SCRIPT_ID,email,asunto,descripcion):
+   try:
+    service = build('script', 'v1', credentials=creds)
+    request = {
+       'function': 'enviarCorreoElectronico',
+       "parameters": [{"email":email,"asunto":asunto, "descripcion":descripcion}],
+       "devMode": True
+       }
+    response = service.scripts().run( scriptId=SCRIPT_ID, body=request).execute()
+    print(response)
+   except errors.HttpError as error:
+    print(error.content)
+
+def test_exec():
+    TOKEN_FILE = "token.json"
+    CLIENT_SECRET = "credentials.json"
+    SCOPES = [
+       'https://www.googleapis.com/auth/spreadsheets',
+       'https://www.googleapis.com/auth/spreadsheets.readonly',
+       'https://www.googleapis.com/auth/drive',
+       'https://www.googleapis.com/auth/admin.directory.user',
+       'https://www.googleapis.com/auth/script.projects',
+       'https://www.googleapis.com/auth/script.send_mail'
+       ]
+
+    SCRIPT_ID = "AKfycbwcHByCWYAlcyCNTXXzi_GDklb52oNZo3UJlDWjesDCj5tZIs_xFOobKW1Xdb1zrlSr"
+    creds = get_token_credentials(TOKEN_FILE, CLIENT_SECRET, SCOPES)
+    execute_function(creds,SCRIPT_ID)
 
 #   TOKEN_FILE = "token.json"
 #   CLIENT_SECRET = "credentials.json"

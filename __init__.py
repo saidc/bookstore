@@ -1,8 +1,8 @@
 # coding=utf-8
-from sheet import get_token_credentials, connect_to_sheet_api, append_row_value
+from sheet import get_token_credentials, connect_to_sheet_api, append_row_value, send_email
 from flask import Flask, render_template, jsonify, redirect, session
 from base_de_datos import obtener_informacion_producto
-from wompi import generar_link_de_pago, verify_event, get_webhook_param
+from wompi import generar_link_de_pago, verify_event, get_webhook_param, get_webhook_param_json
 from tools import getenv_var, obtener_hora_colombia, convert_to_list, obtener_precio_dolar
 from flask import request as rq
 from datetime import timedelta
@@ -69,6 +69,7 @@ def webhook():
                 CLIENT_SECRET = os.environ.get("SHEET_CLIENT_SECRET") 
                 SCOPES = convert_to_list( os.environ.get("SHEET_SCOPES") )
                 SPREADSHEET_ID = os.environ.get("SPREADSHEET_ID") 
+                SCRIPT_ID = os.environ.get("SCRIPT_ID") 
                 SHEET_NAME = os.environ.get("SHEET_NAME") 
                 creds = get_token_credentials(TOKEN_FILE, CLIENT_SECRET, SCOPES)
                 service = connect_to_sheet_api(creds)
@@ -77,9 +78,34 @@ def webhook():
                     print("conexion exitosa")
                     transaction_data = request_data["data"]["transaction"]
                     row = get_webhook_param( transaction_data )
+                    row_json = get_webhook_param_json( transaction_data )
                                 
                     #new_row = [ proceso_compra_id,  "El niño aquel",  80000,    str(shipping_address),   "sayacorcal@gmail.com",  str(request_data["data"]) ]
                     rslt = append_row_value(service, SPREADSHEET_ID, SHEET_NAME, row)
+                    email = row_json["customer_email"]
+                    proceso_compra_id = row_json["proceso_compra_id"]
+                    asunto = f"Compra de Libro Cristiano - {proceso_compra_id}"
+                    
+                    pais = row_json["country"]
+                    region = row_json["region"]
+                    city = row_json["city"]
+                    phone_number = row_json["phone_number"]
+                    address_line_1 = row_json["address_line_1"]
+                    address_line_2 = row_json["address_line_2"]
+                    
+                    
+                    descripcion = f"""
+                        Dios te bendiga, Gracias por tu compra de libros cristianos.
+                        Recibimos tu compra y estamos en proceso de envio a la siguiente direccion
+                        pais:   {pais}
+                        region: {region}
+                        city:   {city}
+                        phone_number:   {phone_number}
+                        address_line_1: {address_line_1}
+                        address_line_2: {address_line_2}
+                        
+                        """
+                    send_email(creds,SCRIPT_ID,email,asunto,descripcion)
                     print("result: ", rslt)
                 else:
                     print("conexion fallida")
