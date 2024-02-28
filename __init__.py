@@ -461,7 +461,7 @@ def get_load():
         'memory_percent': memory_percent
     }), 200
 
-@app.route('/count_down')
+@app.route('/count_down', methods=['POST'])
 def count_down():
     TOKEN_FILE = os.environ.get("SHEET_TOKEN_FILE")
     CLIENT_SECRET = os.environ.get("SHEET_CLIENT_SECRET") 

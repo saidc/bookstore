@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	var dias_en_segundos = 267840;
 
 	fetch("/count_down", {
-		method: "GET",
+		method: "POST",
 		headers: {"Content-Type": "application/json"},
 		body: JSON.stringify({}) 
 	}).then(function(response) {
