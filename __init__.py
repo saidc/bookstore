@@ -446,9 +446,10 @@ def cart():
 @app.route('/purchase_confirmation')
 def purchase_confirmation():
     print("argumentos: ", rq.args)
-    #if "libro" in rq.args:
-    #    id = rq.args.get("libro")   
-    return render_template('purchase_confirmation.html')
+    if "libro" in rq.args:
+        id_Orden_de_Compra = rq.args.get("id_Orden_de_Compra")   
+        return render_template('purchase_confirmation.html', id_Orden_de_Compra=id_Orden_de_Compra)
+    return render_template('purchase_confirmation.html', id_Orden_de_Compra=None)
 
 @app.route('/load')
 def get_load():

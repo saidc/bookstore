@@ -1,3 +1,22 @@
+document.addEventListener('DOMContentLoaded', () => {
+	// Unix timestamp (in seconds) to count down to
+	var days = 3;
+	var dias_en_segundos = 86400 * days;
+	var twoDaysFromNow = (new Date().getTime() / 1000) + dias_en_segundos + 1;
+
+	// Set up FlipDown
+	var flipdown = new FlipDown(twoDaysFromNow)
+
+		// Start the countdown
+		.start()
+
+		// Do something when the countdown ends
+		.ifEnded(() => {
+		console.log('The countdown has ended!');
+		});
+});
+
+
 $("#cart").click(function(){
 	window.location.href = "/cart";
 });
@@ -5,9 +24,6 @@ $("#cart").click(function(){
 ;(function () {
 	
 	'use strict';
-
-
-
 	var isMobile = {
 		Android: function() {
 			return navigator.userAgent.match(/Android/i);
