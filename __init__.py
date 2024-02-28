@@ -442,6 +442,13 @@ def cart():
         else:
             return jsonify({"error": 1, "error-msg":"Parametros incorrectos o faltantes"})
         
+@app.route('/purchase_confirmation')
+def purchase_confirmation():
+    print("argumentos: ", rq.args)
+    #if "libro" in rq.args:
+    #    id = rq.args.get("libro")   
+    return render_template('purchase_confirmation.html')
+
 @app.route('/load')
 def get_load():
     # Obtener métricas de carga del sistema

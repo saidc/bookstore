@@ -108,6 +108,7 @@ def get_webhook_param( transaction_data ):
     str( redirect_url ) , # "redirect_url"
     str( payment_link_id ) , # "payment_link_id"
   ]
+
 def get_webhook_param_json( transaction_data ):
   shipping_address = extract_shipping_address(transaction_data["shipping_address"] if "shipping_address" in transaction_data else None)
   
@@ -173,6 +174,4 @@ def extract_shipping_address(shipping_address):
       "postal_code": postal_code ,
     }
   return {}
-
-
 
