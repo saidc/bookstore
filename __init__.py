@@ -428,7 +428,7 @@ def cart():
                             fecha_de_creacion = data["created_at"]
                             fecha_de_expiracion = data["expires_at"]
                             productos_a_comprar = json.dumps(productos_comprar)
-                            row = [str(payment_link_id), str(productos_a_comprar), str(fecha_de_creacion), str(fecha_de_expiracion)]
+                            row = [str(payment_link_id), str(productos_a_comprar), str(fecha_de_creacion), str(fecha_de_expiracion),"INICIALIZO"]
 
                             TOKEN_FILE = os.environ.get("SHEET_TOKEN_FILE")
                             CLIENT_SECRET = os.environ.get("SHEET_CLIENT_SECRET") 
