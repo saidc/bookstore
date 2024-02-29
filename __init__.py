@@ -83,31 +83,32 @@ def webhook():
                                 
                     #new_row = [ proceso_compra_id,  "El niño aquel",  80000,    str(shipping_address),   "sayacorcal@gmail.com",  str(request_data["data"]) ]
                     rslt = append_row_value(service, SPREADSHEET_ID, SHEET_NAME, row)
-                    email = row_json["customer_email"]
-                    proceso_compra_id = row_json["proceso_compra_id"]
-                    asunto = f"Compra de Libro Cristiano - {proceso_compra_id}"
-                    
-                    pais = row_json["country"]
-                    region = row_json["region"]
-                    city = row_json["city"]
-                    phone_number = row_json["phone_number"]
-                    address_line_1 = row_json["address_line_1"]
-                    address_line_2 = row_json["address_line_2"]
-                    
-                    
-                    descripcion = f"""
-                        Dios te bendiga, Gracias por tu compra de libros cristianos.
-                        Recibimos tu compra y estamos en proceso de envio a la siguiente direccion
-                        pais:   {pais}
-                        region: {region}
-                        city:   {city}
-                        phone_number:   {phone_number}
-                        address_line_1: {address_line_1}
-                        address_line_2: {address_line_2}
+                    if row_json["status"] ==  "APPROVED":
+                        email = row_json["customer_email"]
+                        proceso_compra_id = row_json["proceso_compra_id"]
+                        asunto = f"Compra de Libro Cristiano - {proceso_compra_id}"
                         
-                        """
-                    send_email(creds,SCRIPT_ID,email,asunto,descripcion)
-                    print("result: ", rslt)
+                        pais = row_json["country"]
+                        region = row_json["region"]
+                        city = row_json["city"]
+                        phone_number = row_json["phone_number"]
+                        address_line_1 = row_json["address_line_1"]
+                        address_line_2 = row_json["address_line_2"]
+                        
+                        
+                        descripcion = f"""
+                            Dios te bendiga, Gracias por tu compra de libros cristianos.
+                            Recibimos tu compra y estamos en proceso de envio a la siguiente direccion
+                            pais:   {pais}
+                            region: {region}
+                            city:   {city}
+                            phone_number:   {phone_number}
+                            address_line_1: {address_line_1}
+                            address_line_2: {address_line_2}
+                            
+                            """
+                        send_email(creds,SCRIPT_ID,email,asunto,descripcion)
+                        print("result: ", rslt)
                 else:
                     print("conexion fallida")
             else:
@@ -424,7 +425,7 @@ def cart():
                         response_data = json.loads(response)
                         if "data" in response_data:
                             data = response_data["data"]
-                            print("--> data: ", data)
+                            #print("--> data: ", data)
                             payment_link_id = data["id"]
                             fecha_de_creacion = data["created_at"]
                             fecha_de_expiracion = data["expires_at"]
