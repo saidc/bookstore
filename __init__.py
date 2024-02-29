@@ -13,7 +13,7 @@ import uuid
 import json
 import os
 
-ESTADO_PROYECTO="TEST" # PROD
+ESTADO_PROYECTO="PROD" # TEST
 
 sist_op = platform.system()
 print( "estas en un sistema " + str(sist_op))
