@@ -424,6 +424,7 @@ def cart():
                         response_data = json.loads(response)
                         if "data" in response_data:
                             data = response_data["data"]
+                            print("--> data: ", data)
                             payment_link_id = data["id"]
                             fecha_de_creacion = data["created_at"]
                             fecha_de_expiracion = data["expires_at"]
