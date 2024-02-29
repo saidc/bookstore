@@ -65,11 +65,12 @@ def webhook():
         if "data" in request_data:
             if "transaction" in request_data["data"]:
                 
+                SCRIPT_ID = os.environ.get("SCRIPT_ID") 
+
                 TOKEN_FILE = os.environ.get("SHEET_TOKEN_FILE")
                 CLIENT_SECRET = os.environ.get("SHEET_CLIENT_SECRET") 
                 SCOPES = convert_to_list( os.environ.get("SHEET_SCOPES") )
                 SPREADSHEET_ID = os.environ.get("SPREADSHEET_ID") 
-                SCRIPT_ID = os.environ.get("SCRIPT_ID") 
                 SHEET_NAME = os.environ.get("SHEET_NAME") 
                 creds = get_token_credentials(TOKEN_FILE, CLIENT_SECRET, SCOPES)
                 service = connect_to_sheet_api(creds)
@@ -426,7 +427,22 @@ def cart():
                             payment_link_id = data["id"]
                             fecha_de_creacion = data["created_at"]
                             fecha_de_expiracion = data["expires_at"]
-                            
+                            productos_a_comprar = json.dumps(productos_comprar)
+                            row = [str(payment_link_id), str(productos_a_comprar), str(fecha_de_creacion), str(fecha_de_expiracion)]
+
+                            TOKEN_FILE = os.environ.get("SHEET_TOKEN_FILE")
+                            CLIENT_SECRET = os.environ.get("SHEET_CLIENT_SECRET") 
+                            SCOPES = convert_to_list( os.environ.get("SHEET_SCOPES") )
+                            SPREADSHEET_ID = os.environ.get("INIT_COMPRA_SPREADSHEET_ID") 
+                            SHEET_NAME = os.environ.get("INIT_COMPRA_SHEET_NAME") 
+                            creds = get_token_credentials(TOKEN_FILE, CLIENT_SECRET, SCOPES)
+                            service = connect_to_sheet_api(creds)
+                            if(service):
+                                rslt = append_row_value(service, SPREADSHEET_ID, SHEET_NAME, row)
+                                print("intento de añadir fila de INIT_COMPRA: ", rslt , row)
+                            else:
+                                print("no se pudo añadir fila de INIT_COMPRA: ", row)
+
                             url = f"https://checkout.wompi.co/l/{payment_link_id}"
                             session['carrito'] = []
                             return jsonify({"error": 0, "url": url})
