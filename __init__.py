@@ -83,18 +83,20 @@ def webhook():
                                 
                     #new_row = [ proceso_compra_id,  "El niño aquel",  80000,    str(shipping_address),   "sayacorcal@gmail.com",  str(request_data["data"]) ]
                     rslt = append_row_value(service, SPREADSHEET_ID, SHEET_NAME, row)
+                    
+                    print("result: ", rslt)
+                    email = row_json["customer_email"]
+                    proceso_compra_id = row_json["proceso_compra_id"]
+                    asunto = f"Compra de Libro Cristiano - {proceso_compra_id}"
+                    
+                    pais = row_json["country"]
+                    region = row_json["region"]
+                    city = row_json["city"]
+                    phone_number = row_json["phone_number"]
+                    address_line_1 = row_json["address_line_1"]
+                    address_line_2 = row_json["address_line_2"]
+                    
                     if row_json["status"] ==  "APPROVED":
-                        email = row_json["customer_email"]
-                        proceso_compra_id = row_json["proceso_compra_id"]
-                        asunto = f"Compra de Libro Cristiano - {proceso_compra_id}"
-                        
-                        pais = row_json["country"]
-                        region = row_json["region"]
-                        city = row_json["city"]
-                        phone_number = row_json["phone_number"]
-                        address_line_1 = row_json["address_line_1"]
-                        address_line_2 = row_json["address_line_2"]
-                        
                         
                         descripcion = f"""
                             Dios te bendiga, Gracias por tu compra de libros cristianos.
@@ -108,7 +110,16 @@ def webhook():
                             
                             """
                         send_email(creds,SCRIPT_ID,email,asunto,descripcion)
-                        print("result: ", rslt)
+                    else:
+                        descripcion = f"""
+                            Dios te bendiga, El proceso de compra ha sido DECLINADA.
+                            Intenta nuevamente o comunicate a: 
+                            
+                            https://m.me/said.cortescalderon 
+                            
+                            """
+                        send_email(creds,SCRIPT_ID,email,asunto,descripcion)
+                        print(rslt)
                 else:
                     print("conexion fallida")
             else:
