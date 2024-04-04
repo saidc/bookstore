@@ -171,7 +171,7 @@ $("#checkout").click(function() {
         console.log("data de respuesta: ", data)
         if( data.error == 0 ){
           // aqui se redirecciona a la url obtenida
-          print("url obtenido: ", data.url)
+          console.log("url obtenido: ", data.url)
           //window.location.href = data.url;
           window.location.replace(data.url);
         }else if(data.error >= 1 ){
