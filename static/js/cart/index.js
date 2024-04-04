@@ -172,7 +172,8 @@ $("#checkout").click(function() {
         if( data.error == 0 ){
           // aqui se redirecciona a la url obtenida
           print("url obtenido: ", data.url)
-          window.location.href = data.url;
+          //window.location.href = data.url;
+          window.location.replace(data.url);
         }else if(data.error >= 1 ){
           //msg = "Error, falta de parametros para generar el pago, intentalo mas tarde"
           alert(data["error-msg"]);
