@@ -370,15 +370,15 @@ def cart():
                     return jsonify({"error": 2, "error-msg":"Producto Errorneo o inexistente"})
             
             if total_amount < 20:
-                h_shipping = 5000 if total_amount < 10 else 10000 
+                h_shipping = 12000 if total_amount < 10 else 22000 
                 h_dolar_shipping = 0
                 if total_amount < 10:
                     if pais_producto != "COLOMBIA":
-                        h_dolar_shipping = 10
+                        h_dolar_shipping = 15
                         h_shipping = h_dolar_shipping * dolar
                 else:
                     if pais_producto != "COLOMBIA":
-                        h_dolar_shipping = 20
+                        h_dolar_shipping = 25
                         h_shipping = h_dolar_shipping * dolar
 
                 nombre = "compra de libro cristiano" if total_amount <= 1 else "Compra de libros cristiano"
