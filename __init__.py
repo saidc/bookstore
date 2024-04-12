@@ -13,11 +13,11 @@ import uuid
 import json
 import os
 
-ESTADO_PROYECTO="PROD" # TEST
+ESTADO_PROYECTO = "PROD" # TEST
 
 sist_op = platform.system()
-print( "estas en un sistema " + str(sist_op))
-print("path actual: ", os.getcwd())
+print( "estas en un sistema " + str(sist_op) )
+print( "path actual: ", os.getcwd() )
 delta_time = -5 if sist_op == "Linux" else 0
 env_file_path = ".env" # "myapp/bookstore/.env" if sist_op == "Linux" else ".env" # else "Windows"
 
