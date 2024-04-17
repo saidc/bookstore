@@ -88,6 +88,8 @@ def webhook():
                     pos, row =  obtener_pedido_by_payment_link_id(rows, payment_link_id)
                     
                     row = update_row_by_webhook_respond(row, webhook_res)
+                    productos_a_comprar = row[15]
+
                     rslt = batch_update_row_value(service, SPREADSHEET_ID, SHEET_NAME, row_to_update=pos, value=row)
                     #rslt = append_row_value(service, SPREADSHEET_ID, SHEET_NAME, webhook_res)
                     
@@ -114,7 +116,7 @@ def webhook():
                             phone_number:   {phone_number}
                             address_line_1: {address_line_1}
                             address_line_2: {address_line_2}
-                            
+                            productos a comprar {productos_a_comprar}
                             """
                         send_email(creds,SCRIPT_ID,email,asunto,descripcion)
                     else:
