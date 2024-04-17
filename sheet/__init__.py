@@ -52,6 +52,7 @@ def get_rows(service=None, spreadsheet_id=None, sheet_name=None):
     print(f"An error occurred: {error}")
     return None
 
+
 def append_row_value(service=None, spreadsheet_id=None, sheet_name=None, value=None):
     # Add new row in the Google.
     try:

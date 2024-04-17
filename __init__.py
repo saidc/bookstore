@@ -1,7 +1,7 @@
 # coding=utf-8
-from sheet import get_token_credentials, get_rows, connect_to_sheet_api, append_row_value, send_email
+from sheet import get_token_credentials, get_rows, connect_to_sheet_api, append_row_value, send_email, batch_update_row_value
 from flask import Flask, render_template, jsonify, redirect, session
-from base_de_datos import obtener_informacion_producto
+from base_de_datos import obtener_informacion_producto, nuevo_procesamiento_de_pedido, obtener_pedido_by_payment_link_id, update_row_by_webhook_respond
 from wompi import generar_link_de_pago, verify_event, get_webhook_param, get_webhook_param_json
 from tools import getenv_var, obtener_hora_colombia, convert_to_list, obtener_precio_dolar, calculate_seconds_remaining
 from flask import request as rq
@@ -13,7 +13,7 @@ import uuid
 import json
 import os
 
-ESTADO_PROYECTO = "PROD" # TEST
+ESTADO_PROYECTO = "TEST" # PROD
 
 sist_op = platform.system()
 print( "estas en un sistema " + str(sist_op) )
@@ -78,11 +78,18 @@ def webhook():
                 if(service):
                     print("conexion exitosa")
                     transaction_data = request_data["data"]["transaction"]
-                    row = get_webhook_param( transaction_data )
+                    webhook_res = get_webhook_param( transaction_data )
                     row_json = get_webhook_param_json( transaction_data )
-                                
+
+                    payment_link_id = row_json["payment_link_id"]
+
                     #new_row = [ proceso_compra_id,  "El niño aquel",  80000,    str(shipping_address),   "sayacorcal@gmail.com",  str(request_data["data"]) ]
-                    rslt = append_row_value(service, SPREADSHEET_ID, SHEET_NAME, row)
+                    rows = get_rows(service, SPREADSHEET_ID, SHEET_NAME)
+                    pos, row =  obtener_pedido_by_payment_link_id(rows, payment_link_id)
+                    
+                    row = update_row_by_webhook_respond(row, webhook_res)
+                    rslt = batch_update_row_value(service, SPREADSHEET_ID, SHEET_NAME, row_to_update=pos, value=row)
+                    #rslt = append_row_value(service, SPREADSHEET_ID, SHEET_NAME, webhook_res)
                     
                     print("result: ", rslt)
                     email = row_json["customer_email"]
@@ -441,13 +448,16 @@ def cart():
                             fecha_de_creacion = data["created_at"]
                             fecha_de_expiracion = data["expires_at"]
                             productos_a_comprar = json.dumps(productos_comprar)
-                            row = [str(payment_link_id), str(productos_a_comprar), str(fecha_de_creacion), str(fecha_de_expiracion),"INICIALIZO"]
+                            #row = [str(payment_link_id), str(productos_a_comprar), str(fecha_de_creacion), str(fecha_de_expiracion),"INICIALIZO"]
+                            row = nuevo_procesamiento_de_pedido(payment_link_id, productos_a_comprar, fecha_de_creacion, fecha_de_expiracion)
 
                             TOKEN_FILE = os.environ.get("SHEET_TOKEN_FILE")
                             CLIENT_SECRET = os.environ.get("SHEET_CLIENT_SECRET") 
                             SCOPES = convert_to_list( os.environ.get("SHEET_SCOPES") )
-                            SPREADSHEET_ID = os.environ.get("INIT_COMPRA_SPREADSHEET_ID") 
-                            SHEET_NAME = os.environ.get("INIT_COMPRA_SHEET_NAME") 
+                            #SPREADSHEET_ID = os.environ.get("INIT_COMPRA_SPREADSHEET_ID") 
+                            SPREADSHEET_ID = os.environ.get("SPREADSHEET_2_ID") 
+                            #SHEET_NAME = os.environ.get("INIT_COMPRA_SHEET_NAME") 
+                            SHEET_NAME = os.environ.get("SHEET_2_NAME") 
                             creds = get_token_credentials(TOKEN_FILE, CLIENT_SECRET, SCOPES)
                             service = connect_to_sheet_api(creds)
                             if(service):

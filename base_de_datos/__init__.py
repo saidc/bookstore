@@ -1,4 +1,5 @@
 
+from datetime import datetime, timedelta
 
 def obtener_informacion_producto(id):
     # Aquí deberías implementar la lógica para obtener la información del producto
@@ -103,3 +104,120 @@ def obtener_informacion_producto(id):
             return book
     else:
         return None
+
+def nuevo_procesamiento_de_pedido(payment_link_id, productos_a_comprar, fecha_de_creacion, fecha_de_expiracion):
+    #       0   1   2                     3                       4   5                         6            7             8   9   10  11  12  13  14  15                       16 17 18 19 20 21 22 23 24 25 26 27      
+    return ["", "", str(payment_link_id), str(fecha_de_creacion), "", str(fecha_de_expiracion), "ESPERANDO", "VENTAS WEB", "", "", "", "", "", "", "", str(productos_a_comprar),"","","","","","","","","","","","" ]
+     
+    #0  SELECCION MANUAL
+    #1  PROCESO_COMPRA_ID
+    #2  PAYMENT_LINK_ID
+    #3  CREATED_AT
+    #4  FINALIZED_AT
+    #5  EXPIRED_AT
+    #6  STATUS
+    #7  TIPO DE VENTA
+    #8  TOTAL PAGADO
+    #9  PRECIO ESTABLECIDO DE ENVIO
+    #10 CURRENCY
+
+    #11 COSTO ADICIONAL
+    #12 DESCRIPCION DE COSTO ADICIONAL
+
+    #13 MEDIO DE PAGO
+    #14 COMPROBANTE DE PAGO
+    #15 DESCRIPCION DE PEDIDO
+    #16 CUSTOMER_EMAIL
+
+    #17 NAME
+    #18 CELULAR
+    #19 DIRECCION 1
+    #20 DIRECCION 2
+    #21 PAIS
+
+    #22 REGION
+    #23 CIUDAD
+    #24 CODIGO POSTAL
+    #25 NUMERO DE GUIA ENVIO
+    #26 EMPRESA DE ENVIO
+    #27 COSTO FINAL DE ENVIO
+
+def obtener_pedido_by_payment_link_id(rows, payment_link_id):
+     # Obtener la hora actual
+    hora_actual = datetime.now()
+
+    # Calcular la hora hace 2 horas
+    hora_hace_dos_horas = hora_actual - timedelta(hours=2)
+
+    # Lista para almacenar elementos que cumplen con las condiciones
+    elementos_cumplen_condicion = []
+
+     # Iterar sobre la lista de listas, quitando el encabezado
+    for i in range(1, len(rows)):
+        elemento = rows[i]
+        fecha_creacion = datetime.strptime(elemento[3], "%Y-%m-%dT%H:%M:%S.%fZ")
+        # Verificar si la fecha de creación está dentro del rango de 2 horas
+        if fecha_creacion >= hora_hace_dos_horas and fecha_creacion <= hora_actual:
+            elementos_cumplen_condicion.append([i,elemento])
+    
+    # Buscar el elemento con el id_link especificado
+    for elemento in elementos_cumplen_condicion:
+        if elemento[1][2] == payment_link_id:
+            return elemento[0], elemento[1]
+
+    # Si no se encuentra ningún elemento con el id_link especificado
+    return -1, None
+
+def update_row_by_webhook_respond(row, webhook_res):
+    row[1] = webhook_res[0]    #1
+    row[2] = webhook_res[17]   #2
+    row[3] = webhook_res[1]    #3
+    row[4] = webhook_res[2]    #4
+    row[6] = webhook_res[7]    #6
+    row[8] = webhook_res[3]    #8
+    row[10] = webhook_res[5]   #10
+    row[13] = webhook_res[6]   #13
+    row[16] = webhook_res[4]   #16
+    row[17] = webhook_res[13]  #17
+    row[18] = webhook_res[14]  #18
+    row[19] = webhook_res[8]   #19
+    row[20] = webhook_res[9]   #20
+    row[21] = webhook_res[10]  #21
+    row[22] = webhook_res[11]  #22
+    row[23] = webhook_res[12]  #23
+    row[24] = webhook_res[15]  #24
+
+    return row
+    #   ROW                                     WEBHOOK_RES
+    #0  SELECCION MANUAL                    
+    #1  PROCESO_COMPRA_ID                   #0  proceso_compra_id  
+    #2  PAYMENT_LINK_ID                     #17 payment_link_id
+    #3  CREATED_AT                          #1  created_at  
+    #4  FINALIZED_AT                        #2  finalized_at
+    #5  EXPIRED_AT                              
+    #6  STATUS                              #7  status    
+    #7  TIPO DE VENTA                                
+    #8  TOTAL PAGADO                        #3  amount_in_cents
+    #9  PRECIO ESTABLECIDO DE ENVIO                
+    #10 CURRENCY                            #5  currency    
+
+    #11 COSTO ADICIONAL                                
+    #12 DESCRIPCION DE COSTO ADICIONAL                
+
+    #13 MEDIO DE PAGO                       #6  payment_method_type         
+    #14 COMPROBANTE DE PAGO                 
+    #15 DESCRIPCION DE PEDIDO                
+    #16 CUSTOMER_EMAIL                      #4  customer_email           
+
+    #17 NAME                                #13 name
+    #18 CELULAR                             #14 phone_number   
+    #19 DIRECCION 1                         #8  address_line_1       
+    #20 DIRECCION 2                         #9  address_line_2       
+    #21 PAIS                                #10 country
+
+    #22 REGION                              #11 region  
+    #23 CIUDAD                              #12 city  
+    #24 CODIGO POSTAL                       #15 postal_code         
+    #25 NUMERO DE GUIA ENVIO                
+    #26 EMPRESA DE ENVIO                
+    #27 COSTO FINAL DE ENVIO                

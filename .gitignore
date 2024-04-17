@@ -1,4 +1,5 @@
 # Python
+test.py
 
 # Ignorar archivos de caché de Python
 __pycache__/
@@ -14,6 +15,9 @@ ftp_script.txt
 script.sh
 # Flask related
 instance/
+
+Pipfile
+Pipfile.lock
 
 # Static files
 static/images/
