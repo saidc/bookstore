@@ -70,6 +70,10 @@ def append_row_value(service=None, spreadsheet_id=None, sheet_name=None, value=N
         ).execute()
         msg = f"{(result.get('updates').get('updatedCells'))} cells updated."
         return msg
+    except errors.HttpError as error:
+        msg = f"An error occurred: {error}"
+        print(msg)
+        return msg
     except Exception as error:
         msg = f"An error occurred: {error}"
         print(msg)
