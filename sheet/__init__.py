@@ -102,6 +102,10 @@ def batch_update_row_value(service=None, spreadsheet_id=None, sheet_name=None, r
         result = service.spreadsheets().values().batchUpdate( spreadsheetId=spreadsheet_id, body=body).execute()
         print(f"{(result.get('totalUpdatedCells'))} cells updated.")
         return result
+    except errors.HttpError as error:
+        msg = f"An error occurred: {error}"
+        print(msg)
+        return msg
     except Exception as error:
         print(f"An error occurred: {error}")
         return error
