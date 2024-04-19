@@ -20,7 +20,7 @@ service = connect_to_sheet_api(creds)
 # Obtener la fecha y hora actual
 fecha_actual = datetime.now()
 
-payment_link_id = "ZCXl9i"
+payment_link_id = "test_LwJH1N"
 fecha_de_creacion = fecha_actual.strftime("%Y-%m-%dT%H:%M:%S.%fZ") #"2024-02-28T15:59:35.744Z" 
 # Calcular la hora en 2 horas como fecha de expiracion 
 fecha_de_expiracion = (fecha_actual + timedelta(hours=2)).strftime("%Y-%m-%dT%H:%M:%S.%fZ") #"2024-02-28T17:59:35.450Z"
@@ -40,6 +40,8 @@ for i in test_products:
     row = nuevo_procesamiento_de_pedido(payment_link_id, productos_a_comprar, fecha_de_creacion, fecha_de_expiracion)
     rslt = append_row_value(service, SPREADSHEET_ID, SHEET_NAME, row)
 time.sleep(5)
+
+update = ['', '', 'test_LwJH1N', '2024-04-18T23:15:57.852Z', '', '2024-04-19T02:15:52.810Z', 'ESPERANDO', 'VENTAS WEB', '', '', '', '', '', '', '', '[{"id": "elni\\u00f1oaquel", "name": "El ni\\u00f1o aquel", "image": "https://live.staticflickr.com/65535/53550559789_776de25b1c_o.png", "price": 40000, "amount": 1, "subtotal": 40000, "price_dolar": -1, "dolar_subtotal": -1}]', '', '', '', '', '', '', '', '', '', '', '', '']
 
 #rows = get_rows(service, SPREADSHEET_ID, SHEET_NAME)
 ##print(rows)
