@@ -80,7 +80,7 @@ def webhook():
                     transaction_data = request_data["data"]["transaction"]
                     webhook_res = get_webhook_param( transaction_data )
                     row_json = get_webhook_param_json( transaction_data )
-
+                    print("webhook_res: \n", webhook_res)
                     payment_link_id = row_json["payment_link_id"]
 
                     #new_row = [ proceso_compra_id,  "El niño aquel",  80000,    str(shipping_address),   "sayacorcal@gmail.com",  str(request_data["data"]) ]
