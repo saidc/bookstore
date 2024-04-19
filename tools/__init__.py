@@ -5,6 +5,19 @@ import json
 import ast
 import os
 
+def asignar_valor(lista, posicion, valor):
+    # Verificar si la posición está dentro del rango de la lista
+    if posicion < 0:
+        #print("La posición no puede ser negativa.")
+        return lista
+    elif posicion >= len(lista):
+        # Si la posición está fuera del rango de la lista, agregar elementos vacíos hasta alcanzarla
+        lista.extend([""] * (posicion - len(lista) + 1))
+    # Asignar el valor a la posición especificada
+    lista[posicion] = valor
+    #print("Lista actualizada:", lista)
+    return lista
+
 def getenv_var(env_file_path):
     # Obtener las variables de entorno 
     if os.path.exists(env_file_path):

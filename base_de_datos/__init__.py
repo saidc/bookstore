@@ -1,5 +1,6 @@
 
 from datetime import datetime, timedelta
+from tools import asignar_valor
 
 def obtener_informacion_producto(id):
     # Aquí deberías implementar la lógica para obtener la información del producto
@@ -160,7 +161,7 @@ def obtener_pedido_by_payment_link_id(rows, payment_link_id):
         if fecha_creacion >= hora_hace_dos_horas and fecha_creacion <= hora_actual:
             elementos_cumplen_condicion.append([i,elemento])
     
-    print("elementos_cumplen_condicion: ", elementos_cumplen_condicion)
+    #print("elementos_cumplen_condicion: ", elementos_cumplen_condicion)
 
     # Buscar el elemento con el id_link especificado
     for elemento in elementos_cumplen_condicion:
@@ -171,6 +172,7 @@ def obtener_pedido_by_payment_link_id(rows, payment_link_id):
     return -1, None
 
 def update_row_by_webhook_respond(row, webhook_res):
+    row = asignar_valor(row, 28, "")
     row[1] = webhook_res[0]    #1
     row[2] = webhook_res[17]   #2
     row[3] = webhook_res[1]    #3
@@ -188,8 +190,8 @@ def update_row_by_webhook_respond(row, webhook_res):
     row[22] = webhook_res[11]  #22
     row[23] = webhook_res[12]  #23
     row[24] = webhook_res[15]  #24
-
     return row
+
     #   ROW                                     WEBHOOK_RES
     #0  SELECCION MANUAL                    
     #1  PROCESO_COMPRA_ID                   #0  proceso_compra_id  
