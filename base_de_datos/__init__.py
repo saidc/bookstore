@@ -172,7 +172,7 @@ def obtener_pedido_by_payment_link_id(rows, payment_link_id):
     return -1, None
 
 def update_row_by_webhook_respond(row, webhook_res):
-    row = asignar_valor(row, 28, "")
+    row = asignar_valor(row, 27, "")
     row[1] = webhook_res[0]    #1
     row[2] = webhook_res[17]   #2
     row[3] = webhook_res[1]    #3
