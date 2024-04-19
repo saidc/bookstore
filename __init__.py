@@ -70,8 +70,11 @@ def webhook():
                 TOKEN_FILE = os.environ.get("SHEET_TOKEN_FILE")
                 CLIENT_SECRET = os.environ.get("SHEET_CLIENT_SECRET") 
                 SCOPES = convert_to_list( os.environ.get("SHEET_SCOPES") )
-                SPREADSHEET_ID = os.environ.get("SPREADSHEET_ID") 
-                SHEET_NAME = os.environ.get("SHEET_NAME") 
+                #SPREADSHEET_ID = os.environ.get("SPREADSHEET_ID") 
+                SPREADSHEET_ID = os.environ.get("SPREADSHEET_2_ID") 
+                #SHEET_NAME = os.environ.get("SHEET_NAME") 
+                SHEET_NAME = os.environ.get("SHEET_2_NAME") 
+
                 creds = get_token_credentials(TOKEN_FILE, CLIENT_SECRET, SCOPES)
                 service = connect_to_sheet_api(creds)
 
