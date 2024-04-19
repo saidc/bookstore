@@ -85,6 +85,7 @@ def webhook():
 
                     #new_row = [ proceso_compra_id,  "El niño aquel",  80000,    str(shipping_address),   "sayacorcal@gmail.com",  str(request_data["data"]) ]
                     rows = get_rows(service, SPREADSHEET_ID, SHEET_NAME)
+                    print("ros de g_sheet: \n", rows)
                     pos, row =  obtener_pedido_by_payment_link_id(rows, payment_link_id)
                     
                     row = update_row_by_webhook_respond(row, webhook_res)
