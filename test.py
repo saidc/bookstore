@@ -20,7 +20,7 @@ service = connect_to_sheet_api(creds)
 # Obtener la fecha y hora actual
 fecha_actual = datetime.now()
 
-payment_link_id = "ZCXl9i"
+payment_link_id = "test_wodeTj"
 fecha_de_creacion = fecha_actual.strftime("%Y-%m-%dT%H:%M:%S.%fZ") #"2024-02-28T15:59:35.744Z" 
 # Calcular la hora en 2 horas como fecha de expiracion 
 fecha_de_expiracion = (fecha_actual + timedelta(hours=2)).strftime("%Y-%m-%dT%H:%M:%S.%fZ") #"2024-02-28T17:59:35.450Z"
