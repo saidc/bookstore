@@ -173,23 +173,23 @@ def obtener_pedido_by_payment_link_id(rows, payment_link_id):
 
 def update_row_by_webhook_respond(row, webhook_res):
     row = asignar_valor(row, 27, "")
-    row[1] = webhook_res[0]    #1
-    row[2] = webhook_res[17]   #2
-    row[3] = webhook_res[1]    #3
-    row[4] = webhook_res[2]    #4
-    row[6] = webhook_res[7]    #6
-    row[8] = webhook_res[3]    #8
-    row[10] = webhook_res[5]   #10
-    row[13] = webhook_res[6]   #13
-    row[16] = webhook_res[4]   #16
-    row[17] = webhook_res[13]  #17
-    row[18] = webhook_res[14]  #18
-    row[19] = webhook_res[8]   #19
-    row[20] = webhook_res[9]   #20
-    row[21] = webhook_res[10]  #21
-    row[22] = webhook_res[11]  #22
-    row[23] = webhook_res[12]  #23
-    row[24] = webhook_res[15]  #24
+    row[1]  = str(webhook_res[0])  #1
+    row[2]  = str(webhook_res[17])  #2
+    row[3]  = str(webhook_res[1])  #3
+    row[4]  = str(webhook_res[2])  #4
+    row[6]  = str(webhook_res[7])  #6
+    row[8]  = str(webhook_res[3])  #8
+    row[10] = str(webhook_res[5]) #10
+    row[13] = str(webhook_res[6]) #13
+    row[16] = str(webhook_res[4]) #16
+    row[17] = str(webhook_res[13]) #17
+    row[18] = str(webhook_res[14]) #18
+    row[19] = str(webhook_res[8]) #19
+    row[20] = str(webhook_res[9]) #20
+    row[21] = str(webhook_res[10]) #21
+    row[22] = str(webhook_res[11]) #22
+    row[23] = str(webhook_res[12]) #23
+    row[24] = str(webhook_res[15]) #24
     return row
 
     #   ROW                                     WEBHOOK_RES
