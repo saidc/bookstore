@@ -160,6 +160,8 @@ def obtener_pedido_by_payment_link_id(rows, payment_link_id):
         if fecha_creacion >= hora_hace_dos_horas and fecha_creacion <= hora_actual:
             elementos_cumplen_condicion.append([i,elemento])
     
+    print("elementos_cumplen_condicion: ", elementos_cumplen_condicion)
+
     # Buscar el elemento con el id_link especificado
     for elemento in elementos_cumplen_condicion:
         if elemento[1][2] == payment_link_id:
