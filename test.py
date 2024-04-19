@@ -1,5 +1,5 @@
 from base_de_datos import obtener_informacion_producto, nuevo_procesamiento_de_pedido, obtener_pedido_by_payment_link_id, update_row_by_webhook_respond
-from sheet import get_token_credentials, get_rows, connect_to_sheet_api, append_row_value, send_email
+from sheet import get_token_credentials, get_rows, connect_to_sheet_api, append_row_value, send_email, batch_update_row_value
 import  time
 import os 
 from tools import getenv_var, convert_to_list
@@ -49,6 +49,8 @@ rows = get_rows(service, SPREADSHEET_ID, SHEET_NAME)
 pos, row =  obtener_pedido_by_payment_link_id(rows, payment_link_id)
 
 row = update_row_by_webhook_respond(row, webhook_res)
+print("final row ", row)
+rslt = batch_update_row_value(service, SPREADSHEET_ID, SHEET_NAME, row_to_update=pos, value=row)
 
 #rows = get_rows(service, SPREADSHEET_ID, SHEET_NAME)
 ##print(rows)
