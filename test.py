@@ -18,7 +18,7 @@ SHEET_NAME = os.environ.get("SHEET_2_NAME")
 creds = get_token_credentials(TOKEN_FILE, CLIENT_SECRET, SCOPES)
 service = connect_to_sheet_api(creds)
 
-fecha_creacion_str = "2024-04-20T23:04:31.797Z"
+fecha_creacion_str = "2024-04-20T23:41:01.415Z"
 fecha_creacion =  datetime.strptime(fecha_creacion_str, "%Y-%m-%dT%H:%M:%S.%fZ")
 zona_horaria_colombiana = pytz.timezone('America/Bogota')
 fecha_creacion = fecha_creacion.astimezone(zona_horaria_colombiana)
