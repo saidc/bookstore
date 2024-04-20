@@ -160,7 +160,7 @@ def obtener_pedido_by_payment_link_id(rows, payment_link_id):
     for i in range(1, len(rows)):
         elemento = rows[i]
         fecha_creacion = datetime.strptime(elemento[3], "%Y-%m-%dT%H:%M:%S.%fZ")
-        fecha_creacion.astimezone(zona_horaria_colombiana)
+        fecha_creacion = fecha_creacion.astimezone(zona_horaria_colombiana)
         # Verificar si la fecha de creación está dentro del rango de 2 horas
         if fecha_creacion >= hora_hace_dos_horas and fecha_creacion <= hora_actual:
             elementos_cumplen_condicion.append([i,elemento])
