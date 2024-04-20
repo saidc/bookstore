@@ -1,6 +1,7 @@
 
 from datetime import datetime, timedelta
 from tools import asignar_valor, obtener_hora_colombiana,sumar_horas
+import pytz
 
 def obtener_informacion_producto(id):
     # Aquí deberías implementar la lógica para obtener la información del producto
@@ -154,11 +155,12 @@ def obtener_pedido_by_payment_link_id(rows, payment_link_id):
     print("hora actual: ", hora_actual.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
     # Lista para almacenar elementos que cumplen con las condiciones
     elementos_cumplen_condicion = []
-
+    zona_horaria_colombiana = pytz.timezone('America/Bogota')
      # Iterar sobre la lista de listas, quitando el encabezado
     for i in range(1, len(rows)):
         elemento = rows[i]
         fecha_creacion = datetime.strptime(elemento[3], "%Y-%m-%dT%H:%M:%S.%fZ")
+        fecha_creacion.astimezone(zona_horaria_colombiana)
         # Verificar si la fecha de creación está dentro del rango de 2 horas
         if fecha_creacion >= hora_hace_dos_horas and fecha_creacion <= hora_actual:
             elementos_cumplen_condicion.append([i,elemento])
