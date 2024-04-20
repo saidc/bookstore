@@ -18,6 +18,11 @@ def obtener_hora_colombiana():
 
     return hora_colombiana
 
+def sumar_horas(hora, horas_a_sumar):
+    # Sumar las horas especificadas a la hora dada
+    nueva_hora = hora + timedelta(hours=horas_a_sumar)
+    return nueva_hora
+
 def asignar_valor(lista, posicion, valor):
     # Verificar si la posición está dentro del rango de la lista
     if posicion < 0:
