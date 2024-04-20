@@ -149,7 +149,7 @@ def obtener_pedido_by_payment_link_id(rows, payment_link_id):
 
     # Calcular la hora hace 2 horas
     hora_hace_dos_horas = hora_actual - timedelta(hours=2)
-
+    print("hora actual: ", hora_actual.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
     # Lista para almacenar elementos que cumplen con las condiciones
     elementos_cumplen_condicion = []
 

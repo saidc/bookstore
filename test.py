@@ -22,6 +22,7 @@ fecha_actual = datetime.now()
 
 payment_link_id = "test_p81hD8"
 fecha_de_creacion = fecha_actual.strftime("%Y-%m-%dT%H:%M:%S.%fZ") #"2024-02-28T15:59:35.744Z" 
+print("Fecha Actual: ", fecha_de_creacion)
 # Calcular la hora en 2 horas como fecha de expiracion 
 fecha_de_expiracion = (fecha_actual + timedelta(hours=2)).strftime("%Y-%m-%dT%H:%M:%S.%fZ") #"2024-02-28T17:59:35.450Z"
 status = "ESPERANDO"
@@ -42,15 +43,13 @@ productos_a_comprar = '[{"id": "elni\u00f1oaquel", "name": "El ni\u00f1o aquel",
 #time.sleep(5)
 #add_row = ['', '', 'test_wodeTj', '2024-04-19T22:10:51.495Z', '', '2024-04-20T01:10:51.195Z', 'ESPERANDO', 'VENTAS WEB', '', '', '', '', '', '', '', '[{"id": "elni\\u00f1oaquel", "name": "El ni\\u00f1o aquel", "image": "https://live.staticflickr.com/65535/53550559789_776de25b1c_o.png", "price": 40000, "amount": 1, "subtotal": 40000, "price_dolar": -1, "dolar_subtotal": -1}]', '', '', '', '', '', '', '', '', '', '', '', '']
 #updaterowbaywebhookrespond = ['139086-1713564676-32081', '2024-04-19T22:11:16.648Z', '2024-04-19T22:11:17.627Z', '5000000', 'saidjoc@gmail.com', 'COP', 'PSE', 'APPROVED', 'carrera 11#20-57', 'Casa', 'CO', 'Cesar', 'Valledupar', 'SAID JOSÉ CORTÉS CALDERÓN', '+573106016968', '200001', 'https://ipuc-libros.my.canva.site/thanks-for-buy-elninoaquel', 'test_wodeTj']
-webhook_res = ['139086-1713564676-32081', '2024-04-19T22:11:16.648Z', '2024-04-19T22:11:17.627Z', '5000000', 'saidjoc@gmail.com', 'COP', 'PSE', 'APPROVED', 'carrera 11#20-57', 'Casa', 'CO', 'Cesar', 'Valledupar', 'SAID JOSÉ CORTÉS CALDERÓN', '+573106016968', '200001', 'https://ipuc-libros.my.canva.site/thanks-for-buy-elninoaquel', 'test_p81hD8']
 
-rows = get_rows(service, SPREADSHEET_ID, SHEET_NAME)
-
-pos, row =  obtener_pedido_by_payment_link_id(rows, payment_link_id)
-
-row = update_row_by_webhook_respond(row, webhook_res)
-print("final row ", row)
-rslt = batch_update_row_value(service, SPREADSHEET_ID, SHEET_NAME, row_to_update=pos, value=row)
+#webhook_res = ['139086-1713564676-32081', '2024-04-19T22:11:16.648Z', '2024-04-19T22:11:17.627Z', '5000000', 'saidjoc@gmail.com', 'COP', 'PSE', 'APPROVED', 'carrera 11#20-57', 'Casa', 'CO', 'Cesar', 'Valledupar', 'SAID JOSÉ CORTÉS CALDERÓN', '+573106016968', '200001', 'https://ipuc-libros.my.canva.site/thanks-for-buy-elninoaquel', 'test_p81hD8']
+#rows = get_rows(service, SPREADSHEET_ID, SHEET_NAME)
+#pos, row =  obtener_pedido_by_payment_link_id(rows, payment_link_id)
+#row = update_row_by_webhook_respond(row, webhook_res)
+#print("final row ", row)
+#rslt = batch_update_row_value(service, SPREADSHEET_ID, SHEET_NAME, row_to_update=pos, value=row)
 
 #rows = get_rows(service, SPREADSHEET_ID, SHEET_NAME)
 ##print(rows)
