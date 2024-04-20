@@ -1,9 +1,22 @@
 from datetime import datetime, timedelta
 import urllib.request
 import base64
+import pytz
 import json
 import ast
 import os
+
+def obtener_hora_colombiana():
+    # Obtener la hora actual en UTC
+    hora_utc = datetime.utcnow()
+
+    # Definir la zona horaria de Colombia
+    zona_horaria_colombiana = pytz.timezone('America/Bogota')
+
+    # Convertir la hora UTC a la hora en Colombia
+    hora_colombiana = hora_utc.replace(tzinfo=pytz.utc).astimezone(zona_horaria_colombiana)
+
+    return hora_colombiana.strftime("%Y-%m-%dT%H:%M:%S.%fZ")  # Formato deseado
 
 def asignar_valor(lista, posicion, valor):
     # Verificar si la posición está dentro del rango de la lista
