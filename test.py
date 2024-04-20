@@ -2,7 +2,7 @@ from base_de_datos import obtener_informacion_producto, nuevo_procesamiento_de_p
 from sheet import get_token_credentials, get_rows, connect_to_sheet_api, append_row_value, send_email, batch_update_row_value
 import  time
 import os 
-from tools import getenv_var, convert_to_list, obtener_hora_colombiana
+from tools import getenv_var, convert_to_list, obtener_hora_colombiana, sumar_horas
 from datetime import datetime, timedelta
 import pytz
 
@@ -24,9 +24,10 @@ fecha_actual = datetime.now()
 payment_link_id = "test_p81hD8"
 fecha_de_creacion = fecha_actual.strftime("%Y-%m-%dT%H:%M:%S.%fZ") #"2024-02-28T15:59:35.744Z" 
 print("Fecha Actual: ", fecha_de_creacion)
-print("Fecha Actual colombia: ", obtener_hora_colombiana())
-
-
+hora_actual_colombiana = obtener_hora_colombiana().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+print("Fecha Actual colombia: ", hora_actual_colombiana)
+nueva_hora = sumar_horas(hora_actual_colombiana, 5)
+print("Fecha Actual colombia + 5 horas: ", nueva_hora)
 
 # Calcular la hora en 2 horas como fecha de expiracion 
 fecha_de_expiracion = (fecha_actual + timedelta(hours=2)).strftime("%Y-%m-%dT%H:%M:%S.%fZ") #"2024-02-28T17:59:35.450Z"

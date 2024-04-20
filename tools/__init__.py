@@ -16,7 +16,7 @@ def obtener_hora_colombiana():
     # Convertir la hora UTC a la hora en Colombia
     hora_colombiana = hora_utc.replace(tzinfo=pytz.utc).astimezone(zona_horaria_colombiana)
 
-    return hora_colombiana.strftime("%Y-%m-%dT%H:%M:%S.%fZ")  # Formato deseado
+    return hora_colombiana
 
 def asignar_valor(lista, posicion, valor):
     # Verificar si la posición está dentro del rango de la lista
