@@ -18,19 +18,35 @@ SHEET_NAME = os.environ.get("SHEET_2_NAME")
 creds = get_token_credentials(TOKEN_FILE, CLIENT_SECRET, SCOPES)
 service = connect_to_sheet_api(creds)
 
-# Obtener la fecha y hora actual
-fecha_actual = datetime.now()
+fecha_creacion_str = "2024-04-20T23:04:31.797Z"
+fecha_creacion =  datetime.strptime(fecha_creacion_str, "%Y-%m-%dT%H:%M:%S.%fZ")
+zona_horaria_colombiana = pytz.timezone('America/Bogota')
+fecha_creacion = fecha_creacion.astimezone(zona_horaria_colombiana)
+
+print("fecha de crearcion de pedido: ",fecha_creacion.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
+# Obtener la fecha y hora actual colombia
+hora_actual_colombiana = obtener_hora_colombiana()
+print("fecha actual colombia: ",hora_actual_colombiana.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
+hora_actual_colombiana_mas_5 = hora_actual_colombiana + timedelta(hours=5)
+print("fecha actual colombia + 5: ",hora_actual_colombiana_mas_5.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
+
+hace_2_horas = hora_actual_colombiana_mas_5 - timedelta(hours=2)
+print("\nfecha actual colombia + 5 - 2: ",hace_2_horas.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
+
+if( fecha_creacion >= hace_2_horas ):
+    print("la fecha es mayor de hace dos horas")
+else:
+    print("la fecha es menor de hace dos horas")
 
 payment_link_id = "test_q9C8aV"
-fecha_de_creacion = fecha_actual.strftime("%Y-%m-%dT%H:%M:%S.%fZ") #"2024-02-28T15:59:35.744Z" 
+#fecha_de_creacion = fecha_actual.strftime("%Y-%m-%dT%H:%M:%S.%fZ") #"2024-02-28T15:59:35.744Z" 
 #print("Fecha Actual: ", fecha_de_creacion)
-#hora_actual_colombiana = obtener_hora_colombiana()
 #print("Fecha Actual colombia: ", hora_actual_colombiana.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
 #nueva_hora = sumar_horas(hora_actual_colombiana, 5)
 #print("Fecha Actual colombia + 5 horas: ", nueva_hora.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
 
 # Calcular la hora en 2 horas como fecha de expiracion 
-fecha_de_expiracion = (fecha_actual + timedelta(hours=2)).strftime("%Y-%m-%dT%H:%M:%S.%fZ") #"2024-02-28T17:59:35.450Z"
+#fecha_de_expiracion = (fecha_actual + timedelta(hours=2)).strftime("%Y-%m-%dT%H:%M:%S.%fZ") #"2024-02-28T17:59:35.450Z"
 status = "ESPERANDO"
 tipo_de_venta = "VENTAS WEB"
 productos_a_comprar = '[{"id": "elni\u00f1oaquel", "name": "El ni\u00f1o aquel", "image": "https://live.staticflickr.com/65535/53550559789_776de25b1c_o.png", "price": 30000, "amount": 1, "subtotal": 30000, "price_dolar": -1, "dolar_subtotal": -1}]' 
