@@ -1,6 +1,6 @@
 
 from datetime import datetime, timedelta
-from tools import asignar_valor
+from tools import asignar_valor, obtener_hora_colombiana,sumar_horas
 
 def obtener_informacion_producto(id):
     # Aquí deberías implementar la lógica para obtener la información del producto
@@ -144,8 +144,10 @@ def nuevo_procesamiento_de_pedido(payment_link_id, productos_a_comprar, fecha_de
     #27 COSTO FINAL DE ENVIO
 
 def obtener_pedido_by_payment_link_id(rows, payment_link_id):
-     # Obtener la hora actual
-    hora_actual = datetime.now()
+    # Obtener la hora actual
+    #hora_actual = datetime.now()
+    hora_actual_colombiana = obtener_hora_colombiana()
+    hora_actual = sumar_horas(hora_actual_colombiana, 5)
 
     # Calcular la hora hace 2 horas
     hora_hace_dos_horas = hora_actual - timedelta(hours=2)
