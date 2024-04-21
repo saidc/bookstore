@@ -6,6 +6,7 @@ import json
 import ast
 import os
 
+# Esta funcion calcula un rango de google sheet que no pase de 676 columnas 
 def calcular_rango(fila, ancho):
     # Convertir el número de fila en letra de columna
     letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -16,6 +17,7 @@ def calcular_rango(fila, ancho):
     rango = f"A{fila}:{letra_inicio}{letra_final}{fila}"
     return rango
 
+# Esta funcion retorna la hora en la zona horaria de colombia 
 def obtener_hora_colombiana():
     # Obtener la hora actual en UTC
     hora_utc = datetime.utcnow()
@@ -32,6 +34,7 @@ def sumar_horas(hora, horas_a_sumar):
     # Sumar las horas especificadas a la hora dada
     nueva_hora = hora + timedelta(hours=horas_a_sumar)
     return nueva_hora
+
 
 def asignar_valor(lista, posicion, valor):
     # Verificar si la posición está dentro del rango de la lista

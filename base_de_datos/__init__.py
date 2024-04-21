@@ -3,6 +3,37 @@ from datetime import datetime, timedelta
 from tools import asignar_valor, obtener_hora_colombiana,sumar_horas
 import pytz
 
+db_orders = {
+ "SELECCION MANUAL":0,
+ "PROCESO_COMPRA_ID":1,
+ "PAYMENT_LINK_ID":2,
+ "CREATED_AT":3,
+ "FINALIZED_AT":4,
+ "EXPIRED_AT":5,
+ "STATUS":6,
+ "TIPO DE VENTA":7,
+ "TOTAL PAGADO":8,
+ "PRECIO ESTABLECIDO DE ENVIO":9,
+ "CURRENCY":10,
+ "COSTO ADICIONAL":11,
+ "DESCRIPCION DE COSTO ADICIONAL":12,
+ "MEDIO DE PAGO":13,
+ "COMPROBANTE DE PAGO":14,
+ "DESCRIPCION DE PEDIDO":15,
+ "CUSTOMER_EMAIL":16,
+ "NAME":17,
+ "CELULAR":18,
+ "DIRECCION 1":19,
+ "DIRECCION 2":20,
+ "PAIS":21,
+ "REGION":22,
+ "CIUDAD":23,
+ "CODIGO POSTAL":24,
+ "NUMERO DE GUIA ENVIO":25,
+ "EMPRESA DE ENVIO":26,
+ "COSTO FINAL DE ENVIO":27
+}
+
 def obtener_informacion_producto(id):
     # Aquí deberías implementar la lógica para obtener la información del producto
     # Puedes obtener el ID, nombre y precio del producto desde una base de datos o cualquier otra fuente de datos.
@@ -108,58 +139,66 @@ def obtener_informacion_producto(id):
         return None
 
 def nuevo_procesamiento_de_pedido(payment_link_id, productos_a_comprar, fecha_de_creacion, fecha_de_expiracion):
-    #       0   1   2                     3                       4   5                         6            7             8   9   10  11  12  13  14  15                       16 17 18 19 20 21 22 23 24 25 26 27      
-    return ["", "", str(payment_link_id), str(fecha_de_creacion), "", str(fecha_de_expiracion), "ESPERANDO", "VENTAS WEB", "", "", "", "", "", "", "", str(productos_a_comprar),"","","","","","","","","","","","" ]
+    global db_orders
+    lista = []
+    lista = asignar_valor(lista, 27, "")
+
+    lista[db_orders["SELECCION MANUAL"]]                = "" 
+    lista[db_orders["PROCESO_COMPRA_ID"]]               = "" 
+    lista[db_orders["PAYMENT_LINK_ID"]]                 = str(payment_link_id) 
+    lista[db_orders["CREATED_AT"]]                      = str(fecha_de_creacion) 
+    lista[db_orders["FINALIZED_AT"]]                    = "" 
+    lista[db_orders["EXPIRED_AT"]]                      = str(fecha_de_expiracion) 
+    lista[db_orders["STATUS"]]                          = "ESPERANDO" 
+    lista[db_orders["TIPO DE VENTA"]]                   = "VENTAS WEB" 
+    lista[db_orders["TOTAL PAGADO"]]                    = "" 
+    lista[db_orders["PRECIO ESTABLECIDO DE ENVIO"]]     = "" 
+    lista[db_orders["CURRENCY"]]                        = "" 
+    lista[db_orders["COSTO ADICIONAL"]]                 = "" 
+    lista[db_orders["DESCRIPCION DE COSTO ADICIONAL"]]  = "" 
+    lista[db_orders["MEDIO DE PAGO"]]                   = "" 
+    lista[db_orders["COMPROBANTE DE PAGO"]]             = "" 
+    lista[db_orders["DESCRIPCION DE PEDIDO"]]           = str(productos_a_comprar) 
+    lista[db_orders["CUSTOMER_EMAIL"]]                  = "" 
+    lista[db_orders["NAME"]]                            = "" 
+    lista[db_orders["CELULAR"]]                         = "" 
+    lista[db_orders["DIRECCION 1"]]                     = "" 
+    lista[db_orders["DIRECCION 2"]]                     = "" 
+    lista[db_orders["PAIS"]]                            = "" 
+    lista[db_orders["REGION"]]                          = "" 
+    lista[db_orders["CIUDAD"]]                          = "" 
+    lista[db_orders["CODIGO POSTAL"]]                   = "" 
+    lista[db_orders["NUMERO DE GUIA ENVIO"]]            = "" 
+    lista[db_orders["EMPRESA DE ENVIO"]]                = "" 
+    lista[db_orders["COSTO FINAL DE ENVIO"]]            = "" 
+    
+    return lista
      
-    #0  SELECCION MANUAL
-    #1  PROCESO_COMPRA_ID
-    #2  PAYMENT_LINK_ID
-    #3  CREATED_AT
-    #4  FINALIZED_AT
-    #5  EXPIRED_AT
-    #6  STATUS
-    #7  TIPO DE VENTA
-    #8  TOTAL PAGADO
-    #9  PRECIO ESTABLECIDO DE ENVIO
-    #10 CURRENCY
-
-    #11 COSTO ADICIONAL
-    #12 DESCRIPCION DE COSTO ADICIONAL
-
-    #13 MEDIO DE PAGO
-    #14 COMPROBANTE DE PAGO
-    #15 DESCRIPCION DE PEDIDO
-    #16 CUSTOMER_EMAIL
-
-    #17 NAME
-    #18 CELULAR
-    #19 DIRECCION 1
-    #20 DIRECCION 2
-    #21 PAIS
-
-    #22 REGION
-    #23 CIUDAD
-    #24 CODIGO POSTAL
-    #25 NUMERO DE GUIA ENVIO
-    #26 EMPRESA DE ENVIO
-    #27 COSTO FINAL DE ENVIO
 
 def obtener_pedido_by_payment_link_id(rows, payment_link_id):
-    # Obtener la hora actual
-    #hora_actual = datetime.now()
+    global db_orders
+    
+    # Obtener la hora actual Colombia
     hora_actual_colombiana = obtener_hora_colombiana()
+    # se le suman 5 Horas a la hora colombiana 
     hora_actual = hora_actual_colombiana + timedelta(hours=5)
+    # se resta 2 horas para obtener 2 horas antes de la zona horaria del servidor de wompi
     hora_hace_dos_horas = hora_actual - timedelta(hours=2)
-
+    # # defino la zona horaria de colombia
     zona_horaria_colombiana = pytz.timezone('America/Bogota')
 
-    print("hora actual: ", hora_actual.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
+    #print("hora actual: ", hora_actual.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
+    
     # Lista para almacenar elementos que cumplen con las condiciones
     elementos_cumplen_condicion = []
-     # Iterar sobre la lista de listas, quitando el encabezado
+    
+    # Iterar sobre la lista de listas, quitando el encabezado
     for i in range(1, len(rows)):
         row = rows[i]
-        fecha_creacion = datetime.strptime(row[3], "%Y-%m-%dT%H:%M:%S.%fZ")
+        # se obtiene la columna de fecha de creacion de la orden 
+        CREATED_AT = row[db_orders["CREATED_AT"]]
+
+        fecha_creacion = datetime.strptime(CREATED_AT, "%Y-%m-%dT%H:%M:%S.%fZ")
         #fecha_creacion = fecha_creacion.astimezone(zona_horaria_colombiana)
         fecha_creacion = fecha_creacion.replace(tzinfo=zona_horaria_colombiana)
 
@@ -167,11 +206,13 @@ def obtener_pedido_by_payment_link_id(rows, payment_link_id):
         if fecha_creacion >= hora_hace_dos_horas:
             elementos_cumplen_condicion.append([i,row])
     
-    print("elementos_cumplen_condicion: ", elementos_cumplen_condicion)
+    #print("elementos_cumplen_condicion: ", elementos_cumplen_condicion)
 
     # Buscar el elemento con el id_link especificado
     for elemento in elementos_cumplen_condicion:
-        if elemento[1][2] == payment_link_id:
+        # se obtine la columba de id de link de pago
+        PAYMENT_LINK_ID = elemento[1][db_orders["PAYMENT_LINK_ID"]]
+        if PAYMENT_LINK_ID == payment_link_id:
             return elemento[0], elemento[1]
 
     # Si no se encuentra ningún elemento con el id_link especificado
@@ -179,55 +220,21 @@ def obtener_pedido_by_payment_link_id(rows, payment_link_id):
 
 def update_row_by_webhook_respond(row, webhook_res):
     row = asignar_valor(row, 27, "")
-    row[1]  = str(webhook_res[0])  #1
-    row[2]  = str(webhook_res[17])  #2
-    row[3]  = str(webhook_res[1])  #3
-    row[4]  = str(webhook_res[2])  #4
-    row[6]  = str(webhook_res[7])  #6
-    row[8]  = str(webhook_res[3])  #8
-    row[10] = str(webhook_res[5]) #10
-    row[13] = str(webhook_res[6]) #13
-    row[16] = str(webhook_res[4]) #16
-    row[17] = str(webhook_res[13]) #17
-    row[18] = str(webhook_res[14]) #18
-    row[19] = str(webhook_res[8]) #19
-    row[20] = str(webhook_res[9]) #20
-    row[21] = str(webhook_res[10]) #21
-    row[22] = str(webhook_res[11]) #22
-    row[23] = str(webhook_res[12]) #23
-    row[24] = str(webhook_res[15]) #24
+    row[db_orders["PROCESO_COMPRA_ID"]] = str(webhook_res[0])  #0  proceso_compra_id  
+    row[db_orders["PAYMENT_LINK_ID"]]   = str(webhook_res[17]) #17 payment_link_id
+    row[db_orders["CREATED_AT"]]        = str(webhook_res[1])  #1  created_at  
+    row[db_orders["FINALIZED_AT"]]      = str(webhook_res[2])  #2  finalized_at
+    row[db_orders["STATUS"]]            = str(webhook_res[7])  #7  status    
+    row[db_orders["TOTAL PAGADO"]]      = str(webhook_res[3])  #3  amount_in_cents
+    row[db_orders["CURRENCY"]]          = str(webhook_res[5])  #5  currency    
+    row[db_orders["MEDIO DE PAGO"]]     = str(webhook_res[6])  #6  payment_method_type         
+    row[db_orders["CUSTOMER_EMAIL"]]    = str(webhook_res[4])  #4  customer_email           
+    row[db_orders["NAME"]]              = str(webhook_res[13]) #13 name
+    row[db_orders["CELULAR"]]           = str(webhook_res[14]) #14 phone_number   
+    row[db_orders["DIRECCION 1"]]       = str(webhook_res[8])  #8  address_line_1       
+    row[db_orders["DIRECCION 2"]]       = str(webhook_res[9])  #9  address_line_2       
+    row[db_orders["PAIS"]]              = str(webhook_res[10]) #10 country
+    row[db_orders["REGION"]]            = str(webhook_res[11]) #11 region  
+    row[db_orders["CIUDAD"]]            = str(webhook_res[12]) #12 city  
+    row[db_orders["CODIGO POSTAL"]]     = str(webhook_res[15]) #15 postal_code         
     return row
-
-    #   ROW                                     WEBHOOK_RES
-    #0  SELECCION MANUAL                    
-    #1  PROCESO_COMPRA_ID                   #0  proceso_compra_id  
-    #2  PAYMENT_LINK_ID                     #17 payment_link_id
-    #3  CREATED_AT                          #1  created_at  
-    #4  FINALIZED_AT                        #2  finalized_at
-    #5  EXPIRED_AT                              
-    #6  STATUS                              #7  status    
-    #7  TIPO DE VENTA                                
-    #8  TOTAL PAGADO                        #3  amount_in_cents
-    #9  PRECIO ESTABLECIDO DE ENVIO                
-    #10 CURRENCY                            #5  currency    
-
-    #11 COSTO ADICIONAL                                
-    #12 DESCRIPCION DE COSTO ADICIONAL                
-
-    #13 MEDIO DE PAGO                       #6  payment_method_type         
-    #14 COMPROBANTE DE PAGO                 
-    #15 DESCRIPCION DE PEDIDO                
-    #16 CUSTOMER_EMAIL                      #4  customer_email           
-
-    #17 NAME                                #13 name
-    #18 CELULAR                             #14 phone_number   
-    #19 DIRECCION 1                         #8  address_line_1       
-    #20 DIRECCION 2                         #9  address_line_2       
-    #21 PAIS                                #10 country
-
-    #22 REGION                              #11 region  
-    #23 CIUDAD                              #12 city  
-    #24 CODIGO POSTAL                       #15 postal_code         
-    #25 NUMERO DE GUIA ENVIO                
-    #26 EMPRESA DE ENVIO                
-    #27 COSTO FINAL DE ENVIO                

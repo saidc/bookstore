@@ -86,9 +86,7 @@ def batch_update_row_value(service=None, spreadsheet_id=None, sheet_name=None, r
       and row values.
     """
     try:
-        col_end = chr(ord('A') + len(value) - 1)
-        
-        #range_name = f"{sheet_name}!A{row_to_update}:{col_end}{row_to_update}"
+
         range_name = f"{sheet_name}!"+calcular_rango(row_to_update, len(value))
         print("rango de sheet: ", range_name)
         values = [value]
