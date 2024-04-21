@@ -148,11 +148,11 @@ def obtener_pedido_by_payment_link_id(rows, payment_link_id):
     # Obtener la hora actual
     #hora_actual = datetime.now()
     hora_actual_colombiana = obtener_hora_colombiana()
-    hora_actual = sumar_horas(hora_actual_colombiana, 5)
+    hora_actual = hora_actual_colombiana + timedelta(hours=5)
+    hora_hace_dos_horas = hora_actual - timedelta(hours=2)
+
     zona_horaria_colombiana = pytz.timezone('America/Bogota')
 
-    # Calcular la hora hace 2 horas
-    hora_hace_dos_horas = hora_actual - timedelta(hours=2)
     print("hora actual: ", hora_actual.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
     # Lista para almacenar elementos que cumplen con las condiciones
     elementos_cumplen_condicion = []
@@ -160,7 +160,9 @@ def obtener_pedido_by_payment_link_id(rows, payment_link_id):
     for i in range(1, len(rows)):
         row = rows[i]
         fecha_creacion = datetime.strptime(row[3], "%Y-%m-%dT%H:%M:%S.%fZ")
-        fecha_creacion = fecha_creacion.astimezone(zona_horaria_colombiana)
+        #fecha_creacion = fecha_creacion.astimezone(zona_horaria_colombiana)
+        fecha_creacion = fecha_creacion.replace(tzinfo=zona_horaria_colombiana)
+
         # Verificar si la fecha de creación está dentro del rango de 2 horas
         if fecha_creacion >= hora_hace_dos_horas:
             elementos_cumplen_condicion.append([i,row])
