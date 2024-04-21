@@ -90,13 +90,15 @@ def webhook():
                     #new_row = [ proceso_compra_id,  "El niño aquel",  80000,    str(shipping_address),   "sayacorcal@gmail.com",  str(request_data["data"]) ]
                     time.sleep(4)
                     rows = get_rows(service, SPREADSHEET_ID, SHEET_NAME)
-                    print("ros de g_sheet: \n", rows)
+                    print("rows de g_sheet: \n", rows)
                     pos, row =  obtener_pedido_by_payment_link_id(rows, payment_link_id)
+                    print("row of g_sheet: \n", pos, row)
                     
                     row = update_row_by_webhook_respond(row, webhook_res)
+                    print("final row: \n", row)
                     productos_a_comprar = row[15]
 
-                    rslt = batch_update_row_value(service, SPREADSHEET_ID, SHEET_NAME, row_to_update=pos, value=row)
+                    rslt = batch_update_row_value( service, SPREADSHEET_ID, SHEET_NAME, row_to_update=pos+1, value=row ) 
                     #rslt = append_row_value(service, SPREADSHEET_ID, SHEET_NAME, webhook_res)
                     
                     print("result: ", rslt)
