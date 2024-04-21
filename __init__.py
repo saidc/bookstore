@@ -12,6 +12,7 @@ import psutil
 import uuid
 import json
 import os
+import time
 
 ESTADO_PROYECTO = "TEST" # PROD
 
@@ -87,6 +88,7 @@ def webhook():
                     payment_link_id = row_json["payment_link_id"]
 
                     #new_row = [ proceso_compra_id,  "El niño aquel",  80000,    str(shipping_address),   "sayacorcal@gmail.com",  str(request_data["data"]) ]
+                    time.sleep(4)
                     rows = get_rows(service, SPREADSHEET_ID, SHEET_NAME)
                     print("ros de g_sheet: \n", rows)
                     pos, row =  obtener_pedido_by_payment_link_id(rows, payment_link_id)
