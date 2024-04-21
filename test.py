@@ -58,6 +58,14 @@ status = "ESPERANDO"
 tipo_de_venta = "VENTAS WEB"
 productos_a_comprar = '[{"id": "elni\u00f1oaquel", "name": "El ni\u00f1o aquel", "image": "https://live.staticflickr.com/65535/53550559789_776de25b1c_o.png", "price": 30000, "amount": 1, "subtotal": 30000, "price_dolar": -1, "dolar_subtotal": -1}]' 
 
+
+
+# Ejemplo de uso
+#fila = 3
+#ancho = 10
+#rango = calcular_rango(fila, ancho)
+#print("El rango es:", rango)
+
 #test_products = [
 #    #0   1   2                     3                       4   5                         6            7                   8   9   10  11  12  13  14  15                       16 17 18 19 20 21 22 23 24 25 26 27         
 #    ["", "", str(payment_link_id), str(fecha_de_creacion), "", str(fecha_de_expiracion), str(status), str(tipo_de_venta), "", "", "", "", "", "", "", str(productos_a_comprar),"","","","","","","","","","","","" ]

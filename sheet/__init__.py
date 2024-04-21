@@ -6,6 +6,7 @@ from googleapiclient.discovery import build
 from googleapiclient import errors
 import os.path
 import tools
+from tools import calcular_rango
 
 def get_token_credentials(TOKEN_FILE, CLIENT_SECRET, SCOPES):
 
@@ -86,7 +87,9 @@ def batch_update_row_value(service=None, spreadsheet_id=None, sheet_name=None, r
     """
     try:
         col_end = chr(ord('A') + len(value) - 1)
-        range_name = f"{sheet_name}!A{row_to_update}:{col_end}{row_to_update}"
+        
+        #range_name = f"{sheet_name}!A{row_to_update}:{col_end}{row_to_update}"
+        range_name = f"{sheet_name}!"+calcular_rango(row_to_update, len(value))
         
         values = [value]
         data = [

@@ -6,6 +6,16 @@ import json
 import ast
 import os
 
+def calcular_rango(fila, ancho):
+    # Convertir el número de fila en letra de columna
+    letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    letra_inicio = letras[(ancho - 1) // 26 - 1] if ancho > 26 else ""
+    letra_final = letras[(ancho - 1) % 26]
+
+    # Construir el rango
+    rango = f"A{fila}:{letra_inicio}{letra_final}{fila}"
+    return rango
+
 def obtener_hora_colombiana():
     # Obtener la hora actual en UTC
     hora_utc = datetime.utcnow()
