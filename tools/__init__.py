@@ -35,7 +35,7 @@ def sumar_horas(hora, horas_a_sumar):
     nueva_hora = hora + timedelta(hours=horas_a_sumar)
     return nueva_hora
 
-
+# Esta funcion permite añadir columnas con un valor definido y el numero de columnas totales a la lista
 def asignar_valor(lista, posicion, valor):
     # Verificar si la posición está dentro del rango de la lista
     if posicion < 0:

@@ -174,7 +174,6 @@ def nuevo_procesamiento_de_pedido(payment_link_id, productos_a_comprar, fecha_de
     
     return lista
      
-
 def obtener_pedido_by_payment_link_id(rows, payment_link_id):
     global db_orders
     
@@ -238,3 +237,4 @@ def update_row_by_webhook_respond(row, webhook_res):
     row[db_orders["CIUDAD"]]            = str(webhook_res[12]) #12 city  
     row[db_orders["CODIGO POSTAL"]]     = str(webhook_res[15]) #15 postal_code         
     return row
+

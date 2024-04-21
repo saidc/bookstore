@@ -88,7 +88,7 @@ def batch_update_row_value(service=None, spreadsheet_id=None, sheet_name=None, r
     try:
 
         range_name = f"{sheet_name}!"+calcular_rango(row_to_update, len(value))
-        print("rango de sheet: ", range_name)
+        #print("rango de sheet: ", range_name)
         values = [value]
         data = [
             {
@@ -101,7 +101,7 @@ def batch_update_row_value(service=None, spreadsheet_id=None, sheet_name=None, r
             'data': data
         }
         result = service.spreadsheets().values().batchUpdate( spreadsheetId=spreadsheet_id, body=body).execute()
-        print(f"{(result.get('totalUpdatedCells'))} cells updated.")
+        #print(f"{(result.get('totalUpdatedCells'))} cells updated.")
         return result
     except errors.HttpError as error:
         msg = f"An error occurred: {error}"
