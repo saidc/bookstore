@@ -5,6 +5,7 @@ import os
 from tools import getenv_var, convert_to_list, obtener_hora_colombiana, sumar_horas
 from datetime import datetime, timedelta
 import pytz
+from pytz import timezone 
 
 env_file_path = ".env"
 # obtener variables de entorno
@@ -18,25 +19,31 @@ SHEET_NAME = os.environ.get("SHEET_2_NAME")
 creds = get_token_credentials(TOKEN_FILE, CLIENT_SECRET, SCOPES)
 service = connect_to_sheet_api(creds)
 
-fecha_creacion_str = "2024-04-20T23:41:01.415Z"
+
+fecha_creacion_str = "2024-04-21T00:06:20.258Z"
 fecha_creacion =  datetime.strptime(fecha_creacion_str, "%Y-%m-%dT%H:%M:%S.%fZ")
 zona_horaria_colombiana = pytz.timezone('America/Bogota')
-fecha_creacion = fecha_creacion.astimezone(zona_horaria_colombiana)
+fecha_creacion = fecha_creacion.replace(tzinfo=zona_horaria_colombiana)
 
+hora_actual_colombiana = obtener_hora_colombiana()
+hora_actual_colombiana_mas_5 = hora_actual_colombiana + timedelta(hours=5)
+hace_2_horas = hora_actual_colombiana_mas_5 - timedelta(hours=2)
+
+print(zona_horaria_colombiana)
 print("fecha de crearcion de pedido: ",fecha_creacion.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
 # Obtener la fecha y hora actual colombia
-hora_actual_colombiana = obtener_hora_colombiana()
 print("fecha actual colombia: ",hora_actual_colombiana.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
-hora_actual_colombiana_mas_5 = hora_actual_colombiana + timedelta(hours=5)
 print("fecha actual colombia + 5: ",hora_actual_colombiana_mas_5.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
 
-hace_2_horas = hora_actual_colombiana_mas_5 - timedelta(hours=2)
 print("\nfecha actual colombia + 5 - 2: ",hace_2_horas.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
+
 
 if( fecha_creacion >= hace_2_horas ):
     print("la fecha es mayor de hace dos horas")
 else:
     print("la fecha es menor de hace dos horas")
+
+
 
 payment_link_id = "test_q9C8aV"
 #fecha_de_creacion = fecha_actual.strftime("%Y-%m-%dT%H:%M:%S.%fZ") #"2024-02-28T15:59:35.744Z" 
