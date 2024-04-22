@@ -14,7 +14,7 @@ import json
 import os
 import time
 
-ESTADO_PROYECTO = "PROD" # TEST
+ESTADO_PROYECTO = "PROD" # TEST 
 
 sist_op = platform.system()
 print( "estas en un sistema " + str(sist_op) )
