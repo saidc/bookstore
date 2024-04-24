@@ -11,7 +11,7 @@ Para ejecutar este proyecto en tu entorno local, sigue estos pasos:
 2. Navega hasta el directorio del proyecto:
 
     ```bash
-    cd libreria-cristiana
+    cd bookstore
     ```
 
 3. Crea y activa un entorno virtual para el proyecto:
@@ -38,7 +38,7 @@ Para ejecutar este proyecto en tu entorno local, sigue estos pasos:
     flask run
     ```
 
-¡Y listo! Ahora puedes acceder a la Librería Cristiana Online en tu navegador local en la dirección [http://localhost:5000](http://localhost:5000).
+¡Y listo! Ahora puedes acceder al bookstore en tu navegador local en la dirección [http://localhost:5000](http://localhost:5000).
 
 ---
 
