@@ -5,7 +5,7 @@ Para ejecutar este proyecto en tu entorno local, sigue estos pasos:
 1. Clona este repositorio en tu máquina:
 
     ```bash
-    git clone https://github.com/tu_usuario/libreria-cristiana.git
+    git clone https://github.com/saidc/bookstore.git
     ```
 
 2. Navega hasta el directorio del proyecto:
