@@ -1,4 +1,4 @@
-runtime: python38
+runtime: python3
 threadsafe: true
 #api_version: 1
 
