@@ -5,4 +5,3 @@ threadsafe: true
 handlers:
 - url: /.*
   script: main.py
-
