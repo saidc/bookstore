@@ -1,5 +1,5 @@
 runtime: python37
-threadsafe: false
+#threadsafe: false
 #api_version: 1
 
 service: bookstore
