@@ -2,7 +2,8 @@ runtime: python38
 #threadsafe: false
 #api_version: 1
 
-service: default
+#service: default
+
 handlers:
 - url: /.*
   static_dir: static
