@@ -3,6 +3,6 @@ threadsafe: true
 #api_version: 1
 
 #service: bookstore
-#handlers:
-#- url: /.*
-#  script: main.py
+handlers:
+- url: /.*
+  script: main.py
