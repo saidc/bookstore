@@ -1,7 +1,8 @@
 runtime: python27
-api_version: 1
-threadsafe: true
+#api_version: 1
+#threadsafe: true
 
+service: bookstore
 handlers:
 - url: /.*
   script: main.py
