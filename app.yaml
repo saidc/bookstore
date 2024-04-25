@@ -5,4 +5,4 @@ threadsafe: true
 service: bookstore
 handlers:
 - url: /.*
-  script: main.py
+  script: auto
