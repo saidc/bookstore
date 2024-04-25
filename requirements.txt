@@ -1,5 +1,7 @@
-Flask==2.3.3
-psutil==5.9.8
-google-api-python-client==2.119.0
-google-auth-oauthlib==1.2.0
-pytz==2024.1
+Flask
+gunicorn
+Werkzeug
+psutil
+google-api-python-client
+google-auth-oauthlib
+pytz

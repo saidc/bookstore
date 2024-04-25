@@ -1,4 +1,4 @@
-# coding=utf-8
+# [START gae_flex_quickstart]
 from sheet import get_token_credentials, get_rows, connect_to_sheet_api, append_row_value, send_email, batch_update_row_value
 from flask import Flask, render_template, jsonify, redirect, session
 from base_de_datos import obtener_informacion_producto, nuevo_procesamiento_de_pedido, obtener_pedido_by_payment_link_id, update_row_by_webhook_respond
@@ -550,6 +550,7 @@ def count_down():
            }), 200
 
 if __name__ == "__main__":
-  app.run(debug=True)
+  app.run(debug=True, host="127.0.0.1", port=8080)
 
+# [END gae_flex_quickstart]
 
