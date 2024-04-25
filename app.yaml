@@ -1,6 +1,11 @@
-runtime: python39
-# note that App Engine expects to find a file named main.py
+runtime: python27
+api_version: 1
+threadsafe: true
 
 handlers:
 - url: /.*
   script: __init__.py
+
+libraries:
+- name: flask
+  version: 0.12
