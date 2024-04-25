@@ -549,7 +549,7 @@ def count_down():
            'count_down': 267840
            }), 200
 
-#if __name__ == "__main__":
-#  app.run(debug=True)
+if __name__ == "__main__":
+  app.run(debug=True)
 
 
