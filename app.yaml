@@ -5,4 +5,4 @@ runtime: python310
 service: bookstore
 handlers:
 - url: /.*
-  script: auto
+  script: main.py
